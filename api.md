@@ -2,8 +2,5 @@
 layout: default
 ---
 
-## Welcome to another page
+## Welcome to pyKT
 
-_yay_
-
-[back](./)
