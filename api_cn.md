@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: api
 ---
 
 ## 欢迎来到 pyKT
@@ -22,9 +22,11 @@ layout: default
 ```
 执行以上命令即可完成数据预处理和数据划分，生成训练所需数据格式。具体的数据集选取、预处理及划分方式如下:
 
+
 ### 1.1 数据集选取
 
 目前，我们已对7个数据集进行了处理，如下所示
+
 | 数据集              | 数据来源                                                                                                                | 文件名称                                   |
 |:-------------------|:---------------------------------------------------------------------------------------------------------------------|:-------------------------------------------|
 | ASSIST2009         | https://sites.google.com/site/assistmentsdata/home/2009-2010-assistment-data/skill-builder-data-2009-2010?authuser=0 | skill_builder_data_corrected_collapsed.csv |
@@ -330,40 +332,22 @@ sh start_sweep_0_5.sh
 ## 参考
 
 <div id="ref1"></div>
-
 - [1] Piech，C.，Bassen，J.，Huang，J.，Ganguli，S.，Sahami，M.，Guibas，L. J.，& Sohl-Dickstein，J. (2015). [Deep knowledge tracing](https://proceedings.neurips.cc/paper/2015/file/bac9162b47c56fc8a4d2a519803d51b3-Paper.pdf). Advances in neural information processing systems，28. 
-
 <div id="ref2"></div>
-
 - [2] Zhang，J.，Shi，X.，King，I.，& Yeung，D. Y. (2017，April). [Dynamic key-value memory networks for knowledge tracing.](https://dl.acm.org/doi/pdf/10.1145/3038912.3052580) In Proceedings of the 26th international conference on World Wide Web (pp. 765-774).
-
 <div id="ref3"></div>
-
 - [3] Ghosh，A.，Heffernan，N.，& Lan，A. S. (2020，August). [Context-aware attentive knowledge tracing.](https://dl.acm.org/doi/pdf/10.1145/3394486.3403282) In Proceedings of the 26th ACM SIGKDD international conference on knowledge discovery & data mining (pp. 2330-2339).
-
 <div id="ref4"></div>
-
 - [4] Pandey，S.，& Srivastava，J. (2020，October). [Rkt: Relation-aware self-attention for knowledge tracing.](https://dl.acm.org/doi/pdf/10.1145/3340531.3411994) In Proceedings of the 29th ACM International Conference on Information & Knowledge Management (pp. 1205-1214).
-
 <div id="ref5"></div>
-
 - [5] Yeung，C. K.，& Yeung，D. Y. (2018，June). [Addressing two problems in deep knowledge tracing via prediction-consistent regularization.](https://arxiv.org/pdf/1806.02180.pdf) In Proceedings of the Fifth Annual ACM Conference on Learning at Scale (pp. 1-10).
-
 - [6] Lee，J.，& Yeung，D. Y. (2019，March). [Knowledge query network for knowledge tracing: How knowledge interacts with skills.](https://arxiv.org/pdf/1908.02146.pdf)In Proceedings of the 9th International Conference on Learning Analytics & Knowledge (pp. 491-500). 
-
 - [7] Abdelrahman, G., & Wang, Q. (2019, July). [Knowledge tracing with sequential key-value memory networks.](https://dl.acm.org/doi/pdf/10.1145/3331184.3331195) In Proceedings of the 42nd International ACM SIGIR Conference on Research and Development in Information Retrieval (pp. 175-184).
-
 - [8] Pandey，S.，& Karypis，G. (2019). [A Self-Attentive Model for Knowledge Tracing.](https://arxiv.org/pdf/1907.06837.pdf) International Educational Data Mining Society.
-
 - [9] Choi，Youngduck，et al. [Towards an appropriate query，key，and value computation for knowledge tracing.](https://dl.acm.org/doi/pdf/10.1145/3386527.3405945)Proceedings of the Seventh ACM Conference on Learning@ Scale. 2020.
-
 - [10] Guo，X.，Huang，Z.，Gao，J.，Shang，M.，Shu，M.，& Sun，J. (2021，October). [Enhancing Knowledge Tracing via Adversarial Training.](https://dl.acm.org/doi/pdf/10.1145/3474085.3475554) In Proceedings of the 29th ACM International Conference on Multimedia (pp. 367-375).
-
 - [11] Nagatani, K., Zhang, Q., Sato, M., Chen, Y. Y., Chen, F., & Ohkuma, T. (2019, May). [Augmenting knowledge tracing by considering forgetting behavior.](https://dl.acm.org/doi/pdf/10.1145/3308558.3313565) In The world wide web conference (pp. 3101-3107).
-
 - [12] [knowledge-tracing-collection-pytorch](https://github.com/hcnoh/knowledge-tracing-collection-pytorch).
-
 - [13] [Implementation of Context-Aware Attentive Knowledge Tracing (AKT)](https://github.com/arghosh/AKT).
-
 - [14] [Implementation of Knowledge Tracing with Sequential Key-Value Memory Networks (SKVMN)](https://github.com/Badstu/CAKT_othermodels/tree/master/SKVMN).
 - [15] [Implementation of Enhancing Knowledge Tracing via Adversarial Training (ATKT)](https://github.com/xiaopengguo/ATKT).

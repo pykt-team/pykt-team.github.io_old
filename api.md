@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: api
 ---
 
 ## Welcome to pyKT
