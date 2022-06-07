@@ -14,5 +14,5 @@ Get started with [Installation](#Installation) and then get an overview with the
 Use the following command to install PyKY:
 
 ```
-pip install kt-toolkit 
+pip install pykt-toolkit
 ```
