@@ -1,4 +1,5 @@
-cd pykt-toolkit/docs/ && git pull && sh build.sh
+cd pykt-toolkit && git pull && pip install -e .
+cd docs && sh build.sh
 rm -r docs 
 cp -r pykt-toolkit/docs/build/html docs
 git add docs
