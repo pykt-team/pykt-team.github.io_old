@@ -1,0 +1,30 @@
+:py:mod:`pykt.utils.gkt_utils`
+==============================
+
+.. py:module:: pykt.utils.gkt_utils
+
+
+Module Contents
+---------------
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   pykt.utils.gkt_utils.get_gkt_graph
+   pykt.utils.gkt_utils.build_transition_graph
+   pykt.utils.gkt_utils.build_dense_graph
+
+
+
+.. py:function:: get_gkt_graph(data_config, graph_type='dense')
+
+
+.. py:function:: build_transition_graph(df, concept_num)
+
+
+.. py:function:: build_dense_graph(node_num)
+
+

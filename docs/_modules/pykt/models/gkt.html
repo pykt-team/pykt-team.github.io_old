@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pykt.models.gkt &mdash; pykt-toolkit 0.0.3 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> pykt-toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../autoapi/index.html">API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">pykt-toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      <li>pykt.models.gkt</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for pykt.models.gkt</h1><div class="highlight"><pre>
+<span></span><span class="c1"># coding: utf-8</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">torch.nn</span> <span class="k">as</span> <span class="nn">nn</span>
+<span class="kn">import</span> <span class="nn">torch.nn.functional</span> <span class="k">as</span> <span class="nn">F</span>
+
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">from</span> <span class="nn">torch.autograd</span> <span class="kn">import</span> <span class="n">Variable</span>
+
+<span class="c1"># refs https://github.com/jhljx/GKT</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+<div class="viewcode-block" id="device"><a class="viewcode-back" href="../../../autoapi/pykt/models/gkt/index.html#pykt.models.gkt.device">[docs]</a><span class="n">device</span> <span class="o">=</span> <span class="s2">&quot;cpu&quot;</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="k">else</span> <span class="s2">&quot;cuda&quot;</span></div>
+
+<div class="viewcode-block" id="GKT"><a class="viewcode-back" href="../../../autoapi/pykt/models/gkt/index.html#pykt.models.gkt.GKT">[docs]</a><span class="k">class</span> <span class="nc">GKT</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_c</span><span class="p">,</span> <span class="n">hidden_dim</span><span class="p">,</span> <span class="n">emb_size</span><span class="p">,</span> <span class="n">graph_type</span><span class="o">=</span><span class="s2">&quot;dense&quot;</span><span class="p">,</span> <span class="n">graph</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dropout</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">emb_type</span><span class="o">=</span><span class="s2">&quot;qid&quot;</span><span class="p">,</span> <span class="n">emb_path</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span><span class="n">bias</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">GKT</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span> <span class="o">=</span> <span class="s2">&quot;gkt&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_c</span> <span class="o">=</span> <span class="n">num_c</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hidden_dim</span> <span class="o">=</span> <span class="n">hidden_dim</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">emb_size</span> <span class="o">=</span> <span class="n">emb_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">res_len</span> <span class="o">=</span> <span class="mi">2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">graph_type</span> <span class="o">=</span> <span class="n">graph_type</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">graph</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>  <span class="c1"># [num_c, num_c]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">requires_grad</span> <span class="o">=</span> <span class="kc">False</span>  <span class="c1"># fix parameter</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">emb_type</span> <span class="o">=</span> <span class="n">emb_type</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">emb_path</span> <span class="o">=</span> <span class="n">emb_path</span>
+
+
+        <span class="c1"># one-hot feature and question</span>
+        <span class="n">one_hot_feat</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">res_len</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_c</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">one_hot_feat</span> <span class="o">=</span> <span class="n">one_hot_feat</span>
+        <span class="c1"># self.one_hot_q = torch.eye(self.num_c, device=self.one_hot_feat.device)</span>
+        <span class="c1"># zero_padding = torch.zeros(1, self.num_c, device=self.one_hot_feat.device)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">one_hot_q</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_c</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+        <span class="n">zero_padding</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_c</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">one_hot_q</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">one_hot_q</span><span class="p">,</span> <span class="n">zero_padding</span><span class="p">),</span> <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="n">emb_type</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;qid&quot;</span><span class="p">):</span>
+            <span class="c1"># concept and concept &amp; response embeddings</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">interaction_emb</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Embedding</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">res_len</span> <span class="o">*</span> <span class="n">num_c</span><span class="p">,</span> <span class="n">emb_size</span><span class="p">)</span>
+            <span class="c1"># last embedding is used for padding, so dim + 1</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">emb_c</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Embedding</span><span class="p">(</span><span class="n">num_c</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">emb_size</span><span class="p">,</span> <span class="n">padding_idx</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="c1"># f_self function</span>
+        <span class="n">mlp_input_dim</span> <span class="o">=</span> <span class="n">hidden_dim</span> <span class="o">+</span> <span class="n">emb_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">f_self</span> <span class="o">=</span> <span class="n">MLP</span><span class="p">(</span><span class="n">mlp_input_dim</span><span class="p">,</span> <span class="n">hidden_dim</span><span class="p">,</span> <span class="n">hidden_dim</span><span class="p">,</span> <span class="n">dropout</span><span class="o">=</span><span class="n">dropout</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="n">bias</span><span class="p">)</span>
+
+        <span class="c1"># f_neighbor functions</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">f_neighbor_list</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">ModuleList</span><span class="p">()</span>
+
+        <span class="c1"># f_in functions</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">f_neighbor_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">MLP</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">mlp_input_dim</span><span class="p">,</span> <span class="n">hidden_dim</span><span class="p">,</span> <span class="n">hidden_dim</span><span class="p">,</span> <span class="n">dropout</span><span class="o">=</span><span class="n">dropout</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="n">bias</span><span class="p">))</span>
+        <span class="c1"># f_out functions</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">f_neighbor_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">MLP</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">mlp_input_dim</span><span class="p">,</span> <span class="n">hidden_dim</span><span class="p">,</span> <span class="n">hidden_dim</span><span class="p">,</span> <span class="n">dropout</span><span class="o">=</span><span class="n">dropout</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="n">bias</span><span class="p">))</span>
+
+
+        <span class="c1"># Erase &amp; Add Gate</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">erase_add_gate</span> <span class="o">=</span> <span class="n">EraseAddGate</span><span class="p">(</span><span class="n">hidden_dim</span><span class="p">,</span> <span class="n">num_c</span><span class="p">)</span>
+        <span class="c1"># Gate Recurrent Unit</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gru</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">GRUCell</span><span class="p">(</span><span class="n">hidden_dim</span><span class="p">,</span> <span class="n">hidden_dim</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="n">bias</span><span class="p">)</span>
+        <span class="c1"># prediction layer</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">predict</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">hidden_dim</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="n">bias</span><span class="p">)</span>
+
+    <span class="c1"># Aggregate step, as shown in Section 3.2.1 of the paper</span>
+<div class="viewcode-block" id="GKT._aggregate"><a class="viewcode-back" href="../../../autoapi/pykt/models/gkt/index.html#pykt.models.gkt.GKT._aggregate">[docs]</a>    <span class="k">def</span> <span class="nf">_aggregate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xt</span><span class="p">,</span> <span class="n">qt</span><span class="p">,</span> <span class="n">ht</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters:</span>
+<span class="sd">            xt: input one-hot question answering features at the current timestamp</span>
+<span class="sd">            qt: question indices for all students in a batch at the current timestamp</span>
+<span class="sd">            ht: hidden representations of all concepts at the current timestamp</span>
+<span class="sd">            batch_size: the size of a student batch</span>
+<span class="sd">        Shape:</span>
+<span class="sd">            xt: [batch_size]</span>
+<span class="sd">            qt: [batch_size]</span>
+<span class="sd">            ht: [batch_size, num_c, hidden_dim]</span>
+<span class="sd">            tmp_ht: [batch_size, num_c, hidden_dim + emb_size]</span>
+<span class="sd">        Return:</span>
+<span class="sd">            tmp_ht: aggregation results of concept hidden knowledge state and concept(&amp; response) embedding</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">qt_mask</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">ne</span><span class="p">(</span><span class="n">qt</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># [batch_size], qt != -1</span>
+        <span class="n">x_idx_mat</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">res_len</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_c</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
+        <span class="n">x_embedding</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">interaction_emb</span><span class="p">(</span><span class="n">x_idx_mat</span><span class="p">)</span>  <span class="c1"># [res_len * num_c, emb_size]#the emb for each concept with answer?</span>
+        <span class="c1"># print(xt[qt_mask])</span>
+        <span class="c1"># print(self.one_hot_feat)</span>
+        <span class="n">masked_feat</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">embedding</span><span class="p">(</span><span class="n">xt</span><span class="p">[</span><span class="n">qt_mask</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">one_hot_feat</span><span class="p">)</span>  <span class="c1"># [mask_num, res_len * num_c] A simple lookup table that looks up embeddings in a fixed dictionary and size.</span>
+        <span class="c1">#nn.functional.embedding(input, weight, padding_idx=None, max_norm=None, norm_type=2.0, scale_grad_by_freq=False, sparse=False)</span>
+        <span class="n">res_embedding</span> <span class="o">=</span> <span class="n">masked_feat</span><span class="o">.</span><span class="n">mm</span><span class="p">(</span><span class="n">x_embedding</span><span class="p">)</span>  <span class="c1"># [mask_num, emb_size]</span>
+        <span class="n">mask_num</span> <span class="o">=</span> <span class="n">res_embedding</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="n">concept_idx_mat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_c</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">batch_size</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_c</span><span class="p">),</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span><span class="o">.</span><span class="n">long</span><span class="p">()</span>
+        <span class="n">concept_idx_mat</span><span class="p">[</span><span class="n">qt_mask</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_c</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
+        <span class="n">concept_embedding</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">emb_c</span><span class="p">(</span><span class="n">concept_idx_mat</span><span class="p">)</span>  <span class="c1"># [batch_size, num_c, emb_size]</span>
+
+        <span class="n">index_tuple</span> <span class="o">=</span> <span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">mask_num</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">),</span> <span class="n">qt</span><span class="p">[</span><span class="n">qt_mask</span><span class="p">]</span><span class="o">.</span><span class="n">long</span><span class="p">())</span>
+        <span class="n">concept_embedding</span><span class="p">[</span><span class="n">qt_mask</span><span class="p">]</span> <span class="o">=</span> <span class="n">concept_embedding</span><span class="p">[</span><span class="n">qt_mask</span><span class="p">]</span><span class="o">.</span><span class="n">index_put</span><span class="p">(</span><span class="n">index_tuple</span><span class="p">,</span> <span class="n">res_embedding</span><span class="p">)</span>
+        <span class="n">tmp_ht</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">((</span><span class="n">ht</span><span class="p">,</span> <span class="n">concept_embedding</span><span class="p">),</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># [batch_size, num_c, hidden_dim + emb_size]</span>
+        <span class="k">return</span> <span class="n">tmp_ht</span></div>
+
+    <span class="c1"># GNN aggregation step, as shown in 3.3.2 Equation 1 of the paper</span>
+<div class="viewcode-block" id="GKT._agg_neighbors"><a class="viewcode-back" href="../../../autoapi/pykt/models/gkt/index.html#pykt.models.gkt.GKT._agg_neighbors">[docs]</a>    <span class="k">def</span> <span class="nf">_agg_neighbors</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tmp_ht</span><span class="p">,</span> <span class="n">qt</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters:</span>
+<span class="sd">            tmp_ht: temporal hidden representations of all concepts after the aggregate step</span>
+<span class="sd">            qt: question indices for all students in a batch at the current timestamp</span>
+<span class="sd">        Shape:</span>
+<span class="sd">            tmp_ht: [batch_size, num_c, hidden_dim + emb_size]</span>
+<span class="sd">            qt: [batch_size]</span>
+<span class="sd">            m_next: [batch_size, num_c, hidden_dim]</span>
+<span class="sd">        Return:</span>
+<span class="sd">            m_next: hidden representations of all concepts aggregating neighboring representations at the next timestamp</span>
+<span class="sd">            concept_embedding: input of VAE (optional)</span>
+<span class="sd">            rec_embedding: reconstructed input of VAE (optional)</span>
+<span class="sd">            z_prob: probability distribution of latent variable z in VAE (optional)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">qt_mask</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">ne</span><span class="p">(</span><span class="n">qt</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># [batch_size], qt != -1</span>
+        <span class="n">masked_qt</span> <span class="o">=</span> <span class="n">qt</span><span class="p">[</span><span class="n">qt_mask</span><span class="p">]</span>  <span class="c1"># [mask_num, ]</span>
+        <span class="n">masked_tmp_ht</span> <span class="o">=</span> <span class="n">tmp_ht</span><span class="p">[</span><span class="n">qt_mask</span><span class="p">]</span>  <span class="c1"># [mask_num, num_c, hidden_dim + emb_size]</span>
+        <span class="n">mask_num</span> <span class="o">=</span> <span class="n">masked_tmp_ht</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">self_index_tuple</span> <span class="o">=</span> <span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">mask_num</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">qt</span><span class="o">.</span><span class="n">device</span><span class="p">),</span> <span class="n">masked_qt</span><span class="o">.</span><span class="n">long</span><span class="p">())</span>
+        <span class="n">self_ht</span> <span class="o">=</span> <span class="n">masked_tmp_ht</span><span class="p">[</span><span class="n">self_index_tuple</span><span class="p">]</span>  <span class="c1"># [mask_num, hidden_dim + emb_size]</span>
+        <span class="n">self_features</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">f_self</span><span class="p">(</span><span class="n">self_ht</span><span class="p">)</span>  <span class="c1"># [mask_num, hidden_dim]</span>
+        <span class="n">expanded_self_ht</span> <span class="o">=</span> <span class="n">self_ht</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_c</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>  <span class="c1">#[mask_num, num_c, hidden_dim + emb_size]</span>
+        <span class="n">neigh_ht</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">((</span><span class="n">expanded_self_ht</span><span class="p">,</span> <span class="n">masked_tmp_ht</span><span class="p">),</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>  <span class="c1">#[mask_num, num_c, 2 * (hidden_dim + emb_size)]</span>
+        <span class="n">concept_embedding</span><span class="p">,</span> <span class="n">rec_embedding</span><span class="p">,</span> <span class="n">z_prob</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
+
+     
+        <span class="n">adj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="p">[</span><span class="n">masked_qt</span><span class="o">.</span><span class="n">long</span><span class="p">(),</span> <span class="p">:]</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># [mask_num, num_c, 1]</span>
+        <span class="n">reverse_adj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="p">[:,</span> <span class="n">masked_qt</span><span class="o">.</span><span class="n">long</span><span class="p">()]</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># [mask_num, num_c, 1]</span>
+        <span class="c1"># self.f_neighbor_list[0](neigh_ht) shape: [mask_num, num_c, hidden_dim]</span>
+        <span class="n">neigh_features</span> <span class="o">=</span> <span class="n">adj</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">f_neighbor_list</span><span class="p">[</span><span class="mi">0</span><span class="p">](</span><span class="n">neigh_ht</span><span class="p">)</span> <span class="o">+</span> <span class="n">reverse_adj</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">f_neighbor_list</span><span class="p">[</span><span class="mi">1</span><span class="p">](</span><span class="n">neigh_ht</span><span class="p">)</span>
+
+        <span class="c1"># neigh_features: [mask_num, num_c, hidden_dim]</span>
+        <span class="n">m_next</span> <span class="o">=</span> <span class="n">tmp_ht</span><span class="p">[:,</span> <span class="p">:,</span> <span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">hidden_dim</span><span class="p">]</span>
+        <span class="n">m_next</span><span class="p">[</span><span class="n">qt_mask</span><span class="p">]</span> <span class="o">=</span> <span class="n">neigh_features</span>
+        <span class="n">m_next</span><span class="p">[</span><span class="n">qt_mask</span><span class="p">]</span> <span class="o">=</span> <span class="n">m_next</span><span class="p">[</span><span class="n">qt_mask</span><span class="p">]</span><span class="o">.</span><span class="n">index_put</span><span class="p">(</span><span class="n">self_index_tuple</span><span class="p">,</span> <span class="n">self_features</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_next</span><span class="p">,</span> <span class="n">concept_embedding</span><span class="p">,</span> <span class="n">rec_embedding</span><span class="p">,</span> <span class="n">z_prob</span></div>
+
+    <span class="c1"># Update step, as shown in Section 3.3.2 of the paper</span>
+<div class="viewcode-block" id="GKT._update"><a class="viewcode-back" href="../../../autoapi/pykt/models/gkt/index.html#pykt.models.gkt.GKT._update">[docs]</a>    <span class="k">def</span> <span class="nf">_update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tmp_ht</span><span class="p">,</span> <span class="n">ht</span><span class="p">,</span> <span class="n">qt</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters:</span>
+<span class="sd">            tmp_ht: temporal hidden representations of all concepts after the aggregate step</span>
+<span class="sd">            ht: hidden representations of all concepts at the current timestamp</span>
+<span class="sd">            qt: question indices for all students in a batch at the current timestamp</span>
+<span class="sd">        Shape:</span>
+<span class="sd">            tmp_ht: [batch_size, num_c, hidden_dim + emb_size]</span>
+<span class="sd">            ht: [batch_size, num_c, hidden_dim]</span>
+<span class="sd">            qt: [batch_size]</span>
+<span class="sd">            h_next: [batch_size, num_c, hidden_dim]</span>
+<span class="sd">        Return:</span>
+<span class="sd">            h_next: hidden representations of all concepts at the next timestamp</span>
+<span class="sd">            concept_embedding: input of VAE (optional)</span>
+<span class="sd">            rec_embedding: reconstructed input of VAE (optional)</span>
+<span class="sd">            z_prob: probability distribution of latent variable z in VAE (optional)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">qt_mask</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">ne</span><span class="p">(</span><span class="n">qt</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># [batch_size], qt != -1</span>
+        <span class="n">mask_num</span> <span class="o">=</span> <span class="n">qt_mask</span><span class="o">.</span><span class="n">nonzero</span><span class="p">()</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="c1"># GNN Aggregation</span>
+        <span class="n">m_next</span><span class="p">,</span> <span class="n">concept_embedding</span><span class="p">,</span> <span class="n">rec_embedding</span><span class="p">,</span> <span class="n">z_prob</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_agg_neighbors</span><span class="p">(</span><span class="n">tmp_ht</span><span class="p">,</span> <span class="n">qt</span><span class="p">)</span>  <span class="c1"># [batch_size, num_c, hidden_dim]</span>
+        <span class="c1"># Erase &amp; Add Gate</span>
+        <span class="n">m_next</span><span class="p">[</span><span class="n">qt_mask</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">erase_add_gate</span><span class="p">(</span><span class="n">m_next</span><span class="p">[</span><span class="n">qt_mask</span><span class="p">])</span>  <span class="c1"># [mask_num, num_c, hidden_dim]</span>
+        <span class="c1"># GRU</span>
+        <span class="n">h_next</span> <span class="o">=</span> <span class="n">m_next</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gru</span><span class="p">(</span><span class="n">m_next</span><span class="p">[</span><span class="n">qt_mask</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">hidden_dim</span><span class="p">),</span> <span class="n">ht</span><span class="p">[</span><span class="n">qt_mask</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">hidden_dim</span><span class="p">))</span>  <span class="c1"># [mask_num * num_c, hidden_num]</span>
+        <span class="n">index_tuple</span> <span class="o">=</span> <span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">mask_num</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">qt_mask</span><span class="o">.</span><span class="n">device</span><span class="p">),</span> <span class="p">)</span>
+        <span class="n">h_next</span><span class="p">[</span><span class="n">qt_mask</span><span class="p">]</span> <span class="o">=</span> <span class="n">h_next</span><span class="p">[</span><span class="n">qt_mask</span><span class="p">]</span><span class="o">.</span><span class="n">index_put</span><span class="p">(</span><span class="n">index_tuple</span><span class="p">,</span> <span class="n">res</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_c</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">hidden_dim</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">h_next</span><span class="p">,</span> <span class="n">concept_embedding</span><span class="p">,</span> <span class="n">rec_embedding</span><span class="p">,</span> <span class="n">z_prob</span></div>
+
+    <span class="c1"># Predict step, as shown in Section 3.3.3 of the paper</span>
+<div class="viewcode-block" id="GKT._predict"><a class="viewcode-back" href="../../../autoapi/pykt/models/gkt/index.html#pykt.models.gkt.GKT._predict">[docs]</a>    <span class="k">def</span> <span class="nf">_predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">h_next</span><span class="p">,</span> <span class="n">qt</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters:</span>
+<span class="sd">            h_next: hidden representations of all concepts at the next timestamp after the update step</span>
+<span class="sd">            qt: question indices for all students in a batch at the current timestamp</span>
+<span class="sd">        Shape:</span>
+<span class="sd">            h_next: [batch_size, num_c, hidden_dim]</span>
+<span class="sd">            qt: [batch_size]</span>
+<span class="sd">            y: [batch_size, num_c]</span>
+<span class="sd">        Return:</span>
+<span class="sd">            y: predicted correct probability of all concepts at the next timestamp</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">qt_mask</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">ne</span><span class="p">(</span><span class="n">qt</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># [batch_size], qt != -1</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">h_next</span><span class="p">)</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># [batch_size, num_c]</span>
+        <span class="n">y</span><span class="p">[</span><span class="n">qt_mask</span><span class="p">]</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="n">qt_mask</span><span class="p">])</span>  <span class="c1"># [batch_size, num_c]</span>
+        <span class="k">return</span> <span class="n">y</span></div>
+
+<div class="viewcode-block" id="GKT._get_next_pred"><a class="viewcode-back" href="../../../autoapi/pykt/models/gkt/index.html#pykt.models.gkt.GKT._get_next_pred">[docs]</a>    <span class="k">def</span> <span class="nf">_get_next_pred</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">yt</span><span class="p">,</span> <span class="n">q_next</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters:</span>
+<span class="sd">            yt: predicted correct probability of all concepts at the next timestamp</span>
+<span class="sd">            q_next: question index matrix at the next timestamp</span>
+<span class="sd">            batch_size: the size of a student batch</span>
+<span class="sd">        Shape:</span>
+<span class="sd">            y: [batch_size, num_c]</span>
+<span class="sd">            questions: [batch_size, seq_len]</span>
+<span class="sd">            pred: [batch_size, ]</span>
+<span class="sd">        Return:</span>
+<span class="sd">            pred: predicted correct probability of the question answered at the next timestamp</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">next_qt</span> <span class="o">=</span> <span class="n">q_next</span>
+        <span class="n">next_qt</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">next_qt</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">next_qt</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_c</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">next_qt</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">yt</span><span class="o">.</span><span class="n">device</span><span class="p">))</span>
+        <span class="n">one_hot_qt</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">embedding</span><span class="p">(</span><span class="n">next_qt</span><span class="o">.</span><span class="n">long</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">one_hot_q</span><span class="p">)</span>  <span class="c1"># [batch_size, num_c]</span>
+        <span class="c1"># dot product between yt and one_hot_qt</span>
+        <span class="n">pred</span> <span class="o">=</span> <span class="p">(</span><span class="n">yt</span> <span class="o">*</span> <span class="n">one_hot_qt</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># [batch_size, ]</span>
+        <span class="k">return</span> <span class="n">pred</span></div>
+
+<div class="viewcode-block" id="GKT.forward"><a class="viewcode-back" href="../../../autoapi/pykt/models/gkt/index.html#pykt.models.gkt.GKT.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="n">r</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters:</span>
+<span class="sd">            features: input one-hot matrix, is skill_with_answer</span>
+<span class="sd">            questions: question index matrix</span>
+<span class="sd">        seq_len dimension needs padding, because different students may have learning sequences with different lengths.</span>
+<span class="sd">        Shape:</span>
+<span class="sd">            features: [batch_size, seq_len]</span>
+<span class="sd">            questions: [batch_size, seq_len]</span>
+<span class="sd">            pred_res: [batch_size, seq_len - 1]</span>
+<span class="sd">        Return:</span>
+<span class="sd">            pred_res: the correct probability of questions answered at the next timestamp</span>
+<span class="sd">            concept_embedding: input of VAE (optional)</span>
+<span class="sd">            rec_embedding: reconstructed input of VAE (optional)</span>
+<span class="sd">            z_prob: probability distribution of latent variable z in VAE (optional)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">features</span> <span class="o">=</span> <span class="n">q</span><span class="o">*</span><span class="mi">2</span> <span class="o">+</span> <span class="n">r</span>
+        <span class="n">questions</span> <span class="o">=</span> <span class="n">q</span>
+        
+        <span class="n">batch_size</span><span class="p">,</span> <span class="n">seq_len</span> <span class="o">=</span> <span class="n">features</span><span class="o">.</span><span class="n">shape</span>
+        <span class="n">ht</span> <span class="o">=</span> <span class="n">Variable</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">batch_size</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_c</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">hidden_dim</span><span class="p">),</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">))</span>
+        
+        <span class="n">pred_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">seq_len</span><span class="p">):</span>
+            <span class="n">xt</span> <span class="o">=</span> <span class="n">features</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span>  <span class="c1"># [batch_size]</span>
+            <span class="n">qt</span> <span class="o">=</span> <span class="n">questions</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span>  <span class="c1"># [batch_size]</span>
+            <span class="n">qt_mask</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">ne</span><span class="p">(</span><span class="n">qt</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># [batch_size], next_qt != -1</span>
+            <span class="n">tmp_ht</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_aggregate</span><span class="p">(</span><span class="n">xt</span><span class="p">,</span> <span class="n">qt</span><span class="p">,</span> <span class="n">ht</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">)</span>  <span class="c1"># [batch_size, num_c, hidden_dim + emb_size]</span>
+            <span class="n">h_next</span><span class="p">,</span> <span class="n">concept_embedding</span><span class="p">,</span> <span class="n">rec_embedding</span><span class="p">,</span> <span class="n">z_prob</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_update</span><span class="p">(</span><span class="n">tmp_ht</span><span class="p">,</span> <span class="n">ht</span><span class="p">,</span> <span class="n">qt</span><span class="p">)</span>  <span class="c1"># [batch_size, num_c, hidden_dim]</span>
+            <span class="n">ht</span><span class="p">[</span><span class="n">qt_mask</span><span class="p">]</span> <span class="o">=</span> <span class="n">h_next</span><span class="p">[</span><span class="n">qt_mask</span><span class="p">]</span>  <span class="c1"># update new ht</span>
+            <span class="n">yt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_predict</span><span class="p">(</span><span class="n">h_next</span><span class="p">,</span> <span class="n">qt</span><span class="p">)</span>  <span class="c1"># [batch_size, num_c]</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">seq_len</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">pred</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_next_pred</span><span class="p">(</span><span class="n">yt</span><span class="p">,</span> <span class="n">questions</span><span class="p">[:,</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
+                <span class="n">pred_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pred</span><span class="p">)</span>
+        <span class="n">pred_res</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">pred_list</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># [batch_size, seq_len - 1]</span>
+        <span class="k">return</span> <span class="n">pred_res</span></div></div>
+
+<span class="c1"># Multi-Layer Perceptron(MLP) layer</span>
+<div class="viewcode-block" id="MLP"><a class="viewcode-back" href="../../../autoapi/pykt/models/gkt/index.html#pykt.models.gkt.MLP">[docs]</a><span class="k">class</span> <span class="nc">MLP</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Two-layer fully-connected ReLU net with batch norm.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_dim</span><span class="p">,</span> <span class="n">hidden_dim</span><span class="p">,</span> <span class="n">output_dim</span><span class="p">,</span> <span class="n">dropout</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">MLP</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fc1</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">input_dim</span><span class="p">,</span> <span class="n">hidden_dim</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="n">bias</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fc2</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">hidden_dim</span><span class="p">,</span> <span class="n">output_dim</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="n">bias</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">norm</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">BatchNorm1d</span><span class="p">(</span><span class="n">output_dim</span><span class="p">)</span>
+        <span class="c1"># the paper said they added Batch Normalization for the output of MLPs, as shown in Section 4.2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dropout</span> <span class="o">=</span> <span class="n">dropout</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_dim</span> <span class="o">=</span> <span class="n">output_dim</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_weights</span><span class="p">()</span>
+
+<div class="viewcode-block" id="MLP.init_weights"><a class="viewcode-back" href="../../../autoapi/pykt/models/gkt/index.html#pykt.models.gkt.MLP.init_weights">[docs]</a>    <span class="k">def</span> <span class="nf">init_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">modules</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">):</span>
+                <span class="n">nn</span><span class="o">.</span><span class="n">init</span><span class="o">.</span><span class="n">xavier_normal_</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+                <span class="n">m</span><span class="o">.</span><span class="n">bias</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">fill_</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">nn</span><span class="o">.</span><span class="n">BatchNorm1d</span><span class="p">):</span>
+                <span class="n">m</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">fill_</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+                <span class="n">m</span><span class="o">.</span><span class="n">bias</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">zero_</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="MLP.batch_norm"><a class="viewcode-back" href="../../../autoapi/pykt/models/gkt/index.html#pykt.models.gkt.MLP.batch_norm">[docs]</a>    <span class="k">def</span> <span class="nf">batch_norm</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">inputs</span><span class="o">.</span><span class="n">numel</span><span class="p">()</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_dim</span> <span class="ow">or</span> <span class="n">inputs</span><span class="o">.</span><span class="n">numel</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># batch_size == 1 or 0 will cause BatchNorm error, so return the input directly</span>
+            <span class="k">return</span> <span class="n">inputs</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">inputs</span><span class="o">.</span><span class="n">size</span><span class="p">())</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">inputs</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">inputs</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">*</span> <span class="n">inputs</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">x</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">inputs</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">inputs</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>  <span class="c1"># len(input_size()) == 2</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="MLP.forward"><a class="viewcode-back" href="../../../autoapi/pykt/models/gkt/index.html#pykt.models.gkt.MLP.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">):</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fc1</span><span class="p">(</span><span class="n">inputs</span><span class="p">))</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">dropout</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dropout</span><span class="p">,</span> <span class="n">training</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">training</span><span class="p">)</span>  <span class="c1"># pay attention to add training=self.training</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fc2</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">batch_norm</span><span class="p">(</span><span class="n">x</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="EraseAddGate"><a class="viewcode-back" href="../../../autoapi/pykt/models/gkt/index.html#pykt.models.gkt.EraseAddGate">[docs]</a><span class="k">class</span> <span class="nc">EraseAddGate</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Erase &amp; Add Gate module</span>
+<span class="sd">    NOTE: this erase &amp; add gate is a bit different from that in DKVMN.</span>
+<span class="sd">    For more information about Erase &amp; Add gate, please refer to the paper &quot;Dynamic Key-Value Memory Networks for Knowledge Tracing&quot;</span>
+<span class="sd">    The paper can be found in https://arxiv.org/abs/1611.08108</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">feature_dim</span><span class="p">,</span> <span class="n">num_c</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">EraseAddGate</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="c1"># weight</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">weight</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">num_c</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reset_parameters</span><span class="p">()</span>
+        <span class="c1"># erase gate</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">erase</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">feature_dim</span><span class="p">,</span> <span class="n">feature_dim</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="n">bias</span><span class="p">)</span>
+        <span class="c1"># add gate</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">feature_dim</span><span class="p">,</span> <span class="n">feature_dim</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="n">bias</span><span class="p">)</span>
+
+<div class="viewcode-block" id="EraseAddGate.reset_parameters"><a class="viewcode-back" href="../../../autoapi/pykt/models/gkt/index.html#pykt.models.gkt.EraseAddGate.reset_parameters">[docs]</a>    <span class="k">def</span> <span class="nf">reset_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">stdv</span> <span class="o">=</span> <span class="mf">1.</span> <span class="o">/</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">uniform_</span><span class="p">(</span><span class="o">-</span><span class="n">stdv</span><span class="p">,</span> <span class="n">stdv</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="EraseAddGate.forward"><a class="viewcode-back" href="../../../autoapi/pykt/models/gkt/index.html#pykt.models.gkt.EraseAddGate.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Params:</span>
+<span class="sd">            x: input feature matrix</span>
+<span class="sd">        Shape:</span>
+<span class="sd">            x: [batch_size, num_c, feature_dim]</span>
+<span class="sd">            res: [batch_size, num_c, feature_dim]</span>
+<span class="sd">        Return:</span>
+<span class="sd">            res: returned feature matrix with old information erased and new information added</span>
+<span class="sd">        The GKT paper didn&#39;t provide detailed explanation about this erase-add gate. As the erase-add gate in the GKT only has one input parameter,</span>
+<span class="sd">        this gate is different with that of the DKVMN. We used the input matrix to build the erase and add gates, rather than $\mathbf{v}_{t}$ vector in the DKVMN.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">erase_gate</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">erase</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>  <span class="c1"># [batch_size, num_c, feature_dim]</span>
+        <span class="c1"># self.weight.unsqueeze(dim=1) shape: [num_c, 1]</span>
+        <span class="n">tmp_x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">erase_gate</span> <span class="o">*</span> <span class="n">x</span>
+        <span class="n">add_feat</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tanh</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>  <span class="c1"># [batch_size, num_c, feature_dim]</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">tmp_x</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">add_feat</span>
+        <span class="k">return</span> <span class="n">res</span></div></div>
+
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, pykt-team.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

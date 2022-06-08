@@ -1,0 +1,23 @@
+:py:mod:`pykt.preprocess`
+=========================
+
+.. py:module:: pykt.preprocess
+
+
+Submodules
+----------
+.. toctree::
+   :titlesonly:
+   :maxdepth: 1
+
+   algebra2005_preprocess/index.rst
+   assist2009_preprocess/index.rst
+   assist2015_preprocess/index.rst
+   bridge2algebra2006_preprocess/index.rst
+   nips_task34_preprocess/index.rst
+   poj_preprocess/index.rst
+   split_datasets/index.rst
+   statics2011_preprocess/index.rst
+   utils/index.rst
+
+

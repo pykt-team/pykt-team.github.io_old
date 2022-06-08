@@ -1,0 +1,81 @@
+:py:mod:`pykt.models.atkt`
+==========================
+
+.. py:module:: pykt.models.atkt
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   pykt.models.atkt.ATKT
+
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   pykt.models.atkt._l2_normalize_adv
+
+
+
+Attributes
+~~~~~~~~~~
+
+.. autoapisummary::
+
+   pykt.models.atkt.device
+
+
+.. py:data:: device
+   
+
+   
+
+.. py:class:: ATKT(num_c, skill_dim, answer_dim, hidden_dim, attention_dim=80, epsilon=10, beta=0.2, dropout=0.2, emb_type='qid', emb_path='', fix=True)
+
+   Bases: :py:obj:`torch.nn.Module`
+
+   Base class for all neural network modules.
+
+   Your models should also subclass this class.
+
+   Modules can also contain other Modules, allowing to nest them in
+   a tree structure. You can assign the submodules as regular attributes::
+
+       import torch.nn as nn
+       import torch.nn.functional as F
+
+       class Model(nn.Module):
+           def __init__(self):
+               super(Model, self).__init__()
+               self.conv1 = nn.Conv2d(1, 20, 5)
+               self.conv2 = nn.Conv2d(20, 20, 5)
+
+           def forward(self, x):
+               x = F.relu(self.conv1(x))
+               return F.relu(self.conv2(x))
+
+   Submodules assigned in this way will be registered, and will have their
+   parameters converted too when you call :meth:`to`, etc.
+
+   :ivar training: Boolean represents whether this module is in training or
+                   evaluation mode.
+   :vartype training: bool
+
+   .. py:method:: attention_module(self, lstm_output)
+
+
+   .. py:method:: forward(self, skill, answer, perturbation=None)
+
+
+
+.. py:function:: _l2_normalize_adv(d)
+
+

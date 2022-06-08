@@ -1,0 +1,69 @@
+:py:mod:`pykt.utils.utils`
+==========================
+
+.. py:module:: pykt.utils.utils
+
+
+Module Contents
+---------------
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   pykt.utils.utils.init_model
+   pykt.utils.utils.load_model
+   pykt.utils.utils.init_test_datasets
+   pykt.utils.utils.update_gap
+   pykt.utils.utils.init_dataset4train
+   pykt.utils.utils.set_seed
+   pykt.utils.utils.get_now_time
+   pykt.utils.utils.debug_print
+
+
+
+Attributes
+~~~~~~~~~~
+
+.. autoapisummary::
+
+   pykt.utils.utils.device
+
+
+.. py:data:: device
+   
+
+   
+
+.. py:function:: init_model(model_name, model_config, data_config, emb_type)
+
+
+.. py:function:: load_model(model_name, model_config, data_config, emb_type, ckpt_path)
+
+
+.. py:function:: init_test_datasets(data_config, model_name, batch_size)
+
+
+.. py:function:: update_gap(max_rgap, max_sgap, max_pcount, cur)
+
+
+.. py:function:: init_dataset4train(dataset_name, model_name, data_config, i, batch_size)
+
+
+.. py:function:: set_seed(seed)
+
+   try:
+       import tensorflow as tf
+       tf.random.set_random_seed(seed)
+   except Exception as e:
+       print("Set seed failed,details are ", e)
+
+
+.. py:function:: get_now_time()
+
+
+.. py:function:: debug_print(text, fuc_name='')
+
+

@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pykt.models.evaluate_model &mdash; pykt-toolkit 0.0.3 documentation</title>
+      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/graphviz.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../../index.html" class="icon icon-home"> pykt-toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../index.html">API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">pykt-toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li><code class="xref py py-mod docutils literal notranslate"><span class="pre">pykt.models.evaluate_model</span></code></li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../../_sources/autoapi/pykt/models/evaluate_model/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-pykt.models.evaluate_model">
+<span id="pykt-models-evaluate-model"></span><h1><a class="reference internal" href="#module-pykt.models.evaluate_model" title="pykt.models.evaluate_model"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pykt.models.evaluate_model</span></code></a><a class="headerlink" href="#module-pykt.models.evaluate_model" title="Permalink to this headline"></a></h1>
+<section id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this headline"></a></h2>
+<section id="functions">
+<h3>Functions<a class="headerlink" href="#functions" title="Permalink to this headline"></a></h3>
+<table class="autosummary longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pykt.models.evaluate_model.save_cur_predict_result" title="pykt.models.evaluate_model.save_cur_predict_result"><code class="xref py py-obj docutils literal notranslate"><span class="pre">save_cur_predict_result</span></code></a>(dres, q, r, d, t, m, sm, p)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pykt.models.evaluate_model.evaluate" title="pykt.models.evaluate_model.evaluate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">evaluate</span></code></a>(model, test_loader, model_name, save_path='')</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pykt.models.evaluate_model.early_fusion" title="pykt.models.evaluate_model.early_fusion"><code class="xref py py-obj docutils literal notranslate"><span class="pre">early_fusion</span></code></a>(curhs, model, model_name)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pykt.models.evaluate_model.late_fusion" title="pykt.models.evaluate_model.late_fusion"><code class="xref py py-obj docutils literal notranslate"><span class="pre">late_fusion</span></code></a>(dcur, curdf, fusion_type=['mean', 'vote', 'all'])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pykt.models.evaluate_model.effective_fusion" title="pykt.models.evaluate_model.effective_fusion"><code class="xref py py-obj docutils literal notranslate"><span class="pre">effective_fusion</span></code></a>(df, model, model_name, fusion_type)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pykt.models.evaluate_model.group_fusion" title="pykt.models.evaluate_model.group_fusion"><code class="xref py py-obj docutils literal notranslate"><span class="pre">group_fusion</span></code></a>(dmerge, model, model_name, fusion_type, fout)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pykt.models.evaluate_model.save_question_res" title="pykt.models.evaluate_model.save_question_res"><code class="xref py py-obj docutils literal notranslate"><span class="pre">save_question_res</span></code></a>(dres, fout, early=False)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pykt.models.evaluate_model.evaluate_question" title="pykt.models.evaluate_model.evaluate_question"><code class="xref py py-obj docutils literal notranslate"><span class="pre">evaluate_question</span></code></a>(model, test_loader, model_name, fusion_type=['early_fusion', 'late_fusion'], save_path='')</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pykt.models.evaluate_model.log2" title="pykt.models.evaluate_model.log2"><code class="xref py py-obj docutils literal notranslate"><span class="pre">log2</span></code></a>(t)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pykt.models.evaluate_model.calC" title="pykt.models.evaluate_model.calC"><code class="xref py py-obj docutils literal notranslate"><span class="pre">calC</span></code></a>(row, data_config)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pykt.models.evaluate_model.get_info_dkt_forget" title="pykt.models.evaluate_model.get_info_dkt_forget"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_info_dkt_forget</span></code></a>(row, data_config)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pykt.models.evaluate_model.evaluate_splitpred_question" title="pykt.models.evaluate_model.evaluate_splitpred_question"><code class="xref py py-obj docutils literal notranslate"><span class="pre">evaluate_splitpred_question</span></code></a>(model, data_config, testf, model_name, save_path='', use_pred=False, train_ratio=0.2, atkt_pad=False)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pykt.models.evaluate_model.get_cur_teststart" title="pykt.models.evaluate_model.get_cur_teststart"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_cur_teststart</span></code></a>(is_repeat, train_ratio)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pykt.models.evaluate_model.predict_each_group" title="pykt.models.evaluate_model.predict_each_group"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict_each_group</span></code></a>(curdforget, dforget, is_repeat, qidx, uid, idx, curqin, curcin, currin, model_name, model, t, cq, cc, cr, end, fout, atkt_pad=False, maxlen=200)</p></td>
+<td><p>use the predict result as next question input</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pykt.models.evaluate_model.save_each_question_res" title="pykt.models.evaluate_model.save_each_question_res"><code class="xref py py-obj docutils literal notranslate"><span class="pre">save_each_question_res</span></code></a>(dcres, dqres, ctrues, cpreds)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pykt.models.evaluate_model.cal_predres" title="pykt.models.evaluate_model.cal_predres"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cal_predres</span></code></a>(dcres, dqres)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pykt.models.evaluate_model.prepare_data" title="pykt.models.evaluate_model.prepare_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">prepare_data</span></code></a>(model_name, is_repeat, qidx, curqin, curcin, currin, curdforget, cq, cc, cr, dforget, t, end, maxlen=200)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pykt.models.evaluate_model.predict_each_group2" title="pykt.models.evaluate_model.predict_each_group2"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict_each_group2</span></code></a>(curdforget, dforget, is_repeat, qidx, uid, idx, curqin, curcin, currin, model_name, model, t, cq, cc, cr, end, fout, atkt_pad=False, maxlen=200)</p></td>
+<td><p>not use the predict result</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pykt.models.evaluate_model.save_currow_question_res" title="pykt.models.evaluate_model.save_currow_question_res"><code class="xref py py-obj docutils literal notranslate"><span class="pre">save_currow_question_res</span></code></a>(idx, dcres, dqres, qidxs, ctrues, cpreds, uid, fout)</p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="attributes">
+<h3>Attributes<a class="headerlink" href="#attributes" title="Permalink to this headline"></a></h3>
+<table class="autosummary longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pykt.models.evaluate_model.device" title="pykt.models.evaluate_model.device"><code class="xref py py-obj docutils literal notranslate"><span class="pre">device</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py data">
+<dt class="sig sig-object py" id="pykt.models.evaluate_model.device">
+<span class="sig-prename descclassname"><span class="pre">pykt.models.evaluate_model.</span></span><span class="sig-name descname"><span class="pre">device</span></span><a class="reference internal" href="../../../../_modules/pykt/models/evaluate_model.html#device"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.evaluate_model.device" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pykt.models.evaluate_model.save_cur_predict_result">
+<span class="sig-prename descclassname"><span class="pre">pykt.models.evaluate_model.</span></span><span class="sig-name descname"><span class="pre">save_cur_predict_result</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dres</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">m</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/pykt/models/evaluate_model.html#save_cur_predict_result"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.evaluate_model.save_cur_predict_result" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pykt.models.evaluate_model.evaluate">
+<span class="sig-prename descclassname"><span class="pre">pykt.models.evaluate_model.</span></span><span class="sig-name descname"><span class="pre">evaluate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_loader</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/pykt/models/evaluate_model.html#evaluate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.evaluate_model.evaluate" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pykt.models.evaluate_model.early_fusion">
+<span class="sig-prename descclassname"><span class="pre">pykt.models.evaluate_model.</span></span><span class="sig-name descname"><span class="pre">early_fusion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">curhs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/pykt/models/evaluate_model.html#early_fusion"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.evaluate_model.early_fusion" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pykt.models.evaluate_model.late_fusion">
+<span class="sig-prename descclassname"><span class="pre">pykt.models.evaluate_model.</span></span><span class="sig-name descname"><span class="pre">late_fusion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dcur</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">curdf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fusion_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">['mean',</span> <span class="pre">'vote',</span> <span class="pre">'all']</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/pykt/models/evaluate_model.html#late_fusion"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.evaluate_model.late_fusion" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pykt.models.evaluate_model.effective_fusion">
+<span class="sig-prename descclassname"><span class="pre">pykt.models.evaluate_model.</span></span><span class="sig-name descname"><span class="pre">effective_fusion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fusion_type</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/pykt/models/evaluate_model.html#effective_fusion"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.evaluate_model.effective_fusion" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pykt.models.evaluate_model.group_fusion">
+<span class="sig-prename descclassname"><span class="pre">pykt.models.evaluate_model.</span></span><span class="sig-name descname"><span class="pre">group_fusion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dmerge</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fusion_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fout</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/pykt/models/evaluate_model.html#group_fusion"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.evaluate_model.group_fusion" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pykt.models.evaluate_model.save_question_res">
+<span class="sig-prename descclassname"><span class="pre">pykt.models.evaluate_model.</span></span><span class="sig-name descname"><span class="pre">save_question_res</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dres</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fout</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">early</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/pykt/models/evaluate_model.html#save_question_res"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.evaluate_model.save_question_res" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pykt.models.evaluate_model.evaluate_question">
+<span class="sig-prename descclassname"><span class="pre">pykt.models.evaluate_model.</span></span><span class="sig-name descname"><span class="pre">evaluate_question</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_loader</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fusion_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">['early_fusion',</span> <span class="pre">'late_fusion']</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/pykt/models/evaluate_model.html#evaluate_question"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.evaluate_model.evaluate_question" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pykt.models.evaluate_model.log2">
+<span class="sig-prename descclassname"><span class="pre">pykt.models.evaluate_model.</span></span><span class="sig-name descname"><span class="pre">log2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/pykt/models/evaluate_model.html#log2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.evaluate_model.log2" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pykt.models.evaluate_model.calC">
+<span class="sig-prename descclassname"><span class="pre">pykt.models.evaluate_model.</span></span><span class="sig-name descname"><span class="pre">calC</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">row</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_config</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/pykt/models/evaluate_model.html#calC"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.evaluate_model.calC" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pykt.models.evaluate_model.get_info_dkt_forget">
+<span class="sig-prename descclassname"><span class="pre">pykt.models.evaluate_model.</span></span><span class="sig-name descname"><span class="pre">get_info_dkt_forget</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">row</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_config</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/pykt/models/evaluate_model.html#get_info_dkt_forget"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.evaluate_model.get_info_dkt_forget" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pykt.models.evaluate_model.evaluate_splitpred_question">
+<span class="sig-prename descclassname"><span class="pre">pykt.models.evaluate_model.</span></span><span class="sig-name descname"><span class="pre">evaluate_splitpred_question</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">testf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_pred</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_ratio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atkt_pad</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/pykt/models/evaluate_model.html#evaluate_splitpred_question"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.evaluate_model.evaluate_splitpred_question" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pykt.models.evaluate_model.get_cur_teststart">
+<span class="sig-prename descclassname"><span class="pre">pykt.models.evaluate_model.</span></span><span class="sig-name descname"><span class="pre">get_cur_teststart</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">is_repeat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_ratio</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/pykt/models/evaluate_model.html#get_cur_teststart"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.evaluate_model.get_cur_teststart" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pykt.models.evaluate_model.predict_each_group">
+<span class="sig-prename descclassname"><span class="pre">pykt.models.evaluate_model.</span></span><span class="sig-name descname"><span class="pre">predict_each_group</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">curdforget</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dforget</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_repeat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qidx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">curqin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">curcin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">currin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cq</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fout</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atkt_pad</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxlen</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">200</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/pykt/models/evaluate_model.html#predict_each_group"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.evaluate_model.predict_each_group" title="Permalink to this definition"></a></dt>
+<dd><p>use the predict result as next question input</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pykt.models.evaluate_model.save_each_question_res">
+<span class="sig-prename descclassname"><span class="pre">pykt.models.evaluate_model.</span></span><span class="sig-name descname"><span class="pre">save_each_question_res</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dcres</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dqres</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ctrues</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cpreds</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/pykt/models/evaluate_model.html#save_each_question_res"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.evaluate_model.save_each_question_res" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pykt.models.evaluate_model.cal_predres">
+<span class="sig-prename descclassname"><span class="pre">pykt.models.evaluate_model.</span></span><span class="sig-name descname"><span class="pre">cal_predres</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dcres</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dqres</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/pykt/models/evaluate_model.html#cal_predres"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.evaluate_model.cal_predres" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pykt.models.evaluate_model.prepare_data">
+<span class="sig-prename descclassname"><span class="pre">pykt.models.evaluate_model.</span></span><span class="sig-name descname"><span class="pre">prepare_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_repeat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qidx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">curqin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">curcin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">currin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">curdforget</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cq</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dforget</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxlen</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">200</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/pykt/models/evaluate_model.html#prepare_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.evaluate_model.prepare_data" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pykt.models.evaluate_model.predict_each_group2">
+<span class="sig-prename descclassname"><span class="pre">pykt.models.evaluate_model.</span></span><span class="sig-name descname"><span class="pre">predict_each_group2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">curdforget</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dforget</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_repeat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qidx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">curqin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">curcin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">currin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cq</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fout</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atkt_pad</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxlen</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">200</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/pykt/models/evaluate_model.html#predict_each_group2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.evaluate_model.predict_each_group2" title="Permalink to this definition"></a></dt>
+<dd><p>not use the predict result</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pykt.models.evaluate_model.save_currow_question_res">
+<span class="sig-prename descclassname"><span class="pre">pykt.models.evaluate_model.</span></span><span class="sig-name descname"><span class="pre">save_currow_question_res</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">idx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dcres</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dqres</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qidxs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ctrues</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cpreds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fout</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/pykt/models/evaluate_model.html#save_currow_question_res"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.evaluate_model.save_currow_question_res" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, pykt-team.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

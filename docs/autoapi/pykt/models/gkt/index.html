@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pykt.models.gkt &mdash; pykt-toolkit 0.0.3 documentation</title>
+      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/graphviz.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../../index.html" class="icon icon-home"> pykt-toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../index.html">API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">pykt-toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li><code class="xref py py-mod docutils literal notranslate"><span class="pre">pykt.models.gkt</span></code></li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../../_sources/autoapi/pykt/models/gkt/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-pykt.models.gkt">
+<span id="pykt-models-gkt"></span><h1><a class="reference internal" href="#module-pykt.models.gkt" title="pykt.models.gkt"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pykt.models.gkt</span></code></a><a class="headerlink" href="#module-pykt.models.gkt" title="Permalink to this headline"></a></h1>
+<section id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this headline"></a></h2>
+<section id="classes">
+<h3>Classes<a class="headerlink" href="#classes" title="Permalink to this headline"></a></h3>
+<table class="autosummary longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pykt.models.gkt.GKT" title="pykt.models.gkt.GKT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GKT</span></code></a></p></td>
+<td><p>Base class for all neural network modules.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pykt.models.gkt.MLP" title="pykt.models.gkt.MLP"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MLP</span></code></a></p></td>
+<td><p>Two-layer fully-connected ReLU net with batch norm.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pykt.models.gkt.EraseAddGate" title="pykt.models.gkt.EraseAddGate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">EraseAddGate</span></code></a></p></td>
+<td><p>Erase &amp; Add Gate module</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="attributes">
+<h3>Attributes<a class="headerlink" href="#attributes" title="Permalink to this headline"></a></h3>
+<table class="autosummary longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pykt.models.gkt.device" title="pykt.models.gkt.device"><code class="xref py py-obj docutils literal notranslate"><span class="pre">device</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py data">
+<dt class="sig sig-object py" id="pykt.models.gkt.device">
+<span class="sig-prename descclassname"><span class="pre">pykt.models.gkt.</span></span><span class="sig-name descname"><span class="pre">device</span></span><a class="reference internal" href="../../../../_modules/pykt/models/gkt.html#device"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.gkt.device" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pykt.models.gkt.GKT">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pykt.models.gkt.</span></span><span class="sig-name descname"><span class="pre">GKT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_c</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hidden_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">emb_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">graph_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'dense'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">graph</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">emb_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'qid'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">emb_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bias</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/pykt/models/gkt.html#GKT"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.gkt.GKT" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<p>Base class for all neural network modules.</p>
+<p>Your models should also subclass this class.</p>
+<p>Modules can also contain other Modules, allowing to nest them in
+a tree structure. You can assign the submodules as regular attributes:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">torch.nn</span> <span class="k">as</span> <span class="nn">nn</span>
+<span class="kn">import</span> <span class="nn">torch.nn.functional</span> <span class="k">as</span> <span class="nn">F</span>
+
+<span class="k">class</span> <span class="nc">Model</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">Model</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">conv1</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">conv2</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">conv1</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">F</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">conv2</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>Submodules assigned in this way will be registered, and will have their
+parameters converted too when you call <code class="xref py py-meth docutils literal notranslate"><span class="pre">to()</span></code>, etc.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables</dt>
+<dd class="field-odd"><p><strong>training</strong> (<em>bool</em>) – Boolean represents whether this module is in training or
+evaluation mode.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pykt.models.gkt.GKT._aggregate">
+<span class="sig-name descname"><span class="pre">_aggregate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ht</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/pykt/models/gkt.html#GKT._aggregate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.gkt.GKT._aggregate" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>xt</strong> – input one-hot question answering features at the current timestamp</p></li>
+<li><p><strong>qt</strong> – question indices for all students in a batch at the current timestamp</p></li>
+<li><p><strong>ht</strong> – hidden representations of all concepts at the current timestamp</p></li>
+<li><p><strong>batch_size</strong> – the size of a student batch</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="simple">
+<dt>Shape:</dt><dd><p>xt: [batch_size]
+qt: [batch_size]
+ht: [batch_size, num_c, hidden_dim]
+tmp_ht: [batch_size, num_c, hidden_dim + emb_size]</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>aggregation results of concept hidden knowledge state and concept(&amp; response) embedding</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>tmp_ht</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pykt.models.gkt.GKT._agg_neighbors">
+<span class="sig-name descname"><span class="pre">_agg_neighbors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tmp_ht</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qt</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/pykt/models/gkt.html#GKT._agg_neighbors"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.gkt.GKT._agg_neighbors" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tmp_ht</strong> – temporal hidden representations of all concepts after the aggregate step</p></li>
+<li><p><strong>qt</strong> – question indices for all students in a batch at the current timestamp</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="simple">
+<dt>Shape:</dt><dd><p>tmp_ht: [batch_size, num_c, hidden_dim + emb_size]
+qt: [batch_size]
+m_next: [batch_size, num_c, hidden_dim]</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>hidden representations of all concepts aggregating neighboring representations at the next timestamp
+concept_embedding: input of VAE (optional)
+rec_embedding: reconstructed input of VAE (optional)
+z_prob: probability distribution of latent variable z in VAE (optional)</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>m_next</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pykt.models.gkt.GKT._update">
+<span class="sig-name descname"><span class="pre">_update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tmp_ht</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ht</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qt</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/pykt/models/gkt.html#GKT._update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.gkt.GKT._update" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tmp_ht</strong> – temporal hidden representations of all concepts after the aggregate step</p></li>
+<li><p><strong>ht</strong> – hidden representations of all concepts at the current timestamp</p></li>
+<li><p><strong>qt</strong> – question indices for all students in a batch at the current timestamp</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="simple">
+<dt>Shape:</dt><dd><p>tmp_ht: [batch_size, num_c, hidden_dim + emb_size]
+ht: [batch_size, num_c, hidden_dim]
+qt: [batch_size]
+h_next: [batch_size, num_c, hidden_dim]</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>hidden representations of all concepts at the next timestamp
+concept_embedding: input of VAE (optional)
+rec_embedding: reconstructed input of VAE (optional)
+z_prob: probability distribution of latent variable z in VAE (optional)</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>h_next</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pykt.models.gkt.GKT._predict">
+<span class="sig-name descname"><span class="pre">_predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h_next</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qt</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/pykt/models/gkt.html#GKT._predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.gkt.GKT._predict" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>h_next</strong> – hidden representations of all concepts at the next timestamp after the update step</p></li>
+<li><p><strong>qt</strong> – question indices for all students in a batch at the current timestamp</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="simple">
+<dt>Shape:</dt><dd><p>h_next: [batch_size, num_c, hidden_dim]
+qt: [batch_size]
+y: [batch_size, num_c]</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>predicted correct probability of all concepts at the next timestamp</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>y</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pykt.models.gkt.GKT._get_next_pred">
+<span class="sig-name descname"><span class="pre">_get_next_pred</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">yt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q_next</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/pykt/models/gkt.html#GKT._get_next_pred"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.gkt.GKT._get_next_pred" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>yt</strong> – predicted correct probability of all concepts at the next timestamp</p></li>
+<li><p><strong>q_next</strong> – question index matrix at the next timestamp</p></li>
+<li><p><strong>batch_size</strong> – the size of a student batch</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="simple">
+<dt>Shape:</dt><dd><p>y: [batch_size, num_c]
+questions: [batch_size, seq_len]
+pred: [batch_size, ]</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>predicted correct probability of the question answered at the next timestamp</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>pred</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pykt.models.gkt.GKT.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/pykt/models/gkt.html#GKT.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.gkt.GKT.forward" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>features</strong> – input one-hot matrix, is skill_with_answer</p></li>
+<li><p><strong>questions</strong> – question index matrix</p></li>
+</ul>
+</dd>
+</dl>
+<p>seq_len dimension needs padding, because different students may have learning sequences with different lengths.
+Shape:</p>
+<blockquote>
+<div><p>features: [batch_size, seq_len]
+questions: [batch_size, seq_len]
+pred_res: [batch_size, seq_len - 1]</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the correct probability of questions answered at the next timestamp
+concept_embedding: input of VAE (optional)
+rec_embedding: reconstructed input of VAE (optional)
+z_prob: probability distribution of latent variable z in VAE (optional)</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>pred_res</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pykt.models.gkt.MLP">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pykt.models.gkt.</span></span><span class="sig-name descname"><span class="pre">MLP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hidden_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bias</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/pykt/models/gkt.html#MLP"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.gkt.MLP" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<p>Two-layer fully-connected ReLU net with batch norm.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pykt.models.gkt.MLP.init_weights">
+<span class="sig-name descname"><span class="pre">init_weights</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/pykt/models/gkt.html#MLP.init_weights"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.gkt.MLP.init_weights" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pykt.models.gkt.MLP.batch_norm">
+<span class="sig-name descname"><span class="pre">batch_norm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/pykt/models/gkt.html#MLP.batch_norm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.gkt.MLP.batch_norm" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pykt.models.gkt.MLP.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/pykt/models/gkt.html#MLP.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.gkt.MLP.forward" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pykt.models.gkt.EraseAddGate">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pykt.models.gkt.</span></span><span class="sig-name descname"><span class="pre">EraseAddGate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">feature_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_c</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bias</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/pykt/models/gkt.html#EraseAddGate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.gkt.EraseAddGate" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<p>Erase &amp; Add Gate module
+NOTE: this erase &amp; add gate is a bit different from that in DKVMN.
+For more information about Erase &amp; Add gate, please refer to the paper “Dynamic Key-Value Memory Networks for Knowledge Tracing”
+The paper can be found in <a class="reference external" href="https://arxiv.org/abs/1611.08108">https://arxiv.org/abs/1611.08108</a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pykt.models.gkt.EraseAddGate.reset_parameters">
+<span class="sig-name descname"><span class="pre">reset_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/pykt/models/gkt.html#EraseAddGate.reset_parameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.gkt.EraseAddGate.reset_parameters" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pykt.models.gkt.EraseAddGate.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/pykt/models/gkt.html#EraseAddGate.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.gkt.EraseAddGate.forward" title="Permalink to this definition"></a></dt>
+<dd><dl class="simple">
+<dt>Params:</dt><dd><p>x: input feature matrix</p>
+</dd>
+<dt>Shape:</dt><dd><p>x: [batch_size, num_c, feature_dim]
+res: [batch_size, num_c, feature_dim]</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>returned feature matrix with old information erased and new information added</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>res</p>
+</dd>
+</dl>
+<p>The GKT paper didn’t provide detailed explanation about this erase-add gate. As the erase-add gate in the GKT only has one input parameter,
+this gate is different with that of the DKVMN. We used the input matrix to build the erase and add gates, rather than $mathbf{v}_{t}$ vector in the DKVMN.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, pykt-team.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

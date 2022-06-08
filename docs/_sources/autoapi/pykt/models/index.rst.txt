@@ -1,0 +1,27 @@
+:py:mod:`pykt.models`
+=====================
+
+.. py:module:: pykt.models
+
+
+Submodules
+----------
+.. toctree::
+   :titlesonly:
+   :maxdepth: 1
+
+   akt/index.rst
+   atkt/index.rst
+   dkt/index.rst
+   dkt_forget/index.rst
+   dkt_plus/index.rst
+   dkvmn/index.rst
+   evaluate_model/index.rst
+   gkt/index.rst
+   kqn/index.rst
+   saint/index.rst
+   sakt/index.rst
+   train_model/index.rst
+   utils/index.rst
+
+

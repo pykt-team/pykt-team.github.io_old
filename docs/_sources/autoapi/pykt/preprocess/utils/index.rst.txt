@@ -1,0 +1,34 @@
+:py:mod:`pykt.preprocess.utils`
+===============================
+
+.. py:module:: pykt.preprocess.utils
+
+
+Module Contents
+---------------
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   pykt.preprocess.utils.sta_infos
+   pykt.preprocess.utils.write_txt
+   pykt.preprocess.utils.change2timestamp
+   pykt.preprocess.utils.replace_text
+
+
+
+.. py:function:: sta_infos(df, keys, stares, split_str='_')
+
+
+.. py:function:: write_txt(file, data)
+
+
+.. py:function:: change2timestamp(t, hasf=True)
+
+
+.. py:function:: replace_text(text)
+
+

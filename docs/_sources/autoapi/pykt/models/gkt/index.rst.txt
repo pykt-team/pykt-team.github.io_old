@@ -1,0 +1,203 @@
+:py:mod:`pykt.models.gkt`
+=========================
+
+.. py:module:: pykt.models.gkt
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   pykt.models.gkt.GKT
+   pykt.models.gkt.MLP
+   pykt.models.gkt.EraseAddGate
+
+
+
+
+Attributes
+~~~~~~~~~~
+
+.. autoapisummary::
+
+   pykt.models.gkt.device
+
+
+.. py:data:: device
+   
+
+   
+
+.. py:class:: GKT(num_c, hidden_dim, emb_size, graph_type='dense', graph=None, dropout=0.5, emb_type='qid', emb_path='', bias=True)
+
+   Bases: :py:obj:`torch.nn.Module`
+
+   Base class for all neural network modules.
+
+   Your models should also subclass this class.
+
+   Modules can also contain other Modules, allowing to nest them in
+   a tree structure. You can assign the submodules as regular attributes::
+
+       import torch.nn as nn
+       import torch.nn.functional as F
+
+       class Model(nn.Module):
+           def __init__(self):
+               super(Model, self).__init__()
+               self.conv1 = nn.Conv2d(1, 20, 5)
+               self.conv2 = nn.Conv2d(20, 20, 5)
+
+           def forward(self, x):
+               x = F.relu(self.conv1(x))
+               return F.relu(self.conv2(x))
+
+   Submodules assigned in this way will be registered, and will have their
+   parameters converted too when you call :meth:`to`, etc.
+
+   :ivar training: Boolean represents whether this module is in training or
+                   evaluation mode.
+   :vartype training: bool
+
+   .. py:method:: _aggregate(self, xt, qt, ht, batch_size)
+
+      :param xt: input one-hot question answering features at the current timestamp
+      :param qt: question indices for all students in a batch at the current timestamp
+      :param ht: hidden representations of all concepts at the current timestamp
+      :param batch_size: the size of a student batch
+
+      Shape:
+          xt: [batch_size]
+          qt: [batch_size]
+          ht: [batch_size, num_c, hidden_dim]
+          tmp_ht: [batch_size, num_c, hidden_dim + emb_size]
+      :returns: aggregation results of concept hidden knowledge state and concept(& response) embedding
+      :rtype: tmp_ht
+
+
+   .. py:method:: _agg_neighbors(self, tmp_ht, qt)
+
+      :param tmp_ht: temporal hidden representations of all concepts after the aggregate step
+      :param qt: question indices for all students in a batch at the current timestamp
+
+      Shape:
+          tmp_ht: [batch_size, num_c, hidden_dim + emb_size]
+          qt: [batch_size]
+          m_next: [batch_size, num_c, hidden_dim]
+      :returns: hidden representations of all concepts aggregating neighboring representations at the next timestamp
+                concept_embedding: input of VAE (optional)
+                rec_embedding: reconstructed input of VAE (optional)
+                z_prob: probability distribution of latent variable z in VAE (optional)
+      :rtype: m_next
+
+
+   .. py:method:: _update(self, tmp_ht, ht, qt)
+
+      :param tmp_ht: temporal hidden representations of all concepts after the aggregate step
+      :param ht: hidden representations of all concepts at the current timestamp
+      :param qt: question indices for all students in a batch at the current timestamp
+
+      Shape:
+          tmp_ht: [batch_size, num_c, hidden_dim + emb_size]
+          ht: [batch_size, num_c, hidden_dim]
+          qt: [batch_size]
+          h_next: [batch_size, num_c, hidden_dim]
+      :returns: hidden representations of all concepts at the next timestamp
+                concept_embedding: input of VAE (optional)
+                rec_embedding: reconstructed input of VAE (optional)
+                z_prob: probability distribution of latent variable z in VAE (optional)
+      :rtype: h_next
+
+
+   .. py:method:: _predict(self, h_next, qt)
+
+      :param h_next: hidden representations of all concepts at the next timestamp after the update step
+      :param qt: question indices for all students in a batch at the current timestamp
+
+      Shape:
+          h_next: [batch_size, num_c, hidden_dim]
+          qt: [batch_size]
+          y: [batch_size, num_c]
+      :returns: predicted correct probability of all concepts at the next timestamp
+      :rtype: y
+
+
+   .. py:method:: _get_next_pred(self, yt, q_next)
+
+      :param yt: predicted correct probability of all concepts at the next timestamp
+      :param q_next: question index matrix at the next timestamp
+      :param batch_size: the size of a student batch
+
+      Shape:
+          y: [batch_size, num_c]
+          questions: [batch_size, seq_len]
+          pred: [batch_size, ]
+      :returns: predicted correct probability of the question answered at the next timestamp
+      :rtype: pred
+
+
+   .. py:method:: forward(self, q, r)
+
+      :param features: input one-hot matrix, is skill_with_answer
+      :param questions: question index matrix
+
+      seq_len dimension needs padding, because different students may have learning sequences with different lengths.
+      Shape:
+          features: [batch_size, seq_len]
+          questions: [batch_size, seq_len]
+          pred_res: [batch_size, seq_len - 1]
+      :returns: the correct probability of questions answered at the next timestamp
+                concept_embedding: input of VAE (optional)
+                rec_embedding: reconstructed input of VAE (optional)
+                z_prob: probability distribution of latent variable z in VAE (optional)
+      :rtype: pred_res
+
+
+
+.. py:class:: MLP(input_dim, hidden_dim, output_dim, dropout=0.0, bias=True)
+
+   Bases: :py:obj:`torch.nn.Module`
+
+   Two-layer fully-connected ReLU net with batch norm.
+
+   .. py:method:: init_weights(self)
+
+
+   .. py:method:: batch_norm(self, inputs)
+
+
+   .. py:method:: forward(self, inputs)
+
+
+
+.. py:class:: EraseAddGate(feature_dim, num_c, bias=True)
+
+   Bases: :py:obj:`torch.nn.Module`
+
+   Erase & Add Gate module
+   NOTE: this erase & add gate is a bit different from that in DKVMN.
+   For more information about Erase & Add gate, please refer to the paper "Dynamic Key-Value Memory Networks for Knowledge Tracing"
+   The paper can be found in https://arxiv.org/abs/1611.08108
+
+   .. py:method:: reset_parameters(self)
+
+
+   .. py:method:: forward(self, x)
+
+      Params:
+          x: input feature matrix
+      Shape:
+          x: [batch_size, num_c, feature_dim]
+          res: [batch_size, num_c, feature_dim]
+      :returns: returned feature matrix with old information erased and new information added
+      :rtype: res
+
+      The GKT paper didn't provide detailed explanation about this erase-add gate. As the erase-add gate in the GKT only has one input parameter,
+      this gate is different with that of the DKVMN. We used the input matrix to build the erase and add gates, rather than $\mathbf{v}_{t}$ vector in the DKVMN.
+
+
+

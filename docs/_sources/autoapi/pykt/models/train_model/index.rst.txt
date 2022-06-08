@@ -1,0 +1,43 @@
+:py:mod:`pykt.models.train_model`
+=================================
+
+.. py:module:: pykt.models.train_model
+
+
+Module Contents
+---------------
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   pykt.models.train_model.cal_loss
+   pykt.models.train_model.model_forward
+   pykt.models.train_model.train_model
+
+
+
+Attributes
+~~~~~~~~~~
+
+.. autoapisummary::
+
+   pykt.models.train_model.device
+
+
+.. py:data:: device
+   
+
+   
+
+.. py:function:: cal_loss(model, ys, r, rshft, sm, preloss=[])
+
+
+.. py:function:: model_forward(model, data)
+
+
+.. py:function:: train_model(model, train_loader, valid_loader, num_epochs, opt, ckpt_path, test_loader=None, test_window_loader=None, save_model=False)
+
+
