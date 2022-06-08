@@ -3,10 +3,9 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>pykt.models.kqn &mdash; pykt-toolkit 0.0.3 documentation</title>
+  <title>pykt.models.kqn &mdash; pykt-toolkit 0.0.32 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -14,6 +13,7 @@
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -35,9 +35,16 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Home:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../autoapi/index.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../quick_start_cn.html">Quick Start (cn)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../pykt.models.html">Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../pykt.datasets.html">Datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../pykt.preprocess.html">Data Preprocess</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../pykt.utils.html">Utils</a></li>
 </ul>
 
         </div>
@@ -70,9 +77,9 @@
 <span class="kn">import</span> <span class="nn">torch.nn.functional</span> <span class="k">as</span> <span class="nn">F</span>
 <span class="kn">from</span> <span class="nn">torch.autograd</span> <span class="kn">import</span> <span class="n">Variable</span>
 
-<div class="viewcode-block" id="device"><a class="viewcode-back" href="../../../autoapi/pykt/models/kqn/index.html#pykt.models.kqn.device">[docs]</a><span class="n">device</span> <span class="o">=</span> <span class="s2">&quot;cpu&quot;</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="k">else</span> <span class="s2">&quot;cuda&quot;</span></div>
+<span class="n">device</span> <span class="o">=</span> <span class="s2">&quot;cpu&quot;</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="k">else</span> <span class="s2">&quot;cuda&quot;</span>
 
-<div class="viewcode-block" id="KQN"><a class="viewcode-back" href="../../../autoapi/pykt/models/kqn/index.html#pykt.models.kqn.KQN">[docs]</a><span class="k">class</span> <span class="nc">KQN</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<div class="viewcode-block" id="KQN"><a class="viewcode-back" href="../../../pykt.models.html#pykt.models.kqn.KQN">[docs]</a><span class="k">class</span> <span class="nc">KQN</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
     <span class="c1"># n_skills: number of skills in dataset</span>
     <span class="c1"># n_hidden: dimensionality of skill and knowledge state vectors</span>
     <span class="c1"># n_rnn_hidden: number of hidden units in rnn knowledge encoder</span>
@@ -122,7 +129,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">eye</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">n_skills</span><span class="p">)</span>
 
     
-<div class="viewcode-block" id="KQN.init_hidden"><a class="viewcode-back" href="../../../autoapi/pykt/models/kqn/index.html#pykt.models.kqn.KQN.init_hidden">[docs]</a>    <span class="k">def</span> <span class="nf">init_hidden</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<div class="viewcode-block" id="KQN.init_hidden"><a class="viewcode-back" href="../../../pykt.models.html#pykt.models.kqn.KQN.init_hidden">[docs]</a>    <span class="k">def</span> <span class="nf">init_hidden</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
         <span class="n">weight</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">())</span><span class="o">.</span><span class="n">data</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">rnn_type</span> <span class="o">==</span> <span class="s1">&#39;lstm&#39;</span><span class="p">:</span>
             <span class="k">return</span> <span class="p">(</span><span class="n">Variable</span><span class="p">(</span><span class="n">weight</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_rnn_layers</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_rnn_hidden</span><span class="p">)</span><span class="o">.</span><span class="n">zero_</span><span class="p">()),</span>
@@ -131,7 +138,7 @@
             <span class="k">return</span> <span class="n">Variable</span><span class="p">(</span><span class="n">weight</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_rnn_layers</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_rnn_hidden</span><span class="p">)</span><span class="o">.</span><span class="n">zero_</span><span class="p">())</span></div>
     
     
-<div class="viewcode-block" id="KQN.forward"><a class="viewcode-back" href="../../../autoapi/pykt/models/kqn/index.html#pykt.models.kqn.KQN.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">qshft</span><span class="p">,</span> <span class="n">qtest</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="KQN.forward"><a class="viewcode-back" href="../../../pykt.models.html#pykt.models.kqn.KQN.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">qshft</span><span class="p">,</span> <span class="n">qtest</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="n">in_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">two_eye</span><span class="p">[</span><span class="n">r</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_c</span> <span class="o">+</span> <span class="n">q</span><span class="p">]</span>
         <span class="n">next_skills</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">eye</span><span class="p">[</span><span class="n">qshft</span><span class="p">]</span>
         <span class="c1"># print(f&quot;q: {q.tolist()}, r: {r.tolist()}&quot;)</span>
@@ -154,7 +161,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">logits</span><span class="p">,</span> <span class="n">encoded_knowledge</span><span class="p">,</span> <span class="n">encoded_skills</span></div>
 
-<div class="viewcode-block" id="KQN.encode_knowledge"><a class="viewcode-back" href="../../../autoapi/pykt/models/kqn/index.html#pykt.models.kqn.KQN.encode_knowledge">[docs]</a>    <span class="k">def</span> <span class="nf">encode_knowledge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">in_data</span><span class="p">):</span>
+<div class="viewcode-block" id="KQN.encode_knowledge"><a class="viewcode-back" href="../../../pykt.models.html#pykt.models.kqn.KQN.encode_knowledge">[docs]</a>    <span class="k">def</span> <span class="nf">encode_knowledge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">in_data</span><span class="p">):</span>
         <span class="n">batch_size</span> <span class="o">=</span> <span class="n">in_data</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">hidden</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">init_hidden</span><span class="p">(</span><span class="n">batch_size</span><span class="p">)</span>
         
@@ -164,7 +171,7 @@
         <span class="n">encoded_knowledge</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">linear</span><span class="p">(</span><span class="n">rnn_output</span><span class="p">)</span> <span class="c1"># (batch_size, max_seq_len, n_hidden)</span>
         <span class="k">return</span> <span class="n">encoded_knowledge</span></div>
     
-<div class="viewcode-block" id="KQN.encode_skills"><a class="viewcode-back" href="../../../autoapi/pykt/models/kqn/index.html#pykt.models.kqn.KQN.encode_skills">[docs]</a>    <span class="k">def</span> <span class="nf">encode_skills</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">next_skills</span><span class="p">):</span>
+<div class="viewcode-block" id="KQN.encode_skills"><a class="viewcode-back" href="../../../pykt.models.html#pykt.models.kqn.KQN.encode_skills">[docs]</a>    <span class="k">def</span> <span class="nf">encode_skills</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">next_skills</span><span class="p">):</span>
         <span class="n">encoded_skills</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">skill_encoder</span><span class="p">(</span><span class="n">next_skills</span><span class="p">)</span> <span class="c1"># (batch_size, max_seq_len, n_hidden)</span>
         <span class="n">encoded_skills</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">normalize</span><span class="p">(</span><span class="n">encoded_skills</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span> <span class="c1"># L2-normalize</span>
         <span class="k">return</span> <span class="n">encoded_skills</span></div></div>

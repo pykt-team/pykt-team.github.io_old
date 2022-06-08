@@ -1,13 +1,11 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
+  <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Welcome to pykt-toolkit’s documentation! &mdash; pykt-toolkit 0.0.3 documentation</title>
+  <title>Welcome to Pykt’s documentation! &mdash; pykt-toolkit 0.0.32 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -15,10 +13,12 @@
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Search" href="search.html" /> 
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="KT Toolkits" href="quick_start_cn.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -26,7 +26,7 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="/index" class="icon icon-home"> pykt-toolkit
+            <a href="#" class="icon icon-home"> pykt-toolkit
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -36,9 +36,16 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Home:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="autoapi/index.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quick_start_cn.html">Quick Start (cn)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="pykt.models.html">Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pykt.datasets.html">Datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pykt.preprocess.html">Data Preprocess</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pykt.utils.html">Utils</a></li>
 </ul>
 
         </div>
@@ -55,7 +62,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="#" class="icon icon-home"></a> &raquo;</li>
-      <li>Welcome to pykt-toolkit’s documentation!</li>
+      <li>Welcome to Pykt’s documentation!</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -65,31 +72,52 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="welcome-to-pykt-toolkit-s-documentation">
-<h1>Welcome to pykt-toolkit’s documentation!<a class="headerlink" href="#welcome-to-pykt-toolkit-s-documentation" title="Permalink to this headline"></a></h1>
+  <div class="section" id="welcome-to-pykt-s-documentation">
+<h1>Welcome to Pykt’s documentation!<a class="headerlink" href="#welcome-to-pykt-s-documentation" title="Permalink to this heading"></a></h1>
+<p>PyKT is a python library build upon PyTorch to train deep learning based knowledge tracing models. The library consists of a standardized set of integrated data preprocessing procedures on 7 popular datasets across different domains, 5 detailed prediction scenarios, 10 frequently compared DLKT approaches for transparent and extensive experiments. Let’s <a class="reference external" href="./quick_start.html">Get Started!</a></p>
+<div class="section" id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this heading"></a></h2>
+<p>To use pykt, first install it using pip:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>pip install pykt-toolkit
+</pre></div>
+</div>
 <div class="toctree-wrapper compound">
-<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<p class="caption" role="heading"><span class="caption-text">Home:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="autoapi/index.html">API Reference</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="autoapi/pykt/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pykt</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="quick_start_cn.html">Quick Start (cn)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="quick_start_cn.html#id1">1. 生成训练数据</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quick_start_cn.html#id14">2. 模型调优</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quick_start_cn.html#id19">参考</a></li>
 </ul>
 </li>
 </ul>
 </div>
-</section>
-<section id="indices-and-tables">
-<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline"></a></h1>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">API:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="pykt.models.html">Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pykt.datasets.html">Datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pykt.preprocess.html">Data Preprocess</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pykt.utils.html">Utils</a></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="section" id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this heading"></a></h1>
 <ul class="simple">
 <li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
 <li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
 <li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
 </ul>
-</section>
+</div>
 
 
            </div>
           </div>
-          <footer>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="quick_start_cn.html" class="btn btn-neutral float-right" title="KT Toolkits" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
 
   <hr/>
 

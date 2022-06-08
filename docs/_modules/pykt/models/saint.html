@@ -3,10 +3,9 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>pykt.models.saint &mdash; pykt-toolkit 0.0.3 documentation</title>
+  <title>pykt.models.saint &mdash; pykt-toolkit 0.0.32 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -14,6 +13,7 @@
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -35,9 +35,16 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Home:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../autoapi/index.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../quick_start_cn.html">Quick Start (cn)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../pykt.models.html">Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../pykt.datasets.html">Datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../pykt.preprocess.html">Data Preprocess</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../pykt.utils.html">Utils</a></li>
 </ul>
 
         </div>
@@ -69,12 +76,12 @@
 <span class="kn">import</span> <span class="nn">torch.nn</span> <span class="k">as</span> <span class="nn">nn</span>
 <span class="kn">from</span> <span class="nn">torch.nn</span> <span class="kn">import</span> <span class="n">Dropout</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="kn">from</span> <span class="nn">models.utils</span> <span class="kn">import</span> <span class="n">transformer_FFN</span><span class="p">,</span> <span class="n">get_clones</span><span class="p">,</span> <span class="n">ut_mask</span><span class="p">,</span> <span class="n">pos_encode</span>
+<span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="n">transformer_FFN</span><span class="p">,</span> <span class="n">get_clones</span><span class="p">,</span> <span class="n">ut_mask</span><span class="p">,</span> <span class="n">pos_encode</span>
 <span class="kn">from</span> <span class="nn">torch.nn</span> <span class="kn">import</span> <span class="n">Embedding</span><span class="p">,</span> <span class="n">Linear</span>
 
-<div class="viewcode-block" id="device"><a class="viewcode-back" href="../../../autoapi/pykt/models/saint/index.html#pykt.models.saint.device">[docs]</a><span class="n">device</span> <span class="o">=</span> <span class="s2">&quot;cpu&quot;</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="k">else</span> <span class="s2">&quot;cuda&quot;</span></div>
+<span class="n">device</span> <span class="o">=</span> <span class="s2">&quot;cpu&quot;</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="k">else</span> <span class="s2">&quot;cuda&quot;</span>
 
-<div class="viewcode-block" id="SAINT"><a class="viewcode-back" href="../../../autoapi/pykt/models/saint/index.html#pykt.models.saint.SAINT">[docs]</a><span class="k">class</span> <span class="nc">SAINT</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<div class="viewcode-block" id="SAINT"><a class="viewcode-back" href="../../../pykt.models.html#pykt.models.saint.SAINT">[docs]</a><span class="k">class</span> <span class="nc">SAINT</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_q</span><span class="p">,</span> <span class="n">num_c</span><span class="p">,</span> <span class="n">seq_len</span><span class="p">,</span> <span class="n">emb_size</span><span class="p">,</span> <span class="n">num_attn_heads</span><span class="p">,</span> <span class="n">dropout</span><span class="p">,</span> <span class="n">n_blocks</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">emb_type</span><span class="o">=</span><span class="s2">&quot;qid&quot;</span><span class="p">,</span> <span class="n">emb_path</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">pretrain_dim</span><span class="o">=</span><span class="mi">768</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;num_q: </span><span class="si">{</span><span class="n">num_q</span><span class="si">}</span><span class="s2">, num_c: </span><span class="si">{</span><span class="n">num_c</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
@@ -99,7 +106,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">dropout</span> <span class="o">=</span> <span class="n">Dropout</span><span class="p">(</span><span class="n">dropout</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">out</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">in_features</span><span class="o">=</span><span class="n">emb_size</span><span class="p">,</span> <span class="n">out_features</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
     
-<div class="viewcode-block" id="SAINT.forward"><a class="viewcode-back" href="../../../autoapi/pykt/models/saint/index.html#pykt.models.saint.SAINT.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">in_ex</span><span class="p">,</span> <span class="n">in_cat</span><span class="p">,</span> <span class="n">in_res</span><span class="p">,</span> <span class="n">qtest</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="SAINT.forward"><a class="viewcode-back" href="../../../pykt.models.html#pykt.models.saint.SAINT.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">in_ex</span><span class="p">,</span> <span class="n">in_cat</span><span class="p">,</span> <span class="n">in_res</span><span class="p">,</span> <span class="n">qtest</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="n">emb_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">emb_type</span>        
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_q</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
@@ -136,7 +143,7 @@
             <span class="k">return</span> <span class="n">res</span><span class="p">,</span> <span class="n">in_res</span></div></div>
 
 
-<div class="viewcode-block" id="Encoder_block"><a class="viewcode-back" href="../../../autoapi/pykt/models/saint/index.html#pykt.models.saint.Encoder_block">[docs]</a><span class="k">class</span> <span class="nc">Encoder_block</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<div class="viewcode-block" id="Encoder_block"><a class="viewcode-back" href="../../../pykt.models.html#pykt.models.saint.Encoder_block">[docs]</a><span class="k">class</span> <span class="nc">Encoder_block</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    M = SkipConct(Multihead(LayerNorm(Qin;Kin;Vin)))</span>
 <span class="sd">    O = SkipConct(FFN(LayerNorm(M)))</span>
@@ -167,7 +174,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">layer_norm2</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">LayerNorm</span><span class="p">(</span><span class="n">dim_model</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">dropout2</span> <span class="o">=</span> <span class="n">Dropout</span><span class="p">(</span><span class="n">dropout</span><span class="p">)</span>
 
-<div class="viewcode-block" id="Encoder_block.forward"><a class="viewcode-back" href="../../../autoapi/pykt/models/saint/index.html#pykt.models.saint.Encoder_block.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">in_ex</span><span class="p">,</span> <span class="n">in_cat</span><span class="p">,</span> <span class="n">in_pos</span><span class="p">,</span> <span class="n">first_block</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="Encoder_block.forward"><a class="viewcode-back" href="../../../pykt.models.html#pykt.models.saint.Encoder_block.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">in_ex</span><span class="p">,</span> <span class="n">in_cat</span><span class="p">,</span> <span class="n">in_pos</span><span class="p">,</span> <span class="n">first_block</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 
         <span class="c1">## todo create a positional encoding (two options numeric, sine)</span>
         <span class="k">if</span> <span class="n">first_block</span><span class="p">:</span>
@@ -215,7 +222,7 @@
         <span class="k">return</span> <span class="n">out</span></div></div>
 
 
-<div class="viewcode-block" id="Decoder_block"><a class="viewcode-back" href="../../../autoapi/pykt/models/saint/index.html#pykt.models.saint.Decoder_block">[docs]</a><span class="k">class</span> <span class="nc">Decoder_block</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<div class="viewcode-block" id="Decoder_block"><a class="viewcode-back" href="../../../pykt.models.html#pykt.models.saint.Decoder_block">[docs]</a><span class="k">class</span> <span class="nc">Decoder_block</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    M1 = SkipConct(Multihead(LayerNorm(Qin;Kin;Vin)))</span>
 <span class="sd">    M2 = SkipConct(Multihead(LayerNorm(M1;O;O)))</span>
@@ -240,7 +247,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">dropout3</span> <span class="o">=</span> <span class="n">Dropout</span><span class="p">(</span><span class="n">dropout</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="Decoder_block.forward"><a class="viewcode-back" href="../../../autoapi/pykt/models/saint/index.html#pykt.models.saint.Decoder_block.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">in_res</span><span class="p">,</span> <span class="n">in_pos</span><span class="p">,</span> <span class="n">en_out</span><span class="p">,</span><span class="n">first_block</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="Decoder_block.forward"><a class="viewcode-back" href="../../../pykt.models.html#pykt.models.saint.Decoder_block.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">in_res</span><span class="p">,</span> <span class="n">in_pos</span><span class="p">,</span> <span class="n">en_out</span><span class="p">,</span><span class="n">first_block</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 
          <span class="c1">## todo create a positional encoding (two options numeric, sine)</span>
         <span class="k">if</span> <span class="n">first_block</span><span class="p">:</span>

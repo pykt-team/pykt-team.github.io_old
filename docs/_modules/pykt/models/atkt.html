@@ -3,10 +3,9 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>pykt.models.atkt &mdash; pykt-toolkit 0.0.3 documentation</title>
+  <title>pykt.models.atkt &mdash; pykt-toolkit 0.0.32 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -14,6 +13,7 @@
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -35,9 +35,16 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Home:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../autoapi/index.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../quick_start_cn.html">Quick Start (cn)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../pykt.models.html">Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../pykt.datasets.html">Datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../pykt.preprocess.html">Data Preprocess</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../pykt.utils.html">Utils</a></li>
 </ul>
 
         </div>
@@ -70,11 +77,11 @@
 <span class="kn">import</span> <span class="nn">torch.nn</span> <span class="k">as</span> <span class="nn">nn</span>
 <span class="kn">from</span> <span class="nn">torch.autograd</span> <span class="kn">import</span> <span class="n">Variable</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">models.utils</span> <span class="kn">import</span> <span class="n">ut_mask</span>
+<span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="n">ut_mask</span>
 
-<div class="viewcode-block" id="device"><a class="viewcode-back" href="../../../autoapi/pykt/models/atkt/index.html#pykt.models.atkt.device">[docs]</a><span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">&quot;cuda&quot;</span> <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="k">else</span> <span class="s2">&quot;cpu&quot;</span><span class="p">)</span></div>
+<span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">&quot;cuda&quot;</span> <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="k">else</span> <span class="s2">&quot;cpu&quot;</span><span class="p">)</span>
 
-<div class="viewcode-block" id="ATKT"><a class="viewcode-back" href="../../../autoapi/pykt/models/atkt/index.html#pykt.models.atkt.ATKT">[docs]</a><span class="k">class</span> <span class="nc">ATKT</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<div class="viewcode-block" id="ATKT"><a class="viewcode-back" href="../../../pykt.models.html#pykt.models.atkt.ATKT">[docs]</a><span class="k">class</span> <span class="nc">ATKT</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_c</span><span class="p">,</span> <span class="n">skill_dim</span><span class="p">,</span> <span class="n">answer_dim</span><span class="p">,</span> <span class="n">hidden_dim</span><span class="p">,</span> <span class="n">attention_dim</span><span class="o">=</span><span class="mi">80</span><span class="p">,</span> <span class="n">epsilon</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">beta</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">dropout</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">emb_type</span><span class="o">=</span><span class="s2">&quot;qid&quot;</span><span class="p">,</span> <span class="n">emb_path</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">fix</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">ATKT</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span> <span class="o">=</span> <span class="s2">&quot;atkt&quot;</span>
@@ -105,7 +112,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">similarity</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">attention_dim</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
     
-<div class="viewcode-block" id="ATKT.attention_module"><a class="viewcode-back" href="../../../autoapi/pykt/models/atkt/index.html#pykt.models.atkt.ATKT.attention_module">[docs]</a>    <span class="k">def</span> <span class="nf">attention_module</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lstm_output</span><span class="p">):</span>
+<div class="viewcode-block" id="ATKT.attention_module"><a class="viewcode-back" href="../../../pykt.models.html#pykt.models.atkt.ATKT.attention_module">[docs]</a>    <span class="k">def</span> <span class="nf">attention_module</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lstm_output</span><span class="p">):</span>
         <span class="c1"># lstm_output = lstm_output[0:1, :, :]</span>
         <span class="c1"># print(f&quot;lstm_output: {lstm_output.shape}&quot;)</span>
         <span class="n">att_w</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mlp</span><span class="p">(</span><span class="n">lstm_output</span><span class="p">)</span>
@@ -139,7 +146,7 @@
         <span class="k">return</span> <span class="n">final_output</span></div>
 
 
-<div class="viewcode-block" id="ATKT.forward"><a class="viewcode-back" href="../../../autoapi/pykt/models/atkt/index.html#pykt.models.atkt.ATKT.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">skill</span><span class="p">,</span> <span class="n">answer</span><span class="p">,</span> <span class="n">perturbation</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="ATKT.forward"><a class="viewcode-back" href="../../../pykt.models.html#pykt.models.atkt.ATKT.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">skill</span><span class="p">,</span> <span class="n">answer</span><span class="p">,</span> <span class="n">perturbation</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="n">emb_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">emb_type</span>
         <span class="n">r</span> <span class="o">=</span> <span class="n">answer</span>
         
@@ -172,13 +179,13 @@
 
 <span class="kn">from</span> <span class="nn">torch.autograd</span> <span class="kn">import</span> <span class="n">Variable</span>
 
-<div class="viewcode-block" id="_l2_normalize_adv"><a class="viewcode-back" href="../../../autoapi/pykt/models/atkt/index.html#pykt.models.atkt._l2_normalize_adv">[docs]</a><span class="k">def</span> <span class="nf">_l2_normalize_adv</span><span class="p">(</span><span class="n">d</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">_l2_normalize_adv</span><span class="p">(</span><span class="n">d</span><span class="p">):</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">Variable</span><span class="p">):</span>
         <span class="n">d</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
     <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">FloatTensor</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">FloatTensor</span><span class="p">):</span>
         <span class="n">d</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
     <span class="n">d</span> <span class="o">/=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">d</span> <span class="o">**</span> <span class="mi">2</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)))</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span> <span class="o">+</span> <span class="mf">1e-16</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">d</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
 </pre></div>
 
            </div>

@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pykt.models package &mdash; pykt-toolkit 0.0.32 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="pykt.datasets package" href="pykt.datasets.html" />
+    <link rel="prev" title="KT Toolkits" href="quick_start_cn.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> pykt-toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Home:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="quick_start_cn.html">Quick Start (cn)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Models</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-pykt.models.akt">pykt.models.akt module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-pykt.models.atkt">pykt.models.atkt module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-pykt.models.dkt">pykt.models.dkt module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-pykt.models.dkt_forget">pykt.models.dkt_forget module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-pykt.models.dkt_plus">pykt.models.dkt_plus module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-pykt.models.dkvmn">pykt.models.dkvmn module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-pykt.models.evaluate_model">pykt.models.evaluate_model module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-pykt.models.gkt">pykt.models.gkt module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-pykt.models.gkt_utils">pykt.models.gkt_utils module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-pykt.models.init_model">pykt.models.init_model module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-pykt.models.kqn">pykt.models.kqn module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-pykt.models.saint">pykt.models.saint module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-pykt.models.sakt">pykt.models.sakt module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-pykt.models.train_model">pykt.models.train_model module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-pykt.models.utils">pykt.models.utils module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-pykt.models">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="pykt.datasets.html">Datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pykt.preprocess.html">Data Preprocess</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pykt.utils.html">Utils</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">pykt-toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>pykt.models package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/pykt.models.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="pykt-models-package">
+<h1>pykt.models package<a class="headerlink" href="#pykt-models-package" title="Permalink to this heading"></a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
+</div>
+<div class="section" id="module-pykt.models.akt">
+<span id="pykt-models-akt-module"></span><h2>pykt.models.akt module<a class="headerlink" href="#module-pykt.models.akt" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="pykt.models.akt.AKT">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pykt.models.akt.</span></span><span class="sig-name descname"><span class="pre">AKT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_question</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_pid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d_model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_blocks</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d_ff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">256</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kq_same</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">final_fc_dim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">512</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_attn_heads</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">separate_qa</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">l2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">emb_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'qid'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">emb_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pretrain_dim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">768</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/models/akt.html#AKT"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.akt.AKT" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pykt.models.akt.AKT.base_emb">
+<span class="sig-name descname"><span class="pre">base_emb</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">q_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/models/akt.html#AKT.base_emb"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.akt.AKT.base_emb" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pykt.models.akt.AKT.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">q_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pid_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qtest</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/models/akt.html#AKT.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.akt.AKT.forward" title="Permalink to this definition"></a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pykt.models.akt.AKT.reset">
+<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/models/akt.html#AKT.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.akt.AKT.reset" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pykt.models.akt.Architecture">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pykt.models.akt.</span></span><span class="sig-name descname"><span class="pre">Architecture</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_question</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_blocks</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d_model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d_feature</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d_ff</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_heads</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kq_same</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_type</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/models/akt.html#Architecture"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.akt.Architecture" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pykt.models.akt.Architecture.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">q_embed_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qa_embed_data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/models/akt.html#Architecture.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.akt.Architecture.forward" title="Permalink to this definition"></a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pykt.models.akt.CosinePositionalEmbedding">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pykt.models.akt.</span></span><span class="sig-name descname"><span class="pre">CosinePositionalEmbedding</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d_model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_len</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">512</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/models/akt.html#CosinePositionalEmbedding"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.akt.CosinePositionalEmbedding" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pykt.models.akt.CosinePositionalEmbedding.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/models/akt.html#CosinePositionalEmbedding.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.akt.CosinePositionalEmbedding.forward" title="Permalink to this definition"></a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pykt.models.akt.Dim">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pykt.models.akt.</span></span><span class="sig-name descname"><span class="pre">Dim</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/models/akt.html#Dim"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.akt.Dim" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">IntEnum</span></code></p>
+<p>An enumeration.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pykt.models.akt.Dim.batch">
+<span class="sig-name descname"><span class="pre">batch</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#pykt.models.akt.Dim.batch" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pykt.models.akt.Dim.feature">
+<span class="sig-name descname"><span class="pre">feature</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="headerlink" href="#pykt.models.akt.Dim.feature" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pykt.models.akt.Dim.seq">
+<span class="sig-name descname"><span class="pre">seq</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#pykt.models.akt.Dim.seq" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pykt.models.akt.LearnablePositionalEmbedding">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pykt.models.akt.</span></span><span class="sig-name descname"><span class="pre">LearnablePositionalEmbedding</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d_model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_len</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">512</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/models/akt.html#LearnablePositionalEmbedding"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.akt.LearnablePositionalEmbedding" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pykt.models.akt.LearnablePositionalEmbedding.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/models/akt.html#LearnablePositionalEmbedding.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.akt.LearnablePositionalEmbedding.forward" title="Permalink to this definition"></a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pykt.models.akt.MultiHeadAttention">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pykt.models.akt.</span></span><span class="sig-name descname"><span class="pre">MultiHeadAttention</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d_model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d_feature</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_heads</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kq_same</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bias</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/models/akt.html#MultiHeadAttention"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.akt.MultiHeadAttention" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pykt.models.akt.MultiHeadAttention.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">q</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mask</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zero_pad</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/models/akt.html#MultiHeadAttention.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.akt.MultiHeadAttention.forward" title="Permalink to this definition"></a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pykt.models.akt.TransformerLayer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pykt.models.akt.</span></span><span class="sig-name descname"><span class="pre">TransformerLayer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d_model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d_feature</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d_ff</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_heads</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kq_same</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/models/akt.html#TransformerLayer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.akt.TransformerLayer" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pykt.models.akt.TransformerLayer.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mask</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">query</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">apply_pos</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/models/akt.html#TransformerLayer.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.akt.TransformerLayer.forward" title="Permalink to this definition"></a></dt>
+<dd><dl class="simple">
+<dt>Input:</dt><dd><p>block : object of type BasicBlock(nn.Module). It contains masked_attn_head objects which is of type MultiHeadAttention(nn.Module).
+mask : 0 means, it can peek only past values. 1 means, block can peek only current and pas values
+query : Query. In transformer paper it is the input for both encoder and decoder
+key : Keys. In transformer paper it is the input for both encoder and decoder
+Values. In transformer paper it is the input for encoder and  encoded output for decoder (in masked attention part)</p>
+</dd>
+<dt>Output:</dt><dd><p>query: Input gets changed over the layer and returned.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pykt.models.akt.attention">
+<span class="sig-prename descclassname"><span class="pre">pykt.models.akt.</span></span><span class="sig-name descname"><span class="pre">attention</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">q</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d_k</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mask</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zero_pad</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gamma</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/models/akt.html#attention"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.akt.attention" title="Permalink to this definition"></a></dt>
+<dd><p>This is called by Multi-head atention object to find the values.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-pykt.models.atkt">
+<span id="pykt-models-atkt-module"></span><h2>pykt.models.atkt module<a class="headerlink" href="#module-pykt.models.atkt" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="pykt.models.atkt.ATKT">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pykt.models.atkt.</span></span><span class="sig-name descname"><span class="pre">ATKT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_c</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skill_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">answer_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hidden_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attention_dim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">80</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epsilon</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">emb_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'qid'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">emb_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/models/atkt.html#ATKT"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.atkt.ATKT" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pykt.models.atkt.ATKT.attention_module">
+<span class="sig-name descname"><span class="pre">attention_module</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lstm_output</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/models/atkt.html#ATKT.attention_module"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.atkt.ATKT.attention_module" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pykt.models.atkt.ATKT.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">skill</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">answer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">perturbation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/models/atkt.html#ATKT.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.atkt.ATKT.forward" title="Permalink to this definition"></a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-pykt.models.dkt">
+<span id="pykt-models-dkt-module"></span><h2>pykt.models.dkt module<a class="headerlink" href="#module-pykt.models.dkt" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="pykt.models.dkt.DKT">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pykt.models.dkt.</span></span><span class="sig-name descname"><span class="pre">DKT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_c</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">emb_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">emb_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'qid'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">emb_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pretrain_dim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">768</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/models/dkt.html#DKT"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.dkt.DKT" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pykt.models.dkt.DKT.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">q</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/models/dkt.html#DKT.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.dkt.DKT.forward" title="Permalink to this definition"></a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-pykt.models.dkt_forget">
+<span id="pykt-models-dkt-forget-module"></span><h2>pykt.models.dkt_forget module<a class="headerlink" href="#module-pykt.models.dkt_forget" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="pykt.models.dkt_forget.CIntegration">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pykt.models.dkt_forget.</span></span><span class="sig-name descname"><span class="pre">CIntegration</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_rgap</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_sgap</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_pcount</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">emb_dim</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/models/dkt_forget.html#CIntegration"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.dkt_forget.CIntegration" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pykt.models.dkt_forget.CIntegration.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rgap</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sgap</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pcount</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/models/dkt_forget.html#CIntegration.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.dkt_forget.CIntegration.forward" title="Permalink to this definition"></a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pykt.models.dkt_forget.DKTForget">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pykt.models.dkt_forget.</span></span><span class="sig-name descname"><span class="pre">DKTForget</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_c</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_rgap</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_sgap</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_pcount</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">emb_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">emb_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'qid'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">emb_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/models/dkt_forget.html#DKTForget"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.dkt_forget.DKTForget" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pykt.models.dkt_forget.DKTForget.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">q</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dshft</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/models/dkt_forget.html#DKTForget.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.dkt_forget.DKTForget.forward" title="Permalink to this definition"></a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-pykt.models.dkt_plus">
+<span id="pykt-models-dkt-plus-module"></span><h2>pykt.models.dkt_plus module<a class="headerlink" href="#module-pykt.models.dkt_plus" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="pykt.models.dkt_plus.DKTPlus">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pykt.models.dkt_plus.</span></span><span class="sig-name descname"><span class="pre">DKTPlus</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_c</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">emb_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lambda_r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lambda_w1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lambda_w2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">emb_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'qid'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">emb_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pretrain_dim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">768</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/models/dkt_plus.html#DKTPlus"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.dkt_plus.DKTPlus" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pykt.models.dkt_plus.DKTPlus.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">q</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/models/dkt_plus.html#DKTPlus.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.dkt_plus.DKTPlus.forward" title="Permalink to this definition"></a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-pykt.models.dkvmn">
+<span id="pykt-models-dkvmn-module"></span><h2>pykt.models.dkvmn module<a class="headerlink" href="#module-pykt.models.dkvmn" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="pykt.models.dkvmn.DKVMN">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pykt.models.dkvmn.</span></span><span class="sig-name descname"><span class="pre">DKVMN</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_c</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dim_s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size_m</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">emb_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'qid'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">emb_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pretrain_dim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">768</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/models/dkvmn.html#DKVMN"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.dkvmn.DKVMN" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pykt.models.dkvmn.DKVMN.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">q</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qtest</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/models/dkvmn.html#DKVMN.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.dkvmn.DKVMN.forward" title="Permalink to this definition"></a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-pykt.models.evaluate_model">
+<span id="pykt-models-evaluate-model-module"></span><h2>pykt.models.evaluate_model module<a class="headerlink" href="#module-pykt.models.evaluate_model" title="Permalink to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="pykt.models.evaluate_model.calC">
+<span class="sig-prename descclassname"><span class="pre">pykt.models.evaluate_model.</span></span><span class="sig-name descname"><span class="pre">calC</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">row</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_config</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/models/evaluate_model.html#calC"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.evaluate_model.calC" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pykt.models.evaluate_model.cal_predres">
+<span class="sig-prename descclassname"><span class="pre">pykt.models.evaluate_model.</span></span><span class="sig-name descname"><span class="pre">cal_predres</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dcres</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dqres</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/models/evaluate_model.html#cal_predres"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.evaluate_model.cal_predres" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pykt.models.evaluate_model.early_fusion">
+<span class="sig-prename descclassname"><span class="pre">pykt.models.evaluate_model.</span></span><span class="sig-name descname"><span class="pre">early_fusion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">curhs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/models/evaluate_model.html#early_fusion"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.evaluate_model.early_fusion" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pykt.models.evaluate_model.effective_fusion">
+<span class="sig-prename descclassname"><span class="pre">pykt.models.evaluate_model.</span></span><span class="sig-name descname"><span class="pre">effective_fusion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fusion_type</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/models/evaluate_model.html#effective_fusion"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.evaluate_model.effective_fusion" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pykt.models.evaluate_model.evaluate">
+<span class="sig-prename descclassname"><span class="pre">pykt.models.evaluate_model.</span></span><span class="sig-name descname"><span class="pre">evaluate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_loader</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/models/evaluate_model.html#evaluate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.evaluate_model.evaluate" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pykt.models.evaluate_model.evaluate_question">
+<span class="sig-prename descclassname"><span class="pre">pykt.models.evaluate_model.</span></span><span class="sig-name descname"><span class="pre">evaluate_question</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_loader</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fusion_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">['early_fusion',</span> <span class="pre">'late_fusion']</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/models/evaluate_model.html#evaluate_question"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.evaluate_model.evaluate_question" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pykt.models.evaluate_model.evaluate_splitpred_question">
+<span class="sig-prename descclassname"><span class="pre">pykt.models.evaluate_model.</span></span><span class="sig-name descname"><span class="pre">evaluate_splitpred_question</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">testf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_pred</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_ratio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atkt_pad</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/models/evaluate_model.html#evaluate_splitpred_question"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.evaluate_model.evaluate_splitpred_question" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pykt.models.evaluate_model.get_cur_teststart">
+<span class="sig-prename descclassname"><span class="pre">pykt.models.evaluate_model.</span></span><span class="sig-name descname"><span class="pre">get_cur_teststart</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">is_repeat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_ratio</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/models/evaluate_model.html#get_cur_teststart"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.evaluate_model.get_cur_teststart" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pykt.models.evaluate_model.get_info_dkt_forget">
+<span class="sig-prename descclassname"><span class="pre">pykt.models.evaluate_model.</span></span><span class="sig-name descname"><span class="pre">get_info_dkt_forget</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">row</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_config</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/models/evaluate_model.html#get_info_dkt_forget"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.evaluate_model.get_info_dkt_forget" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pykt.models.evaluate_model.group_fusion">
+<span class="sig-prename descclassname"><span class="pre">pykt.models.evaluate_model.</span></span><span class="sig-name descname"><span class="pre">group_fusion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dmerge</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fusion_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fout</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/models/evaluate_model.html#group_fusion"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.evaluate_model.group_fusion" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pykt.models.evaluate_model.late_fusion">
+<span class="sig-prename descclassname"><span class="pre">pykt.models.evaluate_model.</span></span><span class="sig-name descname"><span class="pre">late_fusion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dcur</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">curdf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fusion_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">['mean',</span> <span class="pre">'vote',</span> <span class="pre">'all']</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/models/evaluate_model.html#late_fusion"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.evaluate_model.late_fusion" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pykt.models.evaluate_model.log2">
+<span class="sig-prename descclassname"><span class="pre">pykt.models.evaluate_model.</span></span><span class="sig-name descname"><span class="pre">log2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/models/evaluate_model.html#log2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.evaluate_model.log2" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pykt.models.evaluate_model.predict_each_group">
+<span class="sig-prename descclassname"><span class="pre">pykt.models.evaluate_model.</span></span><span class="sig-name descname"><span class="pre">predict_each_group</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">curdforget</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dforget</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_repeat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qidx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">curqin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">curcin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">currin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cq</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fout</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atkt_pad</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxlen</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">200</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/models/evaluate_model.html#predict_each_group"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.evaluate_model.predict_each_group" title="Permalink to this definition"></a></dt>
+<dd><p>use the predict result as next question input</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pykt.models.evaluate_model.predict_each_group2">
+<span class="sig-prename descclassname"><span class="pre">pykt.models.evaluate_model.</span></span><span class="sig-name descname"><span class="pre">predict_each_group2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">curdforget</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dforget</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_repeat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qidx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">curqin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">curcin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">currin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cq</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fout</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atkt_pad</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxlen</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">200</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/models/evaluate_model.html#predict_each_group2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.evaluate_model.predict_each_group2" title="Permalink to this definition"></a></dt>
+<dd><p>not use the predict result</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pykt.models.evaluate_model.prepare_data">
+<span class="sig-prename descclassname"><span class="pre">pykt.models.evaluate_model.</span></span><span class="sig-name descname"><span class="pre">prepare_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_repeat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qidx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">curqin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">curcin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">currin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">curdforget</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cq</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dforget</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxlen</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">200</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/models/evaluate_model.html#prepare_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.evaluate_model.prepare_data" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pykt.models.evaluate_model.save_cur_predict_result">
+<span class="sig-prename descclassname"><span class="pre">pykt.models.evaluate_model.</span></span><span class="sig-name descname"><span class="pre">save_cur_predict_result</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dres</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">m</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/models/evaluate_model.html#save_cur_predict_result"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.evaluate_model.save_cur_predict_result" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pykt.models.evaluate_model.save_currow_question_res">
+<span class="sig-prename descclassname"><span class="pre">pykt.models.evaluate_model.</span></span><span class="sig-name descname"><span class="pre">save_currow_question_res</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">idx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dcres</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dqres</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qidxs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ctrues</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cpreds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fout</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/models/evaluate_model.html#save_currow_question_res"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.evaluate_model.save_currow_question_res" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pykt.models.evaluate_model.save_each_question_res">
+<span class="sig-prename descclassname"><span class="pre">pykt.models.evaluate_model.</span></span><span class="sig-name descname"><span class="pre">save_each_question_res</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dcres</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dqres</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ctrues</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cpreds</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/models/evaluate_model.html#save_each_question_res"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.evaluate_model.save_each_question_res" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pykt.models.evaluate_model.save_question_res">
+<span class="sig-prename descclassname"><span class="pre">pykt.models.evaluate_model.</span></span><span class="sig-name descname"><span class="pre">save_question_res</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dres</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fout</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">early</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/models/evaluate_model.html#save_question_res"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.evaluate_model.save_question_res" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-pykt.models.gkt">
+<span id="pykt-models-gkt-module"></span><h2>pykt.models.gkt module<a class="headerlink" href="#module-pykt.models.gkt" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="pykt.models.gkt.EraseAddGate">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pykt.models.gkt.</span></span><span class="sig-name descname"><span class="pre">EraseAddGate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">feature_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_c</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bias</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/models/gkt.html#EraseAddGate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.gkt.EraseAddGate" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></p>
+<p>Erase &amp; Add Gate module
+NOTE: this erase &amp; add gate is a bit different from that in DKVMN.
+For more information about Erase &amp; Add gate, please refer to the paper “Dynamic Key-Value Memory Networks for Knowledge Tracing”
+The paper can be found in <a class="reference external" href="https://arxiv.org/abs/1611.08108">https://arxiv.org/abs/1611.08108</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>nn</strong> (<em>_type_</em>) – _description_</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pykt.models.gkt.EraseAddGate.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/models/gkt.html#EraseAddGate.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.gkt.EraseAddGate.forward" title="Permalink to this definition"></a></dt>
+<dd><dl class="simple">
+<dt>Params:</dt><dd><p>x: input feature matrix</p>
+</dd>
+<dt>Shape:</dt><dd><p>x: [batch_size, num_c, feature_dim]
+res: [batch_size, num_c, feature_dim]</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>returned feature matrix with old information erased and new information added
+The GKT paper didn’t provide detailed explanation about this erase-add gate. As the erase-add gate in the GKT only has one input parameter,
+this gate is different with that of the DKVMN. We used the input matrix to build the erase and add gates, rather than $mathbf{v}_{t}$ vector in the DKVMN.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>res</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pykt.models.gkt.EraseAddGate.reset_parameters">
+<span class="sig-name descname"><span class="pre">reset_parameters</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/models/gkt.html#EraseAddGate.reset_parameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.gkt.EraseAddGate.reset_parameters" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pykt.models.gkt.GKT">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pykt.models.gkt.</span></span><span class="sig-name descname"><span class="pre">GKT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_c</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hidden_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">emb_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">graph_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'dense'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">graph</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">emb_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'qid'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">emb_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bias</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/models/gkt.html#GKT"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.gkt.GKT" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pykt.models.gkt.GKT.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">q</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/models/gkt.html#GKT.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.gkt.GKT.forward" title="Permalink to this definition"></a></dt>
+<dd><p>_summary_</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>q</strong> (<em>_type_</em>) – _description_</p></li>
+<li><p><strong>r</strong> (<em>_type_</em>) – _description_</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the correct probability of questions answered at the next timestamp</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pykt.models.gkt.MLP">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pykt.models.gkt.</span></span><span class="sig-name descname"><span class="pre">MLP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hidden_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bias</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/models/gkt.html#MLP"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.gkt.MLP" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></p>
+<p>Two-layer fully-connected ReLU net with batch norm.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pykt.models.gkt.MLP.batch_norm">
+<span class="sig-name descname"><span class="pre">batch_norm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/models/gkt.html#MLP.batch_norm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.gkt.MLP.batch_norm" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pykt.models.gkt.MLP.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/models/gkt.html#MLP.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.gkt.MLP.forward" title="Permalink to this definition"></a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pykt.models.gkt.MLP.init_weights">
+<span class="sig-name descname"><span class="pre">init_weights</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/models/gkt.html#MLP.init_weights"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.gkt.MLP.init_weights" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-pykt.models.gkt_utils">
+<span id="pykt-models-gkt-utils-module"></span><h2>pykt.models.gkt_utils module<a class="headerlink" href="#module-pykt.models.gkt_utils" title="Permalink to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="pykt.models.gkt_utils.build_dense_graph">
+<span class="sig-prename descclassname"><span class="pre">pykt.models.gkt_utils.</span></span><span class="sig-name descname"><span class="pre">build_dense_graph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node_num</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/models/gkt_utils.html#build_dense_graph"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.gkt_utils.build_dense_graph" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pykt.models.gkt_utils.build_transition_graph">
+<span class="sig-prename descclassname"><span class="pre">pykt.models.gkt_utils.</span></span><span class="sig-name descname"><span class="pre">build_transition_graph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">concept_num</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/models/gkt_utils.html#build_transition_graph"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.gkt_utils.build_transition_graph" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pykt.models.gkt_utils.get_gkt_graph">
+<span class="sig-prename descclassname"><span class="pre">pykt.models.gkt_utils.</span></span><span class="sig-name descname"><span class="pre">get_gkt_graph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_c</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dpath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trainfile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">testfile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">graph_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'dense'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tofile</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./graph.npz'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/models/gkt_utils.html#get_gkt_graph"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.gkt_utils.get_gkt_graph" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-pykt.models.init_model">
+<span id="pykt-models-init-model-module"></span><h2>pykt.models.init_model module<a class="headerlink" href="#module-pykt.models.init_model" title="Permalink to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="pykt.models.init_model.init_model">
+<span class="sig-prename descclassname"><span class="pre">pykt.models.init_model.</span></span><span class="sig-name descname"><span class="pre">init_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">emb_type</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/models/init_model.html#init_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.init_model.init_model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pykt.models.init_model.load_model">
+<span class="sig-prename descclassname"><span class="pre">pykt.models.init_model.</span></span><span class="sig-name descname"><span class="pre">load_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">emb_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ckpt_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/models/init_model.html#load_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.init_model.load_model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-pykt.models.kqn">
+<span id="pykt-models-kqn-module"></span><h2>pykt.models.kqn module<a class="headerlink" href="#module-pykt.models.kqn" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="pykt.models.kqn.KQN">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pykt.models.kqn.</span></span><span class="sig-name descname"><span class="pre">KQN</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_skills</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_hidden</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_rnn_hidden</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_mlp_hidden</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_rnn_layers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rnn_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'lstm'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">emb_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'qid'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">emb_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pretrain_dim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">768</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/models/kqn.html#KQN"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.kqn.KQN" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pykt.models.kqn.KQN.encode_knowledge">
+<span class="sig-name descname"><span class="pre">encode_knowledge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/models/kqn.html#KQN.encode_knowledge"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.kqn.KQN.encode_knowledge" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pykt.models.kqn.KQN.encode_skills">
+<span class="sig-name descname"><span class="pre">encode_skills</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">next_skills</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/models/kqn.html#KQN.encode_skills"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.kqn.KQN.encode_skills" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pykt.models.kqn.KQN.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">q</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qshft</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qtest</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/models/kqn.html#KQN.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.kqn.KQN.forward" title="Permalink to this definition"></a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pykt.models.kqn.KQN.init_hidden">
+<span class="sig-name descname"><span class="pre">init_hidden</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/models/kqn.html#KQN.init_hidden"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.kqn.KQN.init_hidden" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-pykt.models.saint">
+<span id="pykt-models-saint-module"></span><h2>pykt.models.saint module<a class="headerlink" href="#module-pykt.models.saint" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="pykt.models.saint.Decoder_block">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pykt.models.saint.</span></span><span class="sig-name descname"><span class="pre">Decoder_block</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dim_model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">total_res</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">heads_de</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seq_len</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/models/saint.html#Decoder_block"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.saint.Decoder_block" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></p>
+<p>M1 = SkipConct(Multihead(LayerNorm(Qin;Kin;Vin)))
+M2 = SkipConct(Multihead(LayerNorm(M1;O;O)))
+L = SkipConct(FFN(LayerNorm(M2)))</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pykt.models.saint.Decoder_block.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_res</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_pos</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">en_out</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">first_block</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/models/saint.html#Decoder_block.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.saint.Decoder_block.forward" title="Permalink to this definition"></a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pykt.models.saint.Encoder_block">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pykt.models.saint.</span></span><span class="sig-name descname"><span class="pre">Encoder_block</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dim_model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">heads_en</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">total_ex</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">total_cat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seq_len</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">emb_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pretrain_dim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">768</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/models/saint.html#Encoder_block"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.saint.Encoder_block" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></p>
+<p>M = SkipConct(Multihead(LayerNorm(Qin;Kin;Vin)))
+O = SkipConct(FFN(LayerNorm(M)))</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pykt.models.saint.Encoder_block.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_ex</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_cat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_pos</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">first_block</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/models/saint.html#Encoder_block.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.saint.Encoder_block.forward" title="Permalink to this definition"></a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pykt.models.saint.SAINT">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pykt.models.saint.</span></span><span class="sig-name descname"><span class="pre">SAINT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_q</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_c</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seq_len</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">emb_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_attn_heads</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_blocks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">emb_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'qid'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">emb_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pretrain_dim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">768</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/models/saint.html#SAINT"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.saint.SAINT" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pykt.models.saint.SAINT.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_ex</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_cat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_res</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qtest</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/models/saint.html#SAINT.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.saint.SAINT.forward" title="Permalink to this definition"></a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-pykt.models.sakt">
+<span id="pykt-models-sakt-module"></span><h2>pykt.models.sakt module<a class="headerlink" href="#module-pykt.models.sakt" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="pykt.models.sakt.Blocks">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pykt.models.sakt.</span></span><span class="sig-name descname"><span class="pre">Blocks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">emb_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_attn_heads</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/models/sakt.html#Blocks"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.sakt.Blocks" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pykt.models.sakt.Blocks.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">q</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/models/sakt.html#Blocks.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.sakt.Blocks.forward" title="Permalink to this definition"></a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pykt.models.sakt.SAKT">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pykt.models.sakt.</span></span><span class="sig-name descname"><span class="pre">SAKT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_c</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seq_len</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">emb_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_attn_heads</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_en</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">emb_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'qid'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">emb_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pretrain_dim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">768</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/models/sakt.html#SAKT"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.sakt.SAKT" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pykt.models.sakt.SAKT.base_emb">
+<span class="sig-name descname"><span class="pre">base_emb</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">q</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qry</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/models/sakt.html#SAKT.base_emb"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.sakt.SAKT.base_emb" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pykt.models.sakt.SAKT.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">q</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qry</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qtest</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/models/sakt.html#SAKT.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.sakt.SAKT.forward" title="Permalink to this definition"></a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-pykt.models.train_model">
+<span id="pykt-models-train-model-module"></span><h2>pykt.models.train_model module<a class="headerlink" href="#module-pykt.models.train_model" title="Permalink to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="pykt.models.train_model.cal_loss">
+<span class="sig-prename descclassname"><span class="pre">pykt.models.train_model.</span></span><span class="sig-name descname"><span class="pre">cal_loss</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ys</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rshft</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">preloss</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/models/train_model.html#cal_loss"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.train_model.cal_loss" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pykt.models.train_model.model_forward">
+<span class="sig-prename descclassname"><span class="pre">pykt.models.train_model.</span></span><span class="sig-name descname"><span class="pre">model_forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/models/train_model.html#model_forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.train_model.model_forward" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pykt.models.train_model.train_model">
+<span class="sig-prename descclassname"><span class="pre">pykt.models.train_model.</span></span><span class="sig-name descname"><span class="pre">train_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_loader</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">valid_loader</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_epochs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">opt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ckpt_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_loader</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_window_loader</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/models/train_model.html#train_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.train_model.train_model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-pykt.models.utils">
+<span id="pykt-models-utils-module"></span><h2>pykt.models.utils module<a class="headerlink" href="#module-pykt.models.utils" title="Permalink to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="pykt.models.utils.get_clones">
+<span class="sig-prename descclassname"><span class="pre">pykt.models.utils.</span></span><span class="sig-name descname"><span class="pre">get_clones</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">N</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/models/utils.html#get_clones"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.utils.get_clones" title="Permalink to this definition"></a></dt>
+<dd><p>Cloning nn modules</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pykt.models.utils.lt_mask">
+<span class="sig-prename descclassname"><span class="pre">pykt.models.utils.</span></span><span class="sig-name descname"><span class="pre">lt_mask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seq_len</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/models/utils.html#lt_mask"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.utils.lt_mask" title="Permalink to this definition"></a></dt>
+<dd><p>Upper Triangular Mask</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pykt.models.utils.pos_encode">
+<span class="sig-prename descclassname"><span class="pre">pykt.models.utils.</span></span><span class="sig-name descname"><span class="pre">pos_encode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seq_len</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/models/utils.html#pos_encode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.utils.pos_encode" title="Permalink to this definition"></a></dt>
+<dd><p>position Encoding</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pykt.models.utils.transformer_FFN">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pykt.models.utils.</span></span><span class="sig-name descname"><span class="pre">transformer_FFN</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">emb_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/models/utils.html#transformer_FFN"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.utils.transformer_FFN" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pykt.models.utils.transformer_FFN.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_fea</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/models/utils.html#transformer_FFN.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.utils.transformer_FFN.forward" title="Permalink to this definition"></a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pykt.models.utils.ut_mask">
+<span class="sig-prename descclassname"><span class="pre">pykt.models.utils.</span></span><span class="sig-name descname"><span class="pre">ut_mask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seq_len</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/models/utils.html#ut_mask"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.utils.ut_mask" title="Permalink to this definition"></a></dt>
+<dd><p>Upper Triangular Mask</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-pykt.models">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-pykt.models" title="Permalink to this heading"></a></h2>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="quick_start_cn.html" class="btn btn-neutral float-left" title="KT Toolkits" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="pykt.datasets.html" class="btn btn-neutral float-right" title="pykt.datasets package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, pykt-team.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

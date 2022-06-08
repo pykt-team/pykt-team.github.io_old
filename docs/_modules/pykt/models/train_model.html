@@ -3,10 +3,9 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>pykt.models.train_model &mdash; pykt-toolkit 0.0.3 documentation</title>
+  <title>pykt.models.train_model &mdash; pykt-toolkit 0.0.32 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -14,6 +13,7 @@
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -35,9 +35,16 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Home:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../autoapi/index.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../quick_start_cn.html">Quick Start (cn)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../pykt.models.html">Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../pykt.datasets.html">Datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../pykt.preprocess.html">Data Preprocess</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../pykt.utils.html">Utils</a></li>
 </ul>
 
         </div>
@@ -70,14 +77,14 @@
 <span class="kn">import</span> <span class="nn">torch.nn</span> <span class="k">as</span> <span class="nn">nn</span>
 <span class="kn">from</span> <span class="nn">torch.nn.functional</span> <span class="kn">import</span> <span class="n">one_hot</span><span class="p">,</span> <span class="n">binary_cross_entropy</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">models.evaluate_model</span> <span class="kn">import</span> <span class="n">evaluate</span>
+<span class="kn">from</span> <span class="nn">.evaluate_model</span> <span class="kn">import</span> <span class="n">evaluate</span>
 <span class="kn">from</span> <span class="nn">torch.autograd</span> <span class="kn">import</span> <span class="n">Variable</span><span class="p">,</span> <span class="n">grad</span>
-<span class="kn">from</span> <span class="nn">models.atkt</span> <span class="kn">import</span> <span class="n">_l2_normalize_adv</span>
-<span class="kn">from</span> <span class="nn">utils.utils</span> <span class="kn">import</span> <span class="n">debug_print</span>
+<span class="kn">from</span> <span class="nn">.atkt</span> <span class="kn">import</span> <span class="n">_l2_normalize_adv</span>
+<span class="kn">from</span> <span class="nn">..utils.utils</span> <span class="kn">import</span> <span class="n">debug_print</span>
 
-<div class="viewcode-block" id="device"><a class="viewcode-back" href="../../../autoapi/pykt/models/train_model/index.html#pykt.models.train_model.device">[docs]</a><span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">&quot;cuda&quot;</span> <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="k">else</span> <span class="s2">&quot;cpu&quot;</span><span class="p">)</span></div>
+<span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">&quot;cuda&quot;</span> <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="k">else</span> <span class="s2">&quot;cpu&quot;</span><span class="p">)</span>
 
-<div class="viewcode-block" id="cal_loss"><a class="viewcode-back" href="../../../autoapi/pykt/models/train_model/index.html#pykt.models.train_model.cal_loss">[docs]</a><span class="k">def</span> <span class="nf">cal_loss</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">ys</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">rshft</span><span class="p">,</span> <span class="n">sm</span><span class="p">,</span> <span class="n">preloss</span><span class="o">=</span><span class="p">[]):</span>
+<div class="viewcode-block" id="cal_loss"><a class="viewcode-back" href="../../../pykt.models.html#pykt.models.train_model.cal_loss">[docs]</a><span class="k">def</span> <span class="nf">cal_loss</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">ys</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">rshft</span><span class="p">,</span> <span class="n">sm</span><span class="p">,</span> <span class="n">preloss</span><span class="o">=</span><span class="p">[]):</span>
     <span class="n">model_name</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">model_name</span>
 
     <span class="k">if</span> <span class="n">model_name</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;dkt&quot;</span><span class="p">,</span> <span class="s2">&quot;dkt_forget&quot;</span><span class="p">,</span> <span class="s2">&quot;dkvmn&quot;</span><span class="p">,</span> <span class="s2">&quot;kqn&quot;</span><span class="p">,</span> <span class="s2">&quot;sakt&quot;</span><span class="p">,</span> <span class="s2">&quot;saint&quot;</span><span class="p">,</span> <span class="s2">&quot;atkt&quot;</span><span class="p">,</span> <span class="s2">&quot;atktfix&quot;</span><span class="p">,</span> <span class="s2">&quot;gkt&quot;</span><span class="p">]:</span>
@@ -107,7 +114,7 @@
     <span class="k">return</span> <span class="n">loss</span></div>
 
 
-<div class="viewcode-block" id="model_forward"><a class="viewcode-back" href="../../../autoapi/pykt/models/train_model/index.html#pykt.models.train_model.model_forward">[docs]</a><span class="k">def</span> <span class="nf">model_forward</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+<div class="viewcode-block" id="model_forward"><a class="viewcode-back" href="../../../pykt.models.html#pykt.models.train_model.model_forward">[docs]</a><span class="k">def</span> <span class="nf">model_forward</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
     <span class="n">model_name</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">model_name</span>
     <span class="k">if</span> <span class="n">model_name</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;dkt_forget&quot;</span><span class="p">]:</span>
         <span class="n">q</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">qshft</span><span class="p">,</span> <span class="n">cshft</span><span class="p">,</span> <span class="n">rshft</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">sm</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">dshft</span> <span class="o">=</span> <span class="n">data</span>
@@ -168,7 +175,7 @@
     <span class="k">return</span> <span class="n">loss</span></div>
     
 
-<div class="viewcode-block" id="train_model"><a class="viewcode-back" href="../../../autoapi/pykt/models/train_model/index.html#pykt.models.train_model.train_model">[docs]</a><span class="k">def</span> <span class="nf">train_model</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">train_loader</span><span class="p">,</span> <span class="n">valid_loader</span><span class="p">,</span> <span class="n">num_epochs</span><span class="p">,</span> <span class="n">opt</span><span class="p">,</span> <span class="n">ckpt_path</span><span class="p">,</span> <span class="n">test_loader</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">test_window_loader</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">save_model</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="train_model"><a class="viewcode-back" href="../../../pykt.models.html#pykt.models.train_model.train_model">[docs]</a><span class="k">def</span> <span class="nf">train_model</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">train_loader</span><span class="p">,</span> <span class="n">valid_loader</span><span class="p">,</span> <span class="n">num_epochs</span><span class="p">,</span> <span class="n">opt</span><span class="p">,</span> <span class="n">ckpt_path</span><span class="p">,</span> <span class="n">test_loader</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">test_window_loader</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">save_model</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="n">max_auc</span><span class="p">,</span> <span class="n">best_epoch</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span>
     <span class="n">train_step</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">num_epochs</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
