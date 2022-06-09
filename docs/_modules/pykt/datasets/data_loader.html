@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pykt.datasets.data_loader &mdash; pykt-toolkit 0.0.32 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> pykt-toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Home:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://pykt-team.github.io/">Official Website</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../quick_start.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../quick_start_cn.html">Quick Start (cn)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../pykt.models.html">Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../pykt.datasets.html">Datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../pykt.preprocess.html">Data Preprocess</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../pykt.utils.html">Utils</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">pykt-toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      <li>pykt.datasets.data_loader</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for pykt.datasets.data_loader</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># coding=utf-8</span>
+
+<span class="kn">import</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">from</span> <span class="nn">torch.utils.data</span> <span class="kn">import</span> <span class="n">Dataset</span>
+<span class="kn">from</span> <span class="nn">torch.cuda</span> <span class="kn">import</span> <span class="n">FloatTensor</span><span class="p">,</span> <span class="n">LongTensor</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+
+
+<div class="viewcode-block" id="KTDataset"><a class="viewcode-back" href="../../../pykt.datasets.html#pykt.datasets.data_loader.KTDataset">[docs]</a><span class="k">class</span> <span class="nc">KTDataset</span><span class="p">(</span><span class="n">Dataset</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Dataset for KT</span>
+<span class="sd">        can use to init dataset for: (for models except dkt_forget)</span>
+<span class="sd">            train data, valid data</span>
+<span class="sd">            common test data(concept level evaluation), real educational scenario test data(question level evaluation).</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        file_path (str): train_valid/test file path</span>
+<span class="sd">        input_type (list[str]): the input type of the dataset, values are in [&quot;questions&quot;, &quot;concepts&quot;]</span>
+<span class="sd">        folds (set(int)): the folds used to generate dataset, -1 for test data</span>
+<span class="sd">        qtest (bool, optional): is question evaluation or not. Defaults to False.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_path</span><span class="p">,</span> <span class="n">input_type</span><span class="p">,</span> <span class="n">folds</span><span class="p">,</span> <span class="n">qtest</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">KTDataset</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="n">sequence_path</span> <span class="o">=</span> <span class="n">file_path</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_type</span> <span class="o">=</span> <span class="n">input_type</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">qtest</span> <span class="o">=</span> <span class="n">qtest</span>
+        <span class="n">folds</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">folds</span><span class="p">))</span>
+        <span class="n">folds_str</span> <span class="o">=</span> <span class="s2">&quot;_&quot;</span> <span class="o">+</span> <span class="s2">&quot;_&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">_</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">folds</span><span class="p">])</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">qtest</span><span class="p">:</span>
+            <span class="n">processed_data</span> <span class="o">=</span> <span class="n">file_path</span> <span class="o">+</span> <span class="n">folds_str</span> <span class="o">+</span> <span class="s2">&quot;_qtest.pkl&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">processed_data</span> <span class="o">=</span> <span class="n">file_path</span> <span class="o">+</span> <span class="n">folds_str</span> <span class="o">+</span> <span class="s2">&quot;.pkl&quot;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">processed_data</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Start preprocessing </span><span class="si">{</span><span class="n">file_path</span><span class="si">}</span><span class="s2"> fold: </span><span class="si">{</span><span class="n">folds_str</span><span class="si">}</span><span class="s2">...&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">qtest</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">q_seqs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">c_seqs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">r_seqs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">mask_seqs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">select_masks</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dqtest</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__load_data__</span><span class="p">(</span><span class="n">sequence_path</span><span class="p">,</span> <span class="n">folds</span><span class="p">)</span>
+                <span class="n">save_data</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">q_seqs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">c_seqs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">r_seqs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">mask_seqs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">select_masks</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dqtest</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">q_seqs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">c_seqs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">r_seqs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">mask_seqs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">select_masks</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__load_data__</span><span class="p">(</span><span class="n">sequence_path</span><span class="p">,</span> <span class="n">folds</span><span class="p">)</span>
+                <span class="n">save_data</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">q_seqs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">c_seqs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">r_seqs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">mask_seqs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">select_masks</span><span class="p">]</span>
+            <span class="n">pd</span><span class="o">.</span><span class="n">to_pickle</span><span class="p">(</span><span class="n">save_data</span><span class="p">,</span> <span class="n">processed_data</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Read data from processed file: </span><span class="si">{</span><span class="n">processed_data</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">qtest</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">q_seqs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">c_seqs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">r_seqs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">mask_seqs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">select_masks</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dqtest</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_pickle</span><span class="p">(</span><span class="n">processed_data</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">q_seqs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">c_seqs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">r_seqs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">mask_seqs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">select_masks</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_pickle</span><span class="p">(</span><span class="n">processed_data</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;file path: </span><span class="si">{</span><span class="n">file_path</span><span class="si">}</span><span class="s2">, qlen: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">q_seqs</span><span class="p">)</span><span class="si">}</span><span class="s2">, clen: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">c_seqs</span><span class="p">)</span><span class="si">}</span><span class="s2">, rlen: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">r_seqs</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;return the dataset length</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            int: the length of the dataset</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">r_seqs</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Args:</span>
+<span class="sd">            index (int): the index of the data want to get</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            (tuple): tuple containing:</span>
+<span class="sd">            </span>
+<span class="sd">            - **q_seqs (torch.tensor)**: question id sequence of the 0~seqlen-2 interactions</span>
+<span class="sd">            - **c_seqs (torch.tensor)**: knowledge concept id sequence of the 0~seqlen-2 interactions</span>
+<span class="sd">            - **r_seqs (torch.tensor)**: response id sequence of the 0~seqlen-2 interactions</span>
+<span class="sd">            - **qshft_seqs (torch.tensor)**: question id sequence of the 1~seqlen-1 interactions</span>
+<span class="sd">            - **cshft_seqs (torch.tensor)**: knowledge concept id sequence of the 1~seqlen-1 interactions</span>
+<span class="sd">            - **rshft_seqs (torch.tensor)**: response id sequence of the 1~seqlen-1 interactions</span>
+<span class="sd">            - **mask_seqs (torch.tensor)**: masked value sequence, shape is seqlen-1</span>
+<span class="sd">            - **select_masks (torch.tensor)**: is select to calculate the performance or not, 0 is not selected, 1 is selected, only available for 1~seqlen-1, shape is seqlen-1</span>
+<span class="sd">            - **dcur (dict)**: used only self.qtest is True, for question level evaluation</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">q_seqs</span><span class="p">,</span> <span class="n">qshft_seqs</span><span class="p">,</span> <span class="n">c_seqs</span><span class="p">,</span> <span class="n">cshft_seqs</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([]),</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([]),</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([]),</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([])</span>
+        <span class="k">if</span> <span class="s2">&quot;questions&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_type</span><span class="p">:</span>
+            <span class="n">q_seqs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">q_seqs</span><span class="p">[</span><span class="n">index</span><span class="p">][:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">mask_seqs</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+            <span class="n">qshft_seqs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">q_seqs</span><span class="p">[</span><span class="n">index</span><span class="p">][</span><span class="mi">1</span><span class="p">:]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">mask_seqs</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+        <span class="k">if</span> <span class="s2">&quot;concepts&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_type</span><span class="p">:</span>
+            <span class="n">c_seqs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">c_seqs</span><span class="p">[</span><span class="n">index</span><span class="p">][:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">mask_seqs</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+            <span class="n">cshft_seqs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">c_seqs</span><span class="p">[</span><span class="n">index</span><span class="p">][</span><span class="mi">1</span><span class="p">:]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">mask_seqs</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+        <span class="n">r_seqs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">r_seqs</span><span class="p">[</span><span class="n">index</span><span class="p">][:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">mask_seqs</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+        <span class="n">rshft_seqs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">r_seqs</span><span class="p">[</span><span class="n">index</span><span class="p">][</span><span class="mi">1</span><span class="p">:]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">mask_seqs</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+
+        <span class="n">mask_seqs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mask_seqs</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+        <span class="n">select_masks</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">select_masks</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">qtest</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">q_seqs</span><span class="p">,</span> <span class="n">c_seqs</span><span class="p">,</span> <span class="n">r_seqs</span><span class="p">,</span> <span class="n">qshft_seqs</span><span class="p">,</span> <span class="n">cshft_seqs</span><span class="p">,</span> <span class="n">rshft_seqs</span><span class="p">,</span> <span class="n">mask_seqs</span><span class="p">,</span> <span class="n">select_masks</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">dcur</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dqtest</span><span class="p">:</span>
+                <span class="n">dcur</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dqtest</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="n">index</span><span class="p">]</span>
+            <span class="k">return</span> <span class="n">q_seqs</span><span class="p">,</span> <span class="n">c_seqs</span><span class="p">,</span> <span class="n">r_seqs</span><span class="p">,</span> <span class="n">qshft_seqs</span><span class="p">,</span> <span class="n">cshft_seqs</span><span class="p">,</span> <span class="n">rshft_seqs</span><span class="p">,</span> <span class="n">mask_seqs</span><span class="p">,</span> <span class="n">select_masks</span><span class="p">,</span> <span class="n">dcur</span>
+
+
+
+    <span class="k">def</span> <span class="nf">__load_data__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sequence_path</span><span class="p">,</span> <span class="n">folds</span><span class="p">,</span> <span class="n">pad_val</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Args:</span>
+<span class="sd">            sequence_path (str): file path of the sequences</span>
+<span class="sd">            folds (list[int]): </span>
+<span class="sd">            pad_val (int, optional): pad value. Defaults to -1.</span>
+
+<span class="sd">        Returns: </span>
+<span class="sd">            (tuple): tuple containing</span>
+
+<span class="sd">            - **q_seqs (torch.tensor)**: question id sequence of the 0~seqlen-1 interactions</span>
+<span class="sd">            - **c_seqs (torch.tensor)**: knowledge concept id sequence of the 0~seqlen-1 interactions</span>
+<span class="sd">            - **r_seqs (torch.tensor)**: response id sequence of the 0~seqlen-1 interactions</span>
+<span class="sd">            - **mask_seqs (torch.tensor)**: masked value sequence, shape is seqlen-1</span>
+<span class="sd">            - **select_masks (torch.tensor)**: is select to calculate the performance or not, 0 is not selected, 1 is selected, only available for 1~seqlen-1, shape is seqlen-1</span>
+<span class="sd">            - **dqtest (dict)**: not null only self.qtest is True, for question level evaluation</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">seq_qids</span><span class="p">,</span> <span class="n">seq_cids</span><span class="p">,</span> <span class="n">seq_rights</span><span class="p">,</span> <span class="n">seq_mask</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[]</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">sequence_path</span><span class="p">)</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;fold&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">folds</span><span class="p">)]</span>
+        <span class="n">interaction_num</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="c1"># seq_qidxs, seq_rests = [], []</span>
+        <span class="n">dqtest</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;qidxs&quot;</span><span class="p">:</span> <span class="p">[],</span> <span class="s2">&quot;rests&quot;</span><span class="p">:[],</span> <span class="s2">&quot;orirow&quot;</span><span class="p">:[]}</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+            <span class="c1">#use kc_id or question_id as input</span>
+            <span class="k">if</span> <span class="s2">&quot;concepts&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_type</span><span class="p">:</span>
+                <span class="n">seq_cids</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="nb">int</span><span class="p">(</span><span class="n">_</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;concepts&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)])</span>
+            <span class="k">if</span> <span class="s2">&quot;questions&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_type</span><span class="p">:</span>
+                <span class="n">seq_qids</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="nb">int</span><span class="p">(</span><span class="n">_</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;questions&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)])</span>
+
+            <span class="n">seq_rights</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="nb">int</span><span class="p">(</span><span class="n">_</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;responses&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)])</span>
+            <span class="n">seq_mask</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="nb">int</span><span class="p">(</span><span class="n">_</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;selectmasks&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)])</span>
+
+            <span class="n">interaction_num</span> <span class="o">+=</span> <span class="n">seq_mask</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">qtest</span><span class="p">:</span>
+                <span class="n">dqtest</span><span class="p">[</span><span class="s2">&quot;qidxs&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="nb">int</span><span class="p">(</span><span class="n">_</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;qidxs&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)])</span>
+                <span class="n">dqtest</span><span class="p">[</span><span class="s2">&quot;rests&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="nb">int</span><span class="p">(</span><span class="n">_</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;rest&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)])</span>
+                <span class="n">dqtest</span><span class="p">[</span><span class="s2">&quot;orirow&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="nb">int</span><span class="p">(</span><span class="n">_</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;orirow&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)])</span>
+
+        <span class="n">q_seqs</span><span class="p">,</span> <span class="n">c_seqs</span><span class="p">,</span> <span class="n">r_seqs</span> <span class="o">=</span> <span class="n">FloatTensor</span><span class="p">(</span><span class="n">seq_qids</span><span class="p">),</span> <span class="n">FloatTensor</span><span class="p">(</span><span class="n">seq_cids</span><span class="p">),</span> <span class="n">FloatTensor</span><span class="p">(</span><span class="n">seq_rights</span><span class="p">)</span>
+        <span class="n">seq_mask</span> <span class="o">=</span> <span class="n">LongTensor</span><span class="p">(</span><span class="n">seq_mask</span><span class="p">)</span>
+
+        <span class="n">mask_seqs</span> <span class="o">=</span> <span class="p">(</span><span class="n">c_seqs</span><span class="p">[:,:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="n">pad_val</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">c_seqs</span><span class="p">[:,</span><span class="mi">1</span><span class="p">:]</span> <span class="o">!=</span> <span class="n">pad_val</span><span class="p">)</span>
+        <span class="n">select_masks</span> <span class="o">=</span> <span class="p">(</span><span class="n">seq_mask</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:]</span> <span class="o">!=</span> <span class="n">pad_val</span><span class="p">)</span><span class="c1">#(seq_mask[:,:-1] != pad_val) * (seq_mask[:,1:] != pad_val)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;interaction_num: </span><span class="si">{</span><span class="n">interaction_num</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">qtest</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">dqtest</span><span class="p">:</span>
+                <span class="n">dqtest</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">LongTensor</span><span class="p">(</span><span class="n">dqtest</span><span class="p">[</span><span class="n">key</span><span class="p">])[:,</span> <span class="mi">1</span><span class="p">:]</span>
+            
+            <span class="k">return</span> <span class="n">q_seqs</span><span class="p">,</span> <span class="n">c_seqs</span><span class="p">,</span> <span class="n">r_seqs</span><span class="p">,</span> <span class="n">mask_seqs</span><span class="p">,</span> <span class="n">select_masks</span><span class="p">,</span> <span class="n">dqtest</span>
+        
+        <span class="k">return</span> <span class="n">q_seqs</span><span class="p">,</span> <span class="n">c_seqs</span><span class="p">,</span> <span class="n">r_seqs</span><span class="p">,</span> <span class="n">mask_seqs</span><span class="p">,</span> <span class="n">select_masks</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, pykt-team.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

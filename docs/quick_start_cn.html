@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pykt-toolkit &mdash; pykt-toolkit 0.0.32 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="pykt.models package" href="pykt.models.html" />
+    <link rel="prev" title="Welcome to PyKT" href="quick_start.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> pykt-toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Home:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference external" href="https://pykt-team.github.io/">Official Website</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quick_start.html">Quick Start</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Quick Start (cn)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#id1">1. 生成训练数据</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id2">1.1 数据集选取</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id3">1.2 数据预处理标准</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id4">1.2.1 字段提取</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id5">1.2.2 数据筛选</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id6">1.2.3 数据排序</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id7">1.2.4 字符处理</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id8">1.2.5 输出数据格式</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#id9">1.3 数据切分</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id10">1.3.1 生成训练/验证/测试集</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id11">1.3.2 一个题目多知识点处理</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id12">1.3.3 超出最大长度序列处理</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#id13">1.4 添加新数据集</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#id14">2. 模型调优</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#wandb-key">2.1 配置Wandb Key</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id15">2.2 参数选取</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id16">2.3 调参步骤</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id17">2.4 调参停止条件</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id18">2.5 统计最优结果</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#wandbfusion">2.6 启动Wandb进行测试集上多知识点的Fusion预测</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#id19">参考</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="pykt.models.html">Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pykt.datasets.html">Datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pykt.preprocess.html">Data Preprocess</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pykt.utils.html">Utils</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">pykt-toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>pykt-toolkit</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/quick_start_cn.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="pykt-toolkit">
+<h1>pykt-toolkit<a class="headerlink" href="#pykt-toolkit" title="Permalink to this headline"></a></h1>
+<p>现有的知识追踪（Knowledge Tracing）工作中缺乏一个统一的数据划分标准，导致在各个知识追踪文献中，即便是相同的数据，由于划分方式不同，导致在相同的模型上也有不同的实验结果。因此，本工作旨在构建一个统一的数据预处理及划分结果，并在多个知识追踪SOTA上调优，供后续的知识追踪相关工作进行参考。</p>
+<section id="id1">
+<h2>1. 生成训练数据<a class="headerlink" href="#id1" title="Permalink to this headline"></a></h2>
+<ul class="simple">
+<li><p>cd preprocess</p></li>
+<li><p>python data_preprocess.py [参数]</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>   参数:
+      --dataset_name:数据集名称，默认为“assist2015”
+      --min_seq_len:最小序列长度，默认为3
+      --maxlen:最大序列长度，默认为200
+      --kfold:划分折数，默认为5
+   
+   示例
+   cd preprocess
+   python data_preprocess.py --dataset_name=assist2009
+</pre></div>
+</div>
+<p>执行以上命令即可完成数据预处理和数据划分，生成训练所需数据格式。具体的数据集选取、预处理及划分方式如下:</p>
+<section id="id2">
+<h3>1.1 数据集选取<a class="headerlink" href="#id2" title="Permalink to this headline"></a></h3>
+<p>目前，我们已对7个数据集进行了处理，如下所示</p>
+<!-- | 数据集              | 数据来源                                                                                                              | 文件名称                                    |
+|:-------------------|:---------------------------------------------------------------------------------------------------------------------|:-------------------------------------------|
+| ASSIST2009         | https://sites.google.com/site/assistmentsdata/home/2009-2010-assistment-data/skill-builder-data-2009-2010?authuser=0 | skill_builder_data_corrected_collapsed.csv |
+| ASSIST2015         | https://sites.google.com/site/assistmentsdata/datasets/2015-assistments-skill-builder-data                           | 2015_100_skill_builders_main_problems.csv  |
+| Algebra2005        | https://pslcdatashop.web.cmu.edu/KDDCup/downloads.jsp                                                                | algebra_2005_2006_train.txt                |
+| Bridge_algebra2006 | https://pslcdatashop.web.cmu.edu/KDDCup/downloads.jsp                                                                | bridge_to_algebra_2006_2007_train.txt      |
+| Statics2011        | https://pslcdatashop.web.cmu.edu/DatasetInfo?datasetId=507                                                           | AllData_student_step_2011F.csv             |
+| NIPS2020 Task 3 & 4| https://www.microsoft.com/en-us/research/academic-program/diagnostic-questions/                                      | train_task_3_4.csv                         |
+| POJ                | https://drive.google.com/drive/folders/1LRljqWfODwTYRMPw6wEJ_mMt1KZ4xBDk                                             | poj_log.csv                                | --></section>
+<section id="id3">
+<h3>1.2 数据预处理标准<a class="headerlink" href="#id3" title="Permalink to this headline"></a></h3>
+<p>每个数据集都对应一个数据预处理脚本: [数据集名称]_preprocess.py，处理标准如下:</p>
+<section id="id4">
+<h4>1.2.1 字段提取<a class="headerlink" href="#id4" title="Permalink to this headline"></a></h4>
+<p>对于任意一个数据集，我们主要提取用户ID、题目ID(名称)、知识点ID(名称)、答题情况、答案提交时间、答题用时6个字段（如数据集不存在该字段则用NA表示）。</p>
+</section>
+<section id="id5">
+<h4>1.2.2 数据筛选<a class="headerlink" href="#id5" title="Permalink to this headline"></a></h4>
+<p>对于每条答题记录，如其用户ID、题目ID(名称)、知识点ID(名称)、答题情况、答案提交时间5个字段中任意字段为空，则该条答题记录予以删除。</p>
+</section>
+<section id="id6">
+<h4>1.2.3 数据排序<a class="headerlink" href="#id6" title="Permalink to this headline"></a></h4>
+<p>每个学生答题序列都按照学生答题顺序进行排序，如同一学生的不同答题记录出现相同的顺序，则保持原始顺序，即与原数据集中的答题记录顺序保存一致。</p>
+</section>
+<section id="id7">
+<h4>1.2.4 字符处理<a class="headerlink" href="#id7" title="Permalink to this headline"></a></h4>
+<ul>
+<li><p>字段拼接</p>
+<p>以“—-“作为连接符号。
+例如：Algebra2005需将Probelm Name 和 Step Name拼接作为题目名称。</p>
+</li>
+<li><p>字符替换</p>
+<p>如果原数据题目和知识点中存在下划线“_”，则替换为”####”。
+如果原数据题目和知识点中存在逗号“,”，则替换为”&#64;&#64;&#64;&#64;”。</p>
+</li>
+<li><p>多知识点分割符</p>
+<p>如果一个题目存在多个知识点，我们用下划线“_”分隔知识点。</p>
+</li>
+<li><p>时间格式</p>
+<p>答案提交时间为毫秒（ms）级时间戳，答题用时以毫秒（ms）为单位。</p>
+</li>
+</ul>
+</section>
+<section id="id8">
+<h4>1.2.5 输出数据格式<a class="headerlink" href="#id8" title="Permalink to this headline"></a></h4>
+<p>完成以上数据预处理工作后，每个数据集都会在以它命名的文件夹（data目录）下生成一个data.txt文件。每个学生序列包含6行数据，如下所示:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>用户ID，序列长度 
+题目ID (名称) 
+知识点ID (名称) 
+答题情况 
+答案提交时间 
+答题用时 
+</pre></div>
+</div>
+<p>示例</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>示例1：
+50121, 4 
+106101, 106102, 106103, 106104 
+7014, 7012, 7014, 7013 
+0, 1, 1, 1 
+1647409594000, 1647409601000, 1647409666000, 1647409694000 
+123, 234, 456, 789 
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>示例2：
+83935, 8
+NA
+37876, 37876, 37876, 37876, 37876, 37876, 37876, 37876
+1, 1, 0, 1, 0, 1, 1, 1
+NA
+NA
+</pre></div>
+</div>
+</section>
+</section>
+<section id="id9">
+<h3>1.3 数据切分<a class="headerlink" href="#id9" title="Permalink to this headline"></a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">prepocess</span><span class="o">/</span><span class="n">split_datasets</span><span class="o">.</span><span class="n">py</span>
+</pre></div>
+</div>
+<section id="id10">
+<h4>1.3.1 生成训练/验证/测试集<a class="headerlink" href="#id10" title="Permalink to this headline"></a></h4>
+<p>在整个数据集<strong>随机抽取80%序列做为训练集，剩余20%为测试集</strong>。同时，<strong>将训练集根据80%训练集和20%验证集的比例划分为5折</strong>。在5折划分时，如数据不能进行等分（即数据大小不能被5整除，存在余数），则<strong>多余的序列从第一折开始逐个加入到每一折中</strong>。</p>
+</section>
+<section id="id11">
+<h4>1.3.2 一个题目多知识点处理<a class="headerlink" href="#id11" title="Permalink to this headline"></a></h4>
+<ul>
+<li><p>复制方式</p>
+<p>部分数据集存在一个题目对应多个知识点的情况。对于一个题目多知识点的交互，我们参考此前工作<a class="reference external" href="#ref1"><sup>1</sup></a><a class="reference external" href="#ref2"><sup>2</sup></a>，我们<strong>将一个学生的答题记录复制多次，每个知识点作为一次交互</strong>，并用字段“is_repeat”标识（如交互是复制而成，则标识为1，反之为0）。同时，我们用一个“selectmasks”标识需要预测的题目。例如：./data/assist2009/train_valid_sequences.csv</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>示例
+
+原始序列
+题目：3, 4, 5
+知识点：1_3, 1_2, 3
+答题情况：1, 0, 1
+
+复制方式
+题目：3, 3, 4, 4, 5
+知识点：1, 3, 1, 2, 3
+答题情况：1, 1, 0, 0, 1
+is_repeat: 0, 1, 0, 1, 0
+selectmasks: 1, 1, 1, 1, 1
+</pre></div>
+</div>
+</li>
+<li><p>基于题目预测的Fusion方式 (仅测试集)</p>
+<p>当一个题目对应多知识点时，在测试集采用复制方式会导致结果有所偏差(单个知识点当作一个题目，预测题量变多)。因此，我们尝试聚合一个题目对应的所有知识点预测结果作为该题的最终预测。</p>
+<p>为方便聚合一个题目所对应的所有知识点预测结果，我们生成基于题目预测生成的测试集文件时 (例如: ./data/assist2009/test_question_sequences.csv)，对于没有单个题目对应多知识点的序列，每一行是整个序列，预测所有知识点。而对于存在单题目对应多知识点的序列，我们将其分割成多个子序列，每个子序列占用一行，只预测其中一个知识点，而该知识点只参考其前面题目的所属知识点。如图1所示，题目4的知识点1和知识点2的预测都只参考题目3的知识点1和知识点3，题目5对应的知识点3则参考此前所有知识点。我们使用“qidx”字段标识每个知识点所属的题目在数据集中所属的全局位置，方便后续按照全局位置对知识点进行聚合; “rest”字段标识位于该知识点后面剩余的同属一道题的知识点个数,如为0则进行聚合, 否则不聚合。
+因此, 可生成如下子序列：</p>
+<p>示例</p>
+<div align="center">
+<img src="_static/image.png" width="300px" /><p>图1：基于题目预测的Fusion方式</p>
+</div> <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="go">&gt;&gt;&gt;题目3的知识点1和知识点3预测题4的知识点1</span>
+<span class="go">题目：3, 3, 4  </span>
+<span class="go">知识点：1, 3, 1 </span>
+<span class="go">答题情况：1, 1, 0</span>
+<span class="go">selectmasks: -1, -1, 1</span>
+<span class="go">is_repeat: 0, 1, 0</span>
+<span class="go">qidxs: 0, 0, 1</span>
+<span class="go">rest: 1, 0, 1</span>
+
+<span class="go">&gt;&gt;&gt;题目3的知识点1和知识点3预测题4的知识点2</span>
+<span class="go">题目：3, 3, 4  </span>
+<span class="go">知识点：1, 3, 2 </span>
+<span class="go">答题情况：1, 1, 0 </span>
+<span class="go">selectmasks: -1, -1, 1</span>
+<span class="go">is_repeat: 0, 1, 1</span>
+<span class="go">qidxs: 0, 0, 1</span>
+<span class="go">rest: 1, 0, 0</span>
+
+<span class="go">&gt;&gt;&gt;题目3和题目4所有知识点预测题5的知识点3</span>
+<span class="go">题目：3, 3, 4, 4, 5  </span>
+<span class="go">知识点：1, 3, 1, 2, 3 </span>
+<span class="go">答题情况：1, 1, 0, 0, 1</span>
+<span class="go">selectmasks: -1, -1, -1, -1, 1</span>
+<span class="go">is_repeat: 0, 1, 0, 1, 0 </span>
+<span class="go">qidxs: 0, 0, 1, 1, 2</span>
+<span class="go">rest: 1, 0, 1, 0, 0</span>
+</pre></div>
+</div>
+<p>基于生成的序列，我们的有如下预测方式:</p>
+<p>(1) 聚合前:To do</p>
+<p>(2) early_fusion: 取该题对应的所有知识点的hidden state求平均，再输入到prediction模块</p>
+<p>(3) late fusion-mean: 对每个知识点的预测概率求平均，如果这个均值大于(等于)0.5，则视该题为答对</p>
+<p>(4) late fusion-vote: 该题对应的所有知识点预测结果超过(等于)半数视该题为答对</p>
+<p>(5) late fusion-all: 该题对应的所有知识点预测结果都为对，则该视该题为答对</p>
+</li>
+</ul>
+</section>
+<section id="id12">
+<h4>1.3.3 超出最大长度序列处理<a class="headerlink" href="#id12" title="Permalink to this headline"></a></h4>
+<ul class="simple">
+<li><p>切分为子序列</p></li>
+</ul>
+<p>如果一个学生序列长度大于所设最大序列长度<em>M</em>，参照以往工作<a class="reference external" href="#ref2"><sup>2</sup></a><a class="reference external" href="#ref3"><sup>3</sup></a><a class="reference external" href="#ref4"><sup>4</sup></a>，我们将<strong>整个序列分割为多个长度为<em>M</em>的短序列, 长度不足<em>M</em>用“-1”补齐</strong>。例如：./data/assist2009/test_sequences.csv 和 ./data/assist2009/test_question_sequences.csv</p>
+<ul class="simple">
+<li><p>滑窗处理 (仅测试集)</p></li>
+</ul>
+<p>在测试集上直接采取以上两种方式会<strong>遗失一定的历史信息从而影响预测结果</strong>。因此我们额外对测试集进行了滑窗处理，即<strong>对于长度大于<em>M</em>的序列，我们不做截断或分割处理，而是保留其前<em>M</em> - 1个答题历史</strong>。例如，某个学生序列长度为205，最大序列长度为200，我们基于第1道题到第200道题预测第201道题；在预测第202道题时，保留第2到第201道题等等。在滑窗预测时，如果学生序列长度在<em>M</em>以内, 则全部预测, 如果学生的序列长度大于<em>M</em>, 由于前<em>M</em> - 1题在上一个序列中完成预测，为避免重复预测，我们生成的每条滑窗序列预测最后一题即可。例如：./data/assist2009/test_window_sequences.csv 和 ./data/assist2009/test_question_window_sequences.csv</p>
+</section>
+</section>
+<section id="id13">
+<h3>1.4 添加新数据集<a class="headerlink" href="#id13" title="Permalink to this headline"></a></h3>
+<p>如果您想添加新的数据集，请在data目录下创建新的数据集文件夹，以其名称命名，将数据源文件存储在该目录之下，并在preprocess目录下参照我们的数据预测处理标准编写处理脚本[数据集名称]_preprocess.py，后在data_preprocess.py添加数据路径即可。</p>
+</section>
+</section>
+<section id="id14">
+<h2>2. 模型调优<a class="headerlink" href="#id14" title="Permalink to this headline"></a></h2>
+<p>我们的调参在<a class="reference external" href="https://wandb.ai/">Weights&amp;Biases</a>  （Wandb）上进行。</p>
+<section id="wandb-key">
+<h3>2.1 配置Wandb Key<a class="headerlink" href="#wandb-key" title="Permalink to this headline"></a></h3>
+<p>在Wandb完成个人注册并在configs/wandb.json中配置自己的uid和api_key</p>
+</section>
+<section id="id15">
+<h3>2.2 参数选取<a class="headerlink" href="#id15" title="Permalink to this headline"></a></h3>
+<p>参考原论文中各个超参的取值，我们设置每个超参的取值范围，编写参数配置文件。例如：seedwandb/dkt_merge_linear.yaml</p>
+</section>
+<section id="id16">
+<h3>2.3 调参步骤<a class="headerlink" href="#id16" title="Permalink to this headline"></a></h3>
+<ul class="simple">
+<li><p>python generate_wandb.py [参数]</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>   参数:
+      --src_dir:模型的参数配置文件路径
+      --project_name:wandb上的项目名称, 默认值:kt_toolkits
+      --dataset_names:数据集名称，可填多个，以逗号“,“分隔，默认值:“assist2015”
+      --model_names:模型名称，可填多个，以逗号“,“分隔，默认值:dkt
+      --folds:默认值:“0,1,2,3,4”
+      --save_dir_suffix:给模型存储路径名称添加额外字符，默认值:“”
+      --all_dir:生成该数据集该模型的配置文件，默认值:“all_wandbs”
+      --launch_file:生成的sweep启动脚本，默认值:“all_start.sh”
+      --generate_all:输入为“True“或“False”，表示是否生成all_dir目录下所有数据集和模型的wandb启动文件 (True表示:生成all_dir目录下所有数据模型的启动文件, False表示仅生成当前执行的数据模型的启动文件)，默认值:“False”
+   
+</pre></div>
+</div>
+<p>执行后会生成两个结果:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>目录all_dir：存放用于调参的配置文件
+launch_file文件：用于提交sweep的脚本（此处会读取wandb.json）
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>sh [launch_file] [参数]</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>   sh [launch_file文件] &gt; [定向日志] 2&gt;&amp;1
+   
+   - [launch_file文件]:必填，用户提交sweep到wandbs的脚本,将执行输出定向到[定向日志])
+   - [定向日志]:必填，执行日志里的sweep
+   
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>sh run_all.sh [参数]</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>   sh run_all.sh [定向日志] [start_sweep] [end_sweep] [dataset_name] [model_name] [gpu_ids] [project_name]
+
+   - [定向日志]:必填，执行日志里的sweep
+   - [start_sweep]: 必填，启动sweep的起始id
+   - [end_sweep]: 必填，启动sweep结束id
+   - [dataset_name]:必填，数据集名称
+   - [model_name]: 必填，模型名称
+   - [gpu_ids]:必填，GPU ID
+   - [project_name]:选填，默认值：kt_toolkits
+   执行run_all.sh，启动sweep，此处读取[定向日志]
+   
+</pre></div>
+</div>
+<p>示例</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>   <span class="n">python</span> <span class="n">generate_wandb</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">dataset_names</span><span class="o">=</span><span class="s2">&quot;assist2009,assist2015&quot;</span> <span class="o">--</span><span class="n">model_names</span><span class="o">=</span><span class="s2">&quot;dkt,dkt+&quot;</span>
+   <span class="n">sh</span> <span class="n">all_start</span><span class="o">.</span><span class="n">sh</span> <span class="o">&gt;</span> <span class="n">log</span><span class="o">.</span><span class="n">all</span> <span class="mi">2</span><span class="o">&gt;&amp;</span><span class="mi">1</span>
+   <span class="n">sh</span> <span class="n">run_all</span><span class="o">.</span><span class="n">sh</span> <span class="n">log</span><span class="o">.</span><span class="n">all</span> <span class="mi">0</span> <span class="mi">5</span> <span class="n">assist2015</span> <span class="n">dkt</span> <span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span>
+   <span class="n">sh</span> <span class="n">start_sweep_0_5</span><span class="o">.</span><span class="n">sh</span>
+</pre></div>
+</div>
+</section>
+<section id="id17">
+<h3>2.4 调参停止条件<a class="headerlink" href="#id17" title="Permalink to this headline"></a></h3>
+<ul class="simple">
+<li><p>get_wandb.ipynb</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>   考虑到时间成本，我们无法穷举所有参数，需要设置调参停止条件。
+   如模型已选取300组以上的参数组合，且最近运行的100组参数在测试集上都没取得最优结果，停止调参。
+</pre></div>
+</div>
+</section>
+<section id="id18">
+<h3>2.5 统计最优结果<a class="headerlink" href="#id18" title="Permalink to this headline"></a></h3>
+<p>每一折选取在验证集上取得最优AUC所对应的模型对测试集进行预测，
+每一折有一个测试结果，把5个测试结果求平均即为模型预测结果。</p>
+<ul class="simple">
+<li><p>python merge_wandb_results.py [参数]</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>   参数:
+      --src_dir:模型预测的参数配置文件路径
+      --project_name:wandb项目名称，默认值:“kt_toolkits”
+      --dataset_name:数据集名称，默认值:“assist2015”
+      --model_names:模型名称，可填多个，以逗号“,“分隔,默认值:dkt
+      --update:是否更新现有结果，默认值:“1 (是)”
+      --save_dir:结果存储目录，默认值:“results”
+      --extract_best_model:是否提取最优模型路径以便进行下文2.6中的Fusion预测，默认值:“False”
+      --abs_dir:模型存储目录的绝对路径，默认值:“”
+      --pred_dir:生成预测的配置文件，默认值:“pred_wandbs”
+      --launch_file:生成的sweep启动脚本，默认值:&quot;start_predict.sh”
+      --generate_all:输入为“True“或“False”，表示是否生成pred_wandbs目录下所有数据集和模型的wandb启动文件 (True表示:生成pred_wandbs目录下所有数据模型的启动文件, False表示仅生成当前执行的数据模型的启动文件)，默认值:“False”
+</pre></div>
+</div>
+<p>示例</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>   python merge_wandb_results.py --dataset_name=“assist2009” --model_names=“dkt,dkt+” --update=&quot;Fasle&quot;
+</pre></div>
+</div>
+</section>
+<section id="wandbfusion">
+<h3>2.6 启动Wandb进行测试集上多知识点的Fusion预测<a class="headerlink" href="#wandbfusion" title="Permalink to this headline"></a></h3>
+<ul class="simple">
+<li><p>执行上文Section2.5统计最优结果中的命令python merge_wandb_results.py即可</p></li>
+<li><p>执行上文Section2.3调参步骤中的命令sh [launch_file] [参数]</p></li>
+<li><p>执行上文Section2.3调参步骤中的命令sh run_all.sh [参数]</p></li>
+<li><p>python extract_prediction_results.py [参数]</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>   python extract_prediction_results.py [数据集名称] [模型名称] [使用现有统计结果] [项目名称]
+
+   - [数据集名称]:必填(可填多个数据集,以逗号“,“分隔)
+   - [模型名称]:必填(可填多个模型,以逗号“,“分隔)
+   - [使用现有统计结果]:必填（1:是，0:否）
+   - [wandb项目名称]: 可选参数，默认值:“kt_toolkits”
+   
+   读取fusion预测结果
+</pre></div>
+</div>
+<p>示例</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>   <span class="n">python</span> <span class="n">merge_wandb_results</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">dataset_name</span><span class="o">=</span><span class="s2">&quot;assist2009&quot;</span> <span class="o">--</span><span class="n">model_names</span><span class="o">=</span><span class="s2">&quot;dkt,dkt+&quot;</span> <span class="o">--</span><span class="n">update</span><span class="o">=</span><span class="s2">&quot;Fasle&quot;</span> <span class="o">--</span><span class="n">extract_best_model</span><span class="o">=</span><span class="s2">&quot;True&quot;</span> <span class="o">--</span><span class="n">abs_dir</span><span class="o">=</span><span class="s2">&quot;/data/huangshuyan/kt/kt_toolkits&quot;</span> <span class="o">--</span><span class="n">submit_all</span><span class="o">=</span><span class="s2">&quot;False&quot;</span>
+   <span class="n">sh</span> <span class="n">start_predict</span><span class="o">.</span><span class="n">sh</span> <span class="o">&gt;</span> <span class="n">predict</span><span class="o">.</span><span class="n">all</span> <span class="mi">2</span><span class="o">&gt;&amp;</span><span class="mi">1</span>
+   <span class="n">sh</span> <span class="n">run_all</span><span class="o">.</span><span class="n">sh</span> <span class="n">predict</span><span class="o">.</span><span class="n">all</span> <span class="mi">0</span> <span class="mi">1</span> <span class="n">assist2009</span> <span class="n">dkt</span><span class="p">,</span><span class="n">dkt</span><span class="o">+</span> <span class="mi">0</span>
+   <span class="n">sh</span> <span class="n">start_sweep_0_1</span><span class="o">.</span><span class="n">sh</span>
+   <span class="n">python</span> <span class="n">extract_prediction_results</span><span class="o">.</span><span class="n">py</span> <span class="n">assist2009</span> <span class="n">dkt</span><span class="p">,</span><span class="n">dkt</span><span class="o">+</span> <span class="mi">1</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="id19">
+<h2>参考<a class="headerlink" href="#id19" title="Permalink to this headline"></a></h2>
+<div id="ref1"></div><ul class="simple">
+<li><p>[1] Piech，C.，Bassen，J.，Huang，J.，Ganguli，S.，Sahami，M.，Guibas，L. J.，&amp; Sohl-Dickstein，J. (2015). <a class="reference external" href="https://proceedings.neurips.cc/paper/2015/file/bac9162b47c56fc8a4d2a519803d51b3-Paper.pdf">Deep knowledge tracing</a>. Advances in neural information processing systems，28.</p></li>
+</ul>
+<div id="ref2"></div><ul class="simple">
+<li><p>[2] Zhang，J.，Shi，X.，King，I.，&amp; Yeung，D. Y. (2017，April). <a class="reference external" href="https://dl.acm.org/doi/pdf/10.1145/3038912.3052580">Dynamic key-value memory networks for knowledge tracing.</a> In Proceedings of the 26th international conference on World Wide Web (pp. 765-774).</p></li>
+</ul>
+<div id="ref3"></div><ul class="simple">
+<li><p>[3] Ghosh，A.，Heffernan，N.，&amp; Lan，A. S. (2020，August). <a class="reference external" href="https://dl.acm.org/doi/pdf/10.1145/3394486.3403282">Context-aware attentive knowledge tracing.</a> In Proceedings of the 26th ACM SIGKDD international conference on knowledge discovery &amp; data mining (pp. 2330-2339).</p></li>
+</ul>
+<div id="ref4"></div><ul class="simple">
+<li><p>[4] Pandey，S.，&amp; Srivastava，J. (2020，October). <a class="reference external" href="https://dl.acm.org/doi/pdf/10.1145/3340531.3411994">Rkt: Relation-aware self-attention for knowledge tracing.</a> In Proceedings of the 29th ACM International Conference on Information &amp; Knowledge Management (pp. 1205-1214).</p></li>
+</ul>
+<div id="ref5"></div><ul class="simple">
+<li><p>[5] Yeung，C. K.，&amp; Yeung，D. Y. (2018，June). <a class="reference external" href="https://arxiv.org/pdf/1806.02180.pdf">Addressing two problems in deep knowledge tracing via prediction-consistent regularization.</a> In Proceedings of the Fifth Annual ACM Conference on Learning at Scale (pp. 1-10).</p></li>
+<li><p>[6] Lee，J.，&amp; Yeung，D. Y. (2019，March). <a class="reference external" href="https://arxiv.org/pdf/1908.02146.pdf">Knowledge query network for knowledge tracing: How knowledge interacts with skills.</a>In Proceedings of the 9th International Conference on Learning Analytics &amp; Knowledge (pp. 491-500).</p></li>
+<li><p>[7] Abdelrahman, G., &amp; Wang, Q. (2019, July). <a class="reference external" href="https://dl.acm.org/doi/pdf/10.1145/3331184.3331195">Knowledge tracing with sequential key-value memory networks.</a> In Proceedings of the 42nd International ACM SIGIR Conference on Research and Development in Information Retrieval (pp. 175-184).</p></li>
+<li><p>[8] Pandey，S.，&amp; Karypis，G. (2019). <a class="reference external" href="https://arxiv.org/pdf/1907.06837.pdf">A Self-Attentive Model for Knowledge Tracing.</a> International Educational Data Mining Society.</p></li>
+<li><p>[9] Choi，Youngduck，et al. <a class="reference external" href="https://dl.acm.org/doi/pdf/10.1145/3386527.3405945">Towards an appropriate query，key，and value computation for knowledge tracing.</a>Proceedings of the Seventh ACM Conference on Learning&#64; Scale. 2020.</p></li>
+<li><p>[10] Guo，X.，Huang，Z.，Gao，J.，Shang，M.，Shu，M.，&amp; Sun，J. (2021，October). <a class="reference external" href="https://dl.acm.org/doi/pdf/10.1145/3474085.3475554">Enhancing Knowledge Tracing via Adversarial Training.</a> In Proceedings of the 29th ACM International Conference on Multimedia (pp. 367-375).</p></li>
+<li><p>[11] Nagatani, K., Zhang, Q., Sato, M., Chen, Y. Y., Chen, F., &amp; Ohkuma, T. (2019, May). <a class="reference external" href="https://dl.acm.org/doi/pdf/10.1145/3308558.3313565">Augmenting knowledge tracing by considering forgetting behavior.</a> In The world wide web conference (pp. 3101-3107).</p></li>
+<li><p>[12] <a class="reference external" href="https://github.com/hcnoh/knowledge-tracing-collection-pytorch">knowledge-tracing-collection-pytorch</a>.</p></li>
+<li><p>[13] <a class="reference external" href="https://github.com/arghosh/AKT">Implementation of Context-Aware Attentive Knowledge Tracing (AKT)</a>.</p></li>
+<li><p>[14] <a class="reference external" href="https://github.com/Badstu/CAKT_othermodels/tree/master/SKVMN">Implementation of Knowledge Tracing with Sequential Key-Value Memory Networks (SKVMN)</a>.</p></li>
+<li><p>[15] <a class="reference external" href="https://github.com/xiaopengguo/ATKT">Implementation of Enhancing Knowledge Tracing via Adversarial Training (ATKT)</a>.</p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="quick_start.html" class="btn btn-neutral float-left" title="Welcome to PyKT" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="pykt.models.html" class="btn btn-neutral float-right" title="pykt.models package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, pykt-team.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
