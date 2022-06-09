@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pykt.preprocess package &mdash; pykt-toolkit 0.0.32 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="pykt.utils package" href="pykt.utils.html" />
+    <link rel="prev" title="pykt.datasets package" href="pykt.datasets.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> pykt-toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Home:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://pykt-team.github.io/">Official Website</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quick_start.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quick_start_cn.html">Quick Start (cn)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="pykt.models.html">Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pykt.datasets.html">Datasets</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Data Preprocess</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-pykt.preprocess.algebra2005_preprocess">pykt.preprocess.algebra2005_preprocess module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-pykt.preprocess.assist2009_preprocess">pykt.preprocess.assist2009_preprocess module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-pykt.preprocess.assist2015_preprocess">pykt.preprocess.assist2015_preprocess module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-pykt.preprocess.bridge2algebra2006_preprocess">pykt.preprocess.bridge2algebra2006_preprocess module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-pykt.preprocess.data_proprocess">pykt.preprocess.data_proprocess module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-pykt.preprocess.nips_task34_preprocess">pykt.preprocess.nips_task34_preprocess module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-pykt.preprocess.poj_preprocess">pykt.preprocess.poj_preprocess module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-pykt.preprocess.split_datasets">pykt.preprocess.split_datasets module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-pykt.preprocess.statics2011_preprocess">pykt.preprocess.statics2011_preprocess module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-pykt.preprocess.utils">pykt.preprocess.utils module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-pykt.preprocess">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="pykt.utils.html">Utils</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">pykt-toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>pykt.preprocess package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/pykt.preprocess.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="pykt-preprocess-package">
+<h1>pykt.preprocess package<a class="headerlink" href="#pykt-preprocess-package" title="Permalink to this headline"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline"></a></h2>
+</section>
+<section id="module-pykt.preprocess.algebra2005_preprocess">
+<span id="pykt-preprocess-algebra2005-preprocess-module"></span><h2>pykt.preprocess.algebra2005_preprocess module<a class="headerlink" href="#module-pykt.preprocess.algebra2005_preprocess" title="Permalink to this headline"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="pykt.preprocess.algebra2005_preprocess.read_data_from_csv">
+<span class="sig-prename descclassname"><span class="pre">pykt.preprocess.algebra2005_preprocess.</span></span><span class="sig-name descname"><span class="pre">read_data_from_csv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">read_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">write_file</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/preprocess/algebra2005_preprocess.html#read_data_from_csv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.preprocess.algebra2005_preprocess.read_data_from_csv" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-pykt.preprocess.assist2009_preprocess">
+<span id="pykt-preprocess-assist2009-preprocess-module"></span><h2>pykt.preprocess.assist2009_preprocess module<a class="headerlink" href="#module-pykt.preprocess.assist2009_preprocess" title="Permalink to this headline"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="pykt.preprocess.assist2009_preprocess.read_data_from_csv">
+<span class="sig-prename descclassname"><span class="pre">pykt.preprocess.assist2009_preprocess.</span></span><span class="sig-name descname"><span class="pre">read_data_from_csv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">read_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">write_file</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/preprocess/assist2009_preprocess.html#read_data_from_csv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.preprocess.assist2009_preprocess.read_data_from_csv" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-pykt.preprocess.assist2015_preprocess">
+<span id="pykt-preprocess-assist2015-preprocess-module"></span><h2>pykt.preprocess.assist2015_preprocess module<a class="headerlink" href="#module-pykt.preprocess.assist2015_preprocess" title="Permalink to this headline"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="pykt.preprocess.assist2015_preprocess.read_data_from_csv">
+<span class="sig-prename descclassname"><span class="pre">pykt.preprocess.assist2015_preprocess.</span></span><span class="sig-name descname"><span class="pre">read_data_from_csv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">read_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">write_file</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/preprocess/assist2015_preprocess.html#read_data_from_csv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.preprocess.assist2015_preprocess.read_data_from_csv" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-pykt.preprocess.bridge2algebra2006_preprocess">
+<span id="pykt-preprocess-bridge2algebra2006-preprocess-module"></span><h2>pykt.preprocess.bridge2algebra2006_preprocess module<a class="headerlink" href="#module-pykt.preprocess.bridge2algebra2006_preprocess" title="Permalink to this headline"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="pykt.preprocess.bridge2algebra2006_preprocess.read_data_from_csv">
+<span class="sig-prename descclassname"><span class="pre">pykt.preprocess.bridge2algebra2006_preprocess.</span></span><span class="sig-name descname"><span class="pre">read_data_from_csv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">read_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">write_file</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/preprocess/bridge2algebra2006_preprocess.html#read_data_from_csv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.preprocess.bridge2algebra2006_preprocess.read_data_from_csv" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-pykt.preprocess.data_proprocess">
+<span id="pykt-preprocess-data-proprocess-module"></span><h2>pykt.preprocess.data_proprocess module<a class="headerlink" href="#module-pykt.preprocess.data_proprocess" title="Permalink to this headline"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="pykt.preprocess.data_proprocess.process_raw_data">
+<span class="sig-prename descclassname"><span class="pre">pykt.preprocess.data_proprocess.</span></span><span class="sig-name descname"><span class="pre">process_raw_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataset_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dname2paths</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/preprocess/data_proprocess.html#process_raw_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.preprocess.data_proprocess.process_raw_data" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-pykt.preprocess.nips_task34_preprocess">
+<span id="pykt-preprocess-nips-task34-preprocess-module"></span><h2>pykt.preprocess.nips_task34_preprocess module<a class="headerlink" href="#module-pykt.preprocess.nips_task34_preprocess" title="Permalink to this headline"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="pykt.preprocess.nips_task34_preprocess.format_list2str">
+<span class="sig-prename descclassname"><span class="pre">pykt.preprocess.nips_task34_preprocess.</span></span><span class="sig-name descname"><span class="pre">format_list2str</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_list</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/preprocess/nips_task34_preprocess.html#format_list2str"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.preprocess.nips_task34_preprocess.format_list2str" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pykt.preprocess.nips_task34_preprocess.get_user_inters">
+<span class="sig-prename descclassname"><span class="pre">pykt.preprocess.nips_task34_preprocess.</span></span><span class="sig-name descname"><span class="pre">get_user_inters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/preprocess/nips_task34_preprocess.html#get_user_inters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.preprocess.nips_task34_preprocess.get_user_inters" title="Permalink to this definition"></a></dt>
+<dd><p>convert df to user sequences</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>df</strong> (<em>_type_</em>) – the merged df</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>user_inters</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pykt.preprocess.nips_task34_preprocess.load_nips_data">
+<span class="sig-prename descclassname"><span class="pre">pykt.preprocess.nips_task34_preprocess.</span></span><span class="sig-name descname"><span class="pre">load_nips_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">primary_data_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meta_data_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/preprocess/nips_task34_preprocess.html#load_nips_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.preprocess.nips_task34_preprocess.load_nips_data" title="Permalink to this definition"></a></dt>
+<dd><p>The data downloaded from <a class="reference external" href="https://competitions.codalab.org/competitions/25449">https://competitions.codalab.org/competitions/25449</a>
+The document can be downloaded from <a class="reference external" href="https://arxiv.org/abs/2007.12061">https://arxiv.org/abs/2007.12061</a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>primary_data_path</strong> (<em>_type_</em>) – premary data path</p></li>
+<li><p><strong>meta_data_dir</strong> (<em>_type_</em>) – metadata dir</p></li>
+<li><p><strong>task_name</strong> (<em>_type_</em>) – task_1_2 or task_3_4</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the merge df</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dataframe</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pykt.preprocess.nips_task34_preprocess.read_data_from_csv">
+<span class="sig-prename descclassname"><span class="pre">pykt.preprocess.nips_task34_preprocess.</span></span><span class="sig-name descname"><span class="pre">read_data_from_csv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">primary_data_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meta_data_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">write_file</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/preprocess/nips_task34_preprocess.html#read_data_from_csv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.preprocess.nips_task34_preprocess.read_data_from_csv" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-pykt.preprocess.poj_preprocess">
+<span id="pykt-preprocess-poj-preprocess-module"></span><h2>pykt.preprocess.poj_preprocess module<a class="headerlink" href="#module-pykt.preprocess.poj_preprocess" title="Permalink to this headline"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="pykt.preprocess.poj_preprocess.read_data_from_csv">
+<span class="sig-prename descclassname"><span class="pre">pykt.preprocess.poj_preprocess.</span></span><span class="sig-name descname"><span class="pre">read_data_from_csv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">read_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">write_file</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/preprocess/poj_preprocess.html#read_data_from_csv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.preprocess.poj_preprocess.read_data_from_csv" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-pykt.preprocess.split_datasets">
+<span id="pykt-preprocess-split-datasets-module"></span><h2>pykt.preprocess.split_datasets module<a class="headerlink" href="#module-pykt.preprocess.split_datasets" title="Permalink to this headline"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="pykt.preprocess.split_datasets.KFold_split">
+<span class="sig-prename descclassname"><span class="pre">pykt.preprocess.split_datasets.</span></span><span class="sig-name descname"><span class="pre">KFold_split</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/preprocess/split_datasets.html#KFold_split"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.preprocess.split_datasets.KFold_split" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pykt.preprocess.split_datasets.add_qidx">
+<span class="sig-prename descclassname"><span class="pre">pykt.preprocess.split_datasets.</span></span><span class="sig-name descname"><span class="pre">add_qidx</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dcur</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">global_qidx</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/preprocess/split_datasets.html#add_qidx"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.preprocess.split_datasets.add_qidx" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pykt.preprocess.split_datasets.calStatistics">
+<span class="sig-prename descclassname"><span class="pre">pykt.preprocess.split_datasets.</span></span><span class="sig-name descname"><span class="pre">calStatistics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stares</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/preprocess/split_datasets.html#calStatistics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.preprocess.split_datasets.calStatistics" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pykt.preprocess.split_datasets.expand_question">
+<span class="sig-prename descclassname"><span class="pre">pykt.preprocess.split_datasets.</span></span><span class="sig-name descname"><span class="pre">expand_question</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dcur</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">global_qidx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pad_val</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-</span> <span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/preprocess/split_datasets.html#expand_question"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.preprocess.split_datasets.expand_question" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pykt.preprocess.split_datasets.extend_multi_concepts">
+<span class="sig-prename descclassname"><span class="pre">pykt.preprocess.split_datasets.</span></span><span class="sig-name descname"><span class="pre">extend_multi_concepts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">effective_keys</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/preprocess/split_datasets.html#extend_multi_concepts"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.preprocess.split_datasets.extend_multi_concepts" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pykt.preprocess.split_datasets.generate_question_sequences">
+<span class="sig-prename descclassname"><span class="pre">pykt.preprocess.split_datasets.</span></span><span class="sig-name descname"><span class="pre">generate_question_sequences</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">effective_keys</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">window</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_seq_len</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxlen</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">200</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pad_val</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-</span> <span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/preprocess/split_datasets.html#generate_question_sequences"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.preprocess.split_datasets.generate_question_sequences" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pykt.preprocess.split_datasets.generate_sequences">
+<span class="sig-prename descclassname"><span class="pre">pykt.preprocess.split_datasets.</span></span><span class="sig-name descname"><span class="pre">generate_sequences</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">effective_keys</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_seq_len</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxlen</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">200</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pad_val</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-</span> <span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/preprocess/split_datasets.html#generate_sequences"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.preprocess.split_datasets.generate_sequences" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pykt.preprocess.split_datasets.generate_window_sequences">
+<span class="sig-prename descclassname"><span class="pre">pykt.preprocess.split_datasets.</span></span><span class="sig-name descname"><span class="pre">generate_window_sequences</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">effective_keys</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxlen</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">200</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pad_val</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-</span> <span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/preprocess/split_datasets.html#generate_window_sequences"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.preprocess.split_datasets.generate_window_sequences" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pykt.preprocess.split_datasets.get_inter_qidx">
+<span class="sig-prename descclassname"><span class="pre">pykt.preprocess.split_datasets.</span></span><span class="sig-name descname"><span class="pre">get_inter_qidx</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/preprocess/split_datasets.html#get_inter_qidx"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.preprocess.split_datasets.get_inter_qidx" title="Permalink to this definition"></a></dt>
+<dd><p>add global id for each interaction</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pykt.preprocess.split_datasets.id_mapping">
+<span class="sig-prename descclassname"><span class="pre">pykt.preprocess.split_datasets.</span></span><span class="sig-name descname"><span class="pre">id_mapping</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/preprocess/split_datasets.html#id_mapping"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.preprocess.split_datasets.id_mapping" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pykt.preprocess.split_datasets.main">
+<span class="sig-prename descclassname"><span class="pre">pykt.preprocess.split_datasets.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dataset_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">configf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_seq_len</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxlen</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">200</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kfold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/preprocess/split_datasets.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.preprocess.split_datasets.main" title="Permalink to this definition"></a></dt>
+<dd><p>split main function</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dname</strong> (<em>str</em>) – data folder path</p></li>
+<li><p><strong>fname</strong> (<em>str</em>) – the data file used to split, needs 6 columns, format is: (NA indicates the dataset has no corresponding info)
+uid,seqlen: 50121,4
+quetion ids: NA
+concept ids: 7014,7014,7014,7014
+responses: 0,1,1,1
+timestamps: NA
+cost times: NA</p></li>
+<li><p><strong>dataset_name</strong> (<em>str</em>) – dataset name</p></li>
+<li><p><strong>configf</strong> (<em>str</em>) – the dataconfig file path</p></li>
+<li><p><strong>min_seq_len</strong> (<em>int</em><em>, </em><em>optional</em>) – the min seqlen, sequences less than this value will be filtered out. Defaults to 3.</p></li>
+<li><p><strong>maxlen</strong> (<em>int</em><em>, </em><em>optional</em>) – the max seqlen. Defaults to 200.</p></li>
+<li><p><strong>kfold</strong> (<em>int</em><em>, </em><em>optional</em>) – the folds num needs to split. Defaults to 5.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pykt.preprocess.split_datasets.read_data">
+<span class="sig-prename descclassname"><span class="pre">pykt.preprocess.split_datasets.</span></span><span class="sig-name descname"><span class="pre">read_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_seq_len</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">response_set</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0,</span> <span class="pre">1]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/preprocess/split_datasets.html#read_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.preprocess.split_datasets.read_data" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pykt.preprocess.split_datasets.save_dcur">
+<span class="sig-prename descclassname"><span class="pre">pykt.preprocess.split_datasets.</span></span><span class="sig-name descname"><span class="pre">save_dcur</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">row</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">effective_keys</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/preprocess/split_datasets.html#save_dcur"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.preprocess.split_datasets.save_dcur" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pykt.preprocess.split_datasets.save_id2idx">
+<span class="sig-prename descclassname"><span class="pre">pykt.preprocess.split_datasets.</span></span><span class="sig-name descname"><span class="pre">save_id2idx</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dkeyid2idx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/preprocess/split_datasets.html#save_id2idx"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.preprocess.split_datasets.save_id2idx" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pykt.preprocess.split_datasets.train_test_split">
+<span class="sig-prename descclassname"><span class="pre">pykt.preprocess.split_datasets.</span></span><span class="sig-name descname"><span class="pre">train_test_split</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_ratio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/preprocess/split_datasets.html#train_test_split"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.preprocess.split_datasets.train_test_split" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pykt.preprocess.split_datasets.write_config">
+<span class="sig-prename descclassname"><span class="pre">pykt.preprocess.split_datasets.</span></span><span class="sig-name descname"><span class="pre">write_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataset_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dkeyid2idx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">effective_keys</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">configf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dpath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flag</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/preprocess/split_datasets.html#write_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.preprocess.split_datasets.write_config" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-pykt.preprocess.statics2011_preprocess">
+<span id="pykt-preprocess-statics2011-preprocess-module"></span><h2>pykt.preprocess.statics2011_preprocess module<a class="headerlink" href="#module-pykt.preprocess.statics2011_preprocess" title="Permalink to this headline"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="pykt.preprocess.statics2011_preprocess.change2timestamp">
+<span class="sig-prename descclassname"><span class="pre">pykt.preprocess.statics2011_preprocess.</span></span><span class="sig-name descname"><span class="pre">change2timestamp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/preprocess/statics2011_preprocess.html#change2timestamp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.preprocess.statics2011_preprocess.change2timestamp" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pykt.preprocess.statics2011_preprocess.read_data_from_csv">
+<span class="sig-prename descclassname"><span class="pre">pykt.preprocess.statics2011_preprocess.</span></span><span class="sig-name descname"><span class="pre">read_data_from_csv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">read_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">write_file</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/preprocess/statics2011_preprocess.html#read_data_from_csv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.preprocess.statics2011_preprocess.read_data_from_csv" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-pykt.preprocess.utils">
+<span id="pykt-preprocess-utils-module"></span><h2>pykt.preprocess.utils module<a class="headerlink" href="#module-pykt.preprocess.utils" title="Permalink to this headline"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="pykt.preprocess.utils.change2timestamp">
+<span class="sig-prename descclassname"><span class="pre">pykt.preprocess.utils.</span></span><span class="sig-name descname"><span class="pre">change2timestamp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hasf</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/preprocess/utils.html#change2timestamp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.preprocess.utils.change2timestamp" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pykt.preprocess.utils.replace_text">
+<span class="sig-prename descclassname"><span class="pre">pykt.preprocess.utils.</span></span><span class="sig-name descname"><span class="pre">replace_text</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/preprocess/utils.html#replace_text"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.preprocess.utils.replace_text" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pykt.preprocess.utils.sta_infos">
+<span class="sig-prename descclassname"><span class="pre">pykt.preprocess.utils.</span></span><span class="sig-name descname"><span class="pre">sta_infos</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keys</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stares</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">split_str</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'_'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/preprocess/utils.html#sta_infos"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.preprocess.utils.sta_infos" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pykt.preprocess.utils.write_txt">
+<span class="sig-prename descclassname"><span class="pre">pykt.preprocess.utils.</span></span><span class="sig-name descname"><span class="pre">write_txt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/preprocess/utils.html#write_txt"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.preprocess.utils.write_txt" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-pykt.preprocess">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-pykt.preprocess" title="Permalink to this headline"></a></h2>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="pykt.datasets.html" class="btn btn-neutral float-left" title="pykt.datasets package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="pykt.utils.html" class="btn btn-neutral float-right" title="pykt.utils package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, pykt-team.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
