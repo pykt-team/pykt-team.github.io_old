@@ -696,17 +696,17 @@ registered hooks while the latter silently ignores them.</p>
 <span id="pykt-models-gkt-utils-module"></span><h2>pykt.models.gkt_utils module<a class="headerlink" href="#module-pykt.models.gkt_utils" title="Permalink to this headline"></a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="pykt.models.gkt_utils.build_dense_graph">
-<span class="sig-prename descclassname"><span class="pre">pykt.models.gkt_utils.</span></span><span class="sig-name descname"><span class="pre">build_dense_graph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node_num</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/models/gkt_utils.html#build_dense_graph"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.gkt_utils.build_dense_graph" title="Permalink to this definition"></a></dt>
-<dd><p>_summary_</p>
+<span class="sig-prename descclassname"><span class="pre">pykt.models.gkt_utils.</span></span><span class="sig-name descname"><span class="pre">build_dense_graph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">concept_num</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/models/gkt_utils.html#build_dense_graph"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.gkt_utils.build_dense_graph" title="Permalink to this definition"></a></dt>
+<dd><p>generate dense graph</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>node_num</strong> (<em>_type_</em>) – _description_</p>
+<dd class="field-odd"><p><strong>concept_num</strong> (<em>int</em>) – number of concepts</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>_description_</p>
+<dd class="field-even"><p>graph</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>_type_</p>
+<dd class="field-odd"><p>numpy</p>
 </dd>
 </dl>
 </dd></dl>
@@ -714,7 +714,22 @@ registered hooks while the latter silently ignores them.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="pykt.models.gkt_utils.build_transition_graph">
 <span class="sig-prename descclassname"><span class="pre">pykt.models.gkt_utils.</span></span><span class="sig-name descname"><span class="pre">build_transition_graph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">concept_num</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/models/gkt_utils.html#build_transition_graph"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.models.gkt_utils.build_transition_graph" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>generate transition graph</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> (<em>da</em>) – _description_</p></li>
+<li><p><strong>concept_num</strong> (<em>int</em>) – number of concepts</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>graph</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>numpy</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pykt.models.gkt_utils.get_gkt_graph">

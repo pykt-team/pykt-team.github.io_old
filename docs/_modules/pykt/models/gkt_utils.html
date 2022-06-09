@@ -90,6 +90,15 @@
     <span class="k">return</span> <span class="n">graph</span></div>
 
 <div class="viewcode-block" id="build_transition_graph"><a class="viewcode-back" href="../../../pykt.models.html#pykt.models.gkt_utils.build_transition_graph">[docs]</a><span class="k">def</span> <span class="nf">build_transition_graph</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">concept_num</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;generate transition graph</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        df (da): _description_</span>
+<span class="sd">        concept_num (int): number of concepts</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        numpy: graph</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">graph</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">concept_num</span><span class="p">,</span> <span class="n">concept_num</span><span class="p">))</span>
     <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
         <span class="n">questions</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">!=</span> <span class="s1">&#39;-1&#39;</span><span class="p">,</span>
@@ -116,16 +125,16 @@
     
     <span class="k">return</span> <span class="n">graph</span></div>
 
-<div class="viewcode-block" id="build_dense_graph"><a class="viewcode-back" href="../../../pykt.models.html#pykt.models.gkt_utils.build_dense_graph">[docs]</a><span class="k">def</span> <span class="nf">build_dense_graph</span><span class="p">(</span><span class="n">node_num</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;_summary_</span>
+<div class="viewcode-block" id="build_dense_graph"><a class="viewcode-back" href="../../../pykt.models.html#pykt.models.gkt_utils.build_dense_graph">[docs]</a><span class="k">def</span> <span class="nf">build_dense_graph</span><span class="p">(</span><span class="n">concept_num</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;generate dense graph</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        node_num (_type_): _description_</span>
+<span class="sd">        concept_num (int): number of concepts</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        _type_: _description_</span>
+<span class="sd">        numpy: graph</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">graph</span> <span class="o">=</span> <span class="mf">1.</span> <span class="o">/</span> <span class="p">(</span><span class="n">node_num</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">node_num</span><span class="p">,</span> <span class="n">node_num</span><span class="p">))</span>
+    <span class="n">graph</span> <span class="o">=</span> <span class="mf">1.</span> <span class="o">/</span> <span class="p">(</span><span class="n">concept_num</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">concept_num</span><span class="p">,</span> <span class="n">concept_num</span><span class="p">))</span>
     <span class="n">np</span><span class="o">.</span><span class="n">fill_diagonal</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
     <span class="n">graph</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span><span class="o">.</span><span class="n">float</span><span class="p">()</span>
     <span class="k">return</span> <span class="n">graph</span></div>
