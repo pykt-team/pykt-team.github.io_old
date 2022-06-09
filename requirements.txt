@@ -1,0 +1,5 @@
+#for generation api docs
+sphinx
+recommonmark
+sphinx_rtd_theme
+sphinx-autoapi
