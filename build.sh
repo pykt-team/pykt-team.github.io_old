@@ -12,4 +12,6 @@ cp -r pykt-toolkit/docs/build/html docs
 
 git add docs pykt-toolkit
 git commit -m "update docs"
+git fetch
+git rebase
 git push
