@@ -1,5 +1,5 @@
-echo Now dictory is $PWD
-git submodule update --remote pykt-toolkit
+# echo Now dictory is $PWD
+# git submodule update --remote pykt-toolkit
 #update pykt-toolkit
 cd pykt-toolkit 
 pip install -e .
