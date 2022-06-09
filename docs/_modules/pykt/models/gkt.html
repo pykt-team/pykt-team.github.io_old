@@ -13,7 +13,6 @@
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -85,6 +84,19 @@
 <span class="n">device</span> <span class="o">=</span> <span class="s2">&quot;cpu&quot;</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="k">else</span> <span class="s2">&quot;cuda&quot;</span>
 
 <div class="viewcode-block" id="GKT"><a class="viewcode-back" href="../../../pykt.models.html#pykt.models.gkt.GKT">[docs]</a><span class="k">class</span> <span class="nc">GKT</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Graph-based Knowledge Tracing Modeling Student Proficiency Using Graph Neural Network</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        num_c (int): total num of unique questions</span>
+<span class="sd">        hidden_dim (int): hidden dimension for MLP</span>
+<span class="sd">        emb_size (int): embedding dimension for question embedding layer</span>
+<span class="sd">        graph_type (str, optional): graph type, dense or transition. Defaults to &quot;dense&quot;.</span>
+<span class="sd">        graph (_type_, optional): graph. Defaults to None.</span>
+<span class="sd">        dropout (float, optional): dropout. Defaults to 0.5.</span>
+<span class="sd">        emb_type (str, optional): emb_type. Defaults to &quot;qid&quot;.</span>
+<span class="sd">        emb_path (str, optional): emb_path. Defaults to &quot;&quot;.</span>
+<span class="sd">        bias (bool, optional): add bias for DNN. Defaults to True.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_c</span><span class="p">,</span> <span class="n">hidden_dim</span><span class="p">,</span> <span class="n">emb_size</span><span class="p">,</span> <span class="n">graph_type</span><span class="o">=</span><span class="s2">&quot;dense&quot;</span><span class="p">,</span> <span class="n">graph</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dropout</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">emb_type</span><span class="o">=</span><span class="s2">&quot;qid&quot;</span><span class="p">,</span> <span class="n">emb_path</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span><span class="n">bias</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">GKT</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span> <span class="o">=</span> <span class="s2">&quot;gkt&quot;</span>
