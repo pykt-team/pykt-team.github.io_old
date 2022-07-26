@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pykt.models.init_model &mdash; pykt-toolkit 0.0.32 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html">
+            <img src="https://pykt.org/assets/img/logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Home</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pykt-team.github.io/">Official Website</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../quick_start.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../quick_start_cn.html">Quick Start (cn)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../pykt.models.html">Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../pykt.datasets.html">Datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../pykt.preprocess.html">Data Preprocess</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../pykt.utils.html">Utils</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">pykt-toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      <li>pykt.models.init_model</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for pykt.models.init_model</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="kn">from</span> <span class="nn">.dkt</span> <span class="kn">import</span> <span class="n">DKT</span>
+<span class="kn">from</span> <span class="nn">.dkt_plus</span> <span class="kn">import</span> <span class="n">DKTPlus</span>
+<span class="kn">from</span> <span class="nn">.dkvmn</span> <span class="kn">import</span> <span class="n">DKVMN</span>
+<span class="kn">from</span> <span class="nn">.sakt</span> <span class="kn">import</span> <span class="n">SAKT</span>
+<span class="kn">from</span> <span class="nn">.saint</span> <span class="kn">import</span> <span class="n">SAINT</span>
+<span class="kn">from</span> <span class="nn">.kqn</span> <span class="kn">import</span> <span class="n">KQN</span>
+<span class="kn">from</span> <span class="nn">.atkt</span> <span class="kn">import</span> <span class="n">ATKT</span>
+<span class="kn">from</span> <span class="nn">.dkt_forget</span> <span class="kn">import</span> <span class="n">DKTForget</span>
+<span class="kn">from</span> <span class="nn">.akt</span> <span class="kn">import</span> <span class="n">AKT</span>
+<span class="kn">from</span> <span class="nn">.gkt</span> <span class="kn">import</span> <span class="n">GKT</span>
+<span class="kn">from</span> <span class="nn">.gkt_utils</span> <span class="kn">import</span> <span class="n">get_gkt_graph</span>
+<span class="kn">from</span> <span class="nn">.lpkt</span> <span class="kn">import</span> <span class="n">LPKT</span>
+<span class="kn">from</span> <span class="nn">.lpkt_utils</span> <span class="kn">import</span> <span class="n">generate_qmatrix</span>
+<span class="kn">from</span> <span class="nn">.skvmn</span> <span class="kn">import</span> <span class="n">SKVMN</span>
+<span class="kn">from</span> <span class="nn">.hawkes</span> <span class="kn">import</span> <span class="n">HawkesKT</span>
+<span class="kn">from</span> <span class="nn">.iekt</span> <span class="kn">import</span> <span class="n">IEKT</span>
+
+<span class="n">device</span> <span class="o">=</span> <span class="s2">&quot;cpu&quot;</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="k">else</span> <span class="s2">&quot;cuda&quot;</span>
+
+<div class="viewcode-block" id="init_model"><a class="viewcode-back" href="../../../pykt.models.html#pykt.models.init_model.init_model">[docs]</a><span class="k">def</span> <span class="nf">init_model</span><span class="p">(</span><span class="n">model_name</span><span class="p">,</span> <span class="n">model_config</span><span class="p">,</span> <span class="n">data_config</span><span class="p">,</span> <span class="n">emb_type</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">model_name</span> <span class="o">==</span> <span class="s2">&quot;dkt&quot;</span><span class="p">:</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">DKT</span><span class="p">(</span><span class="n">data_config</span><span class="p">[</span><span class="s2">&quot;num_c&quot;</span><span class="p">],</span> <span class="o">**</span><span class="n">model_config</span><span class="p">,</span> <span class="n">emb_type</span><span class="o">=</span><span class="n">emb_type</span><span class="p">,</span> <span class="n">emb_path</span><span class="o">=</span><span class="n">data_config</span><span class="p">[</span><span class="s2">&quot;emb_path&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">model_name</span> <span class="o">==</span> <span class="s2">&quot;dkt+&quot;</span><span class="p">:</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">DKTPlus</span><span class="p">(</span><span class="n">data_config</span><span class="p">[</span><span class="s2">&quot;num_c&quot;</span><span class="p">],</span> <span class="o">**</span><span class="n">model_config</span><span class="p">,</span> <span class="n">emb_type</span><span class="o">=</span><span class="n">emb_type</span><span class="p">,</span> <span class="n">emb_path</span><span class="o">=</span><span class="n">data_config</span><span class="p">[</span><span class="s2">&quot;emb_path&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">model_name</span> <span class="o">==</span> <span class="s2">&quot;dkvmn&quot;</span><span class="p">:</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">DKVMN</span><span class="p">(</span><span class="n">data_config</span><span class="p">[</span><span class="s2">&quot;num_c&quot;</span><span class="p">],</span> <span class="o">**</span><span class="n">model_config</span><span class="p">,</span> <span class="n">emb_type</span><span class="o">=</span><span class="n">emb_type</span><span class="p">,</span> <span class="n">emb_path</span><span class="o">=</span><span class="n">data_config</span><span class="p">[</span><span class="s2">&quot;emb_path&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">model_name</span> <span class="o">==</span> <span class="s2">&quot;sakt&quot;</span><span class="p">:</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">SAKT</span><span class="p">(</span><span class="n">data_config</span><span class="p">[</span><span class="s2">&quot;num_c&quot;</span><span class="p">],</span>  <span class="o">**</span><span class="n">model_config</span><span class="p">,</span> <span class="n">emb_type</span><span class="o">=</span><span class="n">emb_type</span><span class="p">,</span> <span class="n">emb_path</span><span class="o">=</span><span class="n">data_config</span><span class="p">[</span><span class="s2">&quot;emb_path&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">model_name</span> <span class="o">==</span> <span class="s2">&quot;saint&quot;</span><span class="p">:</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">SAINT</span><span class="p">(</span><span class="n">data_config</span><span class="p">[</span><span class="s2">&quot;num_q&quot;</span><span class="p">],</span> <span class="n">data_config</span><span class="p">[</span><span class="s2">&quot;num_c&quot;</span><span class="p">],</span> <span class="o">**</span><span class="n">model_config</span><span class="p">,</span> <span class="n">emb_type</span><span class="o">=</span><span class="n">emb_type</span><span class="p">,</span> <span class="n">emb_path</span><span class="o">=</span><span class="n">data_config</span><span class="p">[</span><span class="s2">&quot;emb_path&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">model_name</span> <span class="o">==</span> <span class="s2">&quot;dkt_forget&quot;</span><span class="p">:</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">DKTForget</span><span class="p">(</span><span class="n">data_config</span><span class="p">[</span><span class="s2">&quot;num_c&quot;</span><span class="p">],</span> <span class="n">data_config</span><span class="p">[</span><span class="s2">&quot;num_rgap&quot;</span><span class="p">],</span> <span class="n">data_config</span><span class="p">[</span><span class="s2">&quot;num_sgap&quot;</span><span class="p">],</span> <span class="n">data_config</span><span class="p">[</span><span class="s2">&quot;num_pcount&quot;</span><span class="p">],</span> <span class="o">**</span><span class="n">model_config</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">model_name</span> <span class="o">==</span> <span class="s2">&quot;akt&quot;</span><span class="p">:</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">AKT</span><span class="p">(</span><span class="n">data_config</span><span class="p">[</span><span class="s2">&quot;num_c&quot;</span><span class="p">],</span> <span class="n">data_config</span><span class="p">[</span><span class="s2">&quot;num_q&quot;</span><span class="p">],</span> <span class="o">**</span><span class="n">model_config</span><span class="p">,</span> <span class="n">emb_type</span><span class="o">=</span><span class="n">emb_type</span><span class="p">,</span> <span class="n">emb_path</span><span class="o">=</span><span class="n">data_config</span><span class="p">[</span><span class="s2">&quot;emb_path&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">model_name</span> <span class="o">==</span> <span class="s2">&quot;kqn&quot;</span><span class="p">:</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">KQN</span><span class="p">(</span><span class="n">data_config</span><span class="p">[</span><span class="s2">&quot;num_c&quot;</span><span class="p">],</span> <span class="o">**</span><span class="n">model_config</span><span class="p">,</span> <span class="n">emb_type</span><span class="o">=</span><span class="n">emb_type</span><span class="p">,</span> <span class="n">emb_path</span><span class="o">=</span><span class="n">data_config</span><span class="p">[</span><span class="s2">&quot;emb_path&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">model_name</span> <span class="o">==</span> <span class="s2">&quot;atkt&quot;</span><span class="p">:</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">ATKT</span><span class="p">(</span><span class="n">data_config</span><span class="p">[</span><span class="s2">&quot;num_c&quot;</span><span class="p">],</span> <span class="o">**</span><span class="n">model_config</span><span class="p">,</span> <span class="n">emb_type</span><span class="o">=</span><span class="n">emb_type</span><span class="p">,</span> <span class="n">emb_path</span><span class="o">=</span><span class="n">data_config</span><span class="p">[</span><span class="s2">&quot;emb_path&quot;</span><span class="p">],</span> <span class="n">fix</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">model_name</span> <span class="o">==</span> <span class="s2">&quot;atktfix&quot;</span><span class="p">:</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">ATKT</span><span class="p">(</span><span class="n">data_config</span><span class="p">[</span><span class="s2">&quot;num_c&quot;</span><span class="p">],</span> <span class="o">**</span><span class="n">model_config</span><span class="p">,</span> <span class="n">emb_type</span><span class="o">=</span><span class="n">emb_type</span><span class="p">,</span> <span class="n">emb_path</span><span class="o">=</span><span class="n">data_config</span><span class="p">[</span><span class="s2">&quot;emb_path&quot;</span><span class="p">],</span> <span class="n">fix</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">model_name</span> <span class="o">==</span> <span class="s2">&quot;gkt&quot;</span><span class="p">:</span>
+        <span class="n">graph_type</span> <span class="o">=</span> <span class="n">model_config</span><span class="p">[</span><span class="s1">&#39;graph_type&#39;</span><span class="p">]</span>
+        <span class="n">fname</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;gkt_graph_</span><span class="si">{</span><span class="n">graph_type</span><span class="si">}</span><span class="s2">.npz&quot;</span>
+        <span class="n">graph_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data_config</span><span class="p">[</span><span class="s2">&quot;dpath&quot;</span><span class="p">],</span> <span class="n">fname</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">graph_path</span><span class="p">):</span>
+            <span class="n">graph</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">graph_path</span><span class="p">,</span> <span class="n">allow_pickle</span><span class="o">=</span><span class="kc">True</span><span class="p">)[</span><span class="s1">&#39;matrix&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">float</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">graph</span> <span class="o">=</span> <span class="n">get_gkt_graph</span><span class="p">(</span><span class="n">data_config</span><span class="p">[</span><span class="s2">&quot;num_c&quot;</span><span class="p">],</span> <span class="n">data_config</span><span class="p">[</span><span class="s2">&quot;dpath&quot;</span><span class="p">],</span> 
+                    <span class="n">data_config</span><span class="p">[</span><span class="s2">&quot;train_valid_original_file&quot;</span><span class="p">],</span> <span class="n">data_config</span><span class="p">[</span><span class="s2">&quot;test_original_file&quot;</span><span class="p">],</span> <span class="n">graph_type</span><span class="o">=</span><span class="n">graph_type</span><span class="p">,</span> <span class="n">tofile</span><span class="o">=</span><span class="n">fname</span><span class="p">)</span>
+            <span class="n">graph</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span><span class="o">.</span><span class="n">float</span><span class="p">()</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">GKT</span><span class="p">(</span><span class="n">data_config</span><span class="p">[</span><span class="s2">&quot;num_c&quot;</span><span class="p">],</span> <span class="o">**</span><span class="n">model_config</span><span class="p">,</span><span class="n">graph</span><span class="o">=</span><span class="n">graph</span><span class="p">,</span><span class="n">emb_type</span><span class="o">=</span><span class="n">emb_type</span><span class="p">,</span> <span class="n">emb_path</span><span class="o">=</span><span class="n">data_config</span><span class="p">[</span><span class="s2">&quot;emb_path&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">model_name</span> <span class="o">==</span> <span class="s2">&quot;lpkt&quot;</span><span class="p">:</span>
+        <span class="n">qmatrix_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data_config</span><span class="p">[</span><span class="s2">&quot;dpath&quot;</span><span class="p">],</span> <span class="s2">&quot;qmatrix.npz&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">qmatrix_path</span><span class="p">):</span>
+            <span class="n">q_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">qmatrix_path</span><span class="p">,</span> <span class="n">allow_pickle</span><span class="o">=</span><span class="kc">True</span><span class="p">)[</span><span class="s1">&#39;matrix&#39;</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">q_matrix</span> <span class="o">=</span> <span class="n">generate_qmatrix</span><span class="p">(</span><span class="n">data_config</span><span class="p">)</span>
+        <span class="n">q_matrix</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">q_matrix</span><span class="p">)</span><span class="o">.</span><span class="n">float</span><span class="p">()</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">LPKT</span><span class="p">(</span><span class="n">data_config</span><span class="p">[</span><span class="s2">&quot;num_at&quot;</span><span class="p">],</span> <span class="n">data_config</span><span class="p">[</span><span class="s2">&quot;num_it&quot;</span><span class="p">],</span> <span class="n">data_config</span><span class="p">[</span><span class="s2">&quot;num_q&quot;</span><span class="p">],</span> <span class="n">data_config</span><span class="p">[</span><span class="s2">&quot;num_c&quot;</span><span class="p">],</span> <span class="o">**</span><span class="n">model_config</span><span class="p">,</span> <span class="n">q_matrix</span><span class="o">=</span><span class="n">q_matrix</span><span class="p">,</span> <span class="n">emb_type</span><span class="o">=</span><span class="n">emb_type</span><span class="p">,</span> <span class="n">emb_path</span><span class="o">=</span><span class="n">data_config</span><span class="p">[</span><span class="s2">&quot;emb_path&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">model_name</span> <span class="o">==</span> <span class="s2">&quot;skvmn&quot;</span><span class="p">:</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">SKVMN</span><span class="p">(</span><span class="n">data_config</span><span class="p">[</span><span class="s2">&quot;num_c&quot;</span><span class="p">],</span> <span class="o">**</span><span class="n">model_config</span><span class="p">,</span> <span class="n">emb_type</span><span class="o">=</span><span class="n">emb_type</span><span class="p">,</span> <span class="n">emb_path</span><span class="o">=</span><span class="n">data_config</span><span class="p">[</span><span class="s2">&quot;emb_path&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>   
+    <span class="k">elif</span> <span class="n">model_name</span> <span class="o">==</span> <span class="s2">&quot;hawkes&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">data_config</span><span class="p">[</span><span class="s2">&quot;num_q&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">data_config</span><span class="p">[</span><span class="s2">&quot;num_c&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;model: </span><span class="si">{</span><span class="n">model_name</span><span class="si">}</span><span class="s2"> needs questions ans concepts! but the dataset has no both&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">HawkesKT</span><span class="p">(</span><span class="n">data_config</span><span class="p">[</span><span class="s2">&quot;num_c&quot;</span><span class="p">],</span> <span class="n">data_config</span><span class="p">[</span><span class="s2">&quot;num_q&quot;</span><span class="p">],</span> <span class="o">**</span><span class="n">model_config</span><span class="p">)</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">double</span><span class="p">()</span>
+        <span class="c1"># print(&quot;===before init weights&quot;+&quot;@&quot;*100)</span>
+        <span class="c1"># model.printparams()</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">init_weights</span><span class="p">)</span>
+        <span class="c1"># print(&quot;===after init weights&quot;)</span>
+        <span class="c1"># model.printparams()</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">model_name</span> <span class="o">==</span> <span class="s2">&quot;iekt&quot;</span><span class="p">:</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">IEKT</span><span class="p">(</span><span class="n">num_q</span><span class="o">=</span><span class="n">data_config</span><span class="p">[</span><span class="s1">&#39;num_q&#39;</span><span class="p">],</span> <span class="n">num_c</span><span class="o">=</span><span class="n">data_config</span><span class="p">[</span><span class="s1">&#39;num_c&#39;</span><span class="p">],</span>
+                <span class="n">max_concepts</span><span class="o">=</span><span class="n">data_config</span><span class="p">[</span><span class="s1">&#39;max_concepts&#39;</span><span class="p">],</span> <span class="o">**</span><span class="n">model_config</span><span class="p">,</span> <span class="n">emb_type</span><span class="o">=</span><span class="n">emb_type</span><span class="p">,</span> <span class="n">emb_path</span><span class="o">=</span><span class="n">data_config</span><span class="p">[</span><span class="s2">&quot;emb_path&quot;</span><span class="p">],</span><span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>   
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;The wrong model name was used...&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="k">return</span> <span class="n">model</span></div>
+
+<div class="viewcode-block" id="load_model"><a class="viewcode-back" href="../../../pykt.models.html#pykt.models.init_model.load_model">[docs]</a><span class="k">def</span> <span class="nf">load_model</span><span class="p">(</span><span class="n">model_name</span><span class="p">,</span> <span class="n">model_config</span><span class="p">,</span> <span class="n">data_config</span><span class="p">,</span> <span class="n">emb_type</span><span class="p">,</span> <span class="n">ckpt_path</span><span class="p">):</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">init_model</span><span class="p">(</span><span class="n">model_name</span><span class="p">,</span> <span class="n">model_config</span><span class="p">,</span> <span class="n">data_config</span><span class="p">,</span> <span class="n">emb_type</span><span class="p">)</span>
+    <span class="n">net</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ckpt_path</span><span class="p">,</span> <span class="n">emb_type</span><span class="o">+</span><span class="s2">&quot;_model.ckpt&quot;</span><span class="p">))</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">load_state_dict</span><span class="p">(</span><span class="n">net</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">model</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, pykt-team.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

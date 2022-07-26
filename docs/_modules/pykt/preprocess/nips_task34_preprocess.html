@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pykt.preprocess.nips_task34_preprocess &mdash; pykt-toolkit 0.0.32 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html">
+            <img src="https://pykt.org/assets/img/logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Home</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pykt-team.github.io/">Official Website</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../quick_start.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../quick_start_cn.html">Quick Start (cn)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../pykt.models.html">Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../pykt.datasets.html">Datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../pykt.preprocess.html">Data Preprocess</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../pykt.utils.html">Utils</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">pykt-toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      <li>pykt.preprocess.nips_task34_preprocess</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for pykt.preprocess.nips_task34_preprocess</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="n">sta_infos</span><span class="p">,</span> <span class="n">write_txt</span><span class="p">,</span> <span class="n">change2timestamp</span><span class="p">,</span><span class="n">format_list2str</span>
+
+
+
+<div class="viewcode-block" id="load_nips_data"><a class="viewcode-back" href="../../../pykt.preprocess.html#pykt.preprocess.nips_task34_preprocess.load_nips_data">[docs]</a><span class="k">def</span> <span class="nf">load_nips_data</span><span class="p">(</span><span class="n">primary_data_path</span><span class="p">,</span><span class="n">meta_data_dir</span><span class="p">,</span><span class="n">task_name</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;The data downloaded from https://competitions.codalab.org/competitions/25449 </span>
+<span class="sd">    The document can be downloaded from https://arxiv.org/abs/2007.12061.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        primary_data_path (_type_): premary data path</span>
+<span class="sd">        meta_data_dir (_type_): metadata dir</span>
+<span class="sd">        task_name (_type_): task_1_2 or task_3_4</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dataframe: the merge df</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Start load data&quot;</span><span class="p">)</span>
+    <span class="n">answer_metadata_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">meta_data_dir</span><span class="p">,</span><span class="sa">f</span><span class="s2">&quot;answer_metadata_</span><span class="si">{</span><span class="n">task_name</span><span class="si">}</span><span class="s2">.csv&quot;</span><span class="p">)</span>
+    <span class="n">question_metadata_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">meta_data_dir</span><span class="p">,</span><span class="sa">f</span><span class="s2">&quot;question_metadata_</span><span class="si">{</span><span class="n">task_name</span><span class="si">}</span><span class="s2">.csv&quot;</span><span class="p">)</span>
+    <span class="n">student_metadata_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">meta_data_dir</span><span class="p">,</span><span class="sa">f</span><span class="s2">&quot;student_metadata_</span><span class="si">{</span><span class="n">task_name</span><span class="si">}</span><span class="s2">.csv&quot;</span><span class="p">)</span>
+    <span class="n">subject_metadata_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">meta_data_dir</span><span class="p">,</span><span class="sa">f</span><span class="s2">&quot;subject_metadata.csv&quot;</span><span class="p">)</span>
+    
+    <span class="n">df_primary</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">primary_data_path</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;len df_primary is </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">df_primary</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="c1">#add timestamp</span>
+    <span class="n">df_answer</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">answer_metadata_path</span><span class="p">)</span>
+    <span class="n">df_answer</span><span class="p">[</span><span class="s1">&#39;answer_timestamp&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_answer</span><span class="p">[</span><span class="s1">&#39;DateAnswered&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">change2timestamp</span><span class="p">)</span>
+    <span class="n">df_question</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">question_metadata_path</span><span class="p">)</span>
+    <span class="c1"># df_student = pd.read_csv(student_metadata_path)</span>
+    <span class="n">df_subject</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">subject_metadata_path</span><span class="p">)</span>
+    
+    <span class="c1">#only keep level 3</span>
+    <span class="n">keep_subject_ids</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">df_subject</span><span class="p">[</span><span class="n">df_subject</span><span class="p">[</span><span class="s1">&#39;Level&#39;</span><span class="p">]</span><span class="o">==</span><span class="mi">3</span><span class="p">][</span><span class="s1">&#39;SubjectId&#39;</span><span class="p">])</span>
+    <span class="n">df_question</span><span class="p">[</span><span class="s1">&#39;SubjectId_level3&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_question</span><span class="p">[</span><span class="s1">&#39;SubjectId&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span><span class="nb">set</span><span class="p">(</span><span class="nb">eval</span><span class="p">(</span><span class="n">x</span><span class="p">))</span><span class="o">&amp;</span><span class="n">keep_subject_ids</span><span class="p">)</span>
+    
+    
+    <span class="c1">#merge data</span>
+    <span class="n">df_merge</span> <span class="o">=</span> <span class="n">df_primary</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">df_answer</span><span class="p">[[</span><span class="s1">&#39;AnswerId&#39;</span><span class="p">,</span><span class="s1">&#39;answer_timestamp&#39;</span><span class="p">]],</span><span class="n">how</span><span class="o">=</span><span class="s1">&#39;left&#39;</span><span class="p">)</span><span class="c1">#merge answer time</span>
+    <span class="n">df_merge</span> <span class="o">=</span> <span class="n">df_merge</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">df_question</span><span class="p">[[</span><span class="s2">&quot;QuestionId&quot;</span><span class="p">,</span><span class="s2">&quot;SubjectId_level3&quot;</span><span class="p">]],</span><span class="n">how</span><span class="o">=</span><span class="s1">&#39;left&#39;</span><span class="p">)</span><span class="c1">#merge question subjects</span>
+    <span class="n">df_merge</span><span class="p">[</span><span class="s1">&#39;SubjectId_level3_str&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_merge</span><span class="p">[</span><span class="s1">&#39;SubjectId_level3&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span><span class="s2">&quot;_&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">x</span><span class="p">]))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;len df_merge is </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">df_merge</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Finish load data&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Num of student </span><span class="si">{</span><span class="n">df_merge</span><span class="p">[</span><span class="s1">&#39;UserId&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span><span class="o">.</span><span class="n">size</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Num of question </span><span class="si">{</span><span class="n">df_merge</span><span class="p">[</span><span class="s1">&#39;QuestionId&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span><span class="o">.</span><span class="n">size</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">kcs</span> <span class="o">=</span><span class="p">[]</span>
+    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">df_merge</span><span class="p">[</span><span class="s1">&#39;SubjectId_level3&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">:</span>
+        <span class="n">kcs</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Num of knowledge </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">kcs</span><span class="p">))</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">df_merge</span></div>
+
+<div class="viewcode-block" id="get_user_inters"><a class="viewcode-back" href="../../../pykt.preprocess.html#pykt.preprocess.nips_task34_preprocess.get_user_inters">[docs]</a><span class="k">def</span> <span class="nf">get_user_inters</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;convert df to user sequences </span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        df (_type_): the merged df</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        List: user_inters</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">user_inters</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">user</span><span class="p">,</span> <span class="n">group</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;UserId&quot;</span><span class="p">,</span> <span class="n">sort</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="n">group</span> <span class="o">=</span> <span class="n">group</span><span class="o">.</span><span class="n">sort_values</span><span class="p">([</span><span class="s2">&quot;answer_timestamp&quot;</span><span class="p">,</span><span class="s2">&quot;tmp_index&quot;</span><span class="p">],</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="n">seq_skills</span> <span class="o">=</span> <span class="n">group</span><span class="p">[</span><span class="s1">&#39;SubjectId_level3_str&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+        <span class="n">seq_ans</span> <span class="o">=</span> <span class="n">group</span><span class="p">[</span><span class="s1">&#39;IsCorrect&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+        <span class="n">seq_response_cost</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;NA&quot;</span><span class="p">]</span>
+        <span class="n">seq_start_time</span> <span class="o">=</span> <span class="n">group</span><span class="p">[</span><span class="s1">&#39;answer_timestamp&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+        <span class="n">seq_problems</span> <span class="o">=</span> <span class="n">group</span><span class="p">[</span><span class="s1">&#39;QuestionId&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+        <span class="n">seq_len</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">group</span><span class="p">)</span>
+        <span class="n">user_inters</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="p">[[</span><span class="nb">str</span><span class="p">(</span><span class="n">user</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">seq_len</span><span class="p">)],</span>
+             <span class="n">format_list2str</span><span class="p">(</span><span class="n">seq_problems</span><span class="p">),</span>
+             <span class="n">format_list2str</span><span class="p">(</span><span class="n">seq_skills</span><span class="p">),</span>
+             <span class="n">format_list2str</span><span class="p">(</span><span class="n">seq_ans</span><span class="p">),</span>
+             <span class="n">format_list2str</span><span class="p">(</span><span class="n">seq_start_time</span><span class="p">),</span>
+             <span class="n">format_list2str</span><span class="p">(</span><span class="n">seq_response_cost</span><span class="p">)])</span>
+    <span class="k">return</span> <span class="n">user_inters</span></div>
+
+
+<span class="n">KEYS</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;UserId&quot;</span><span class="p">,</span> <span class="s2">&quot;SubjectId_level3_str&quot;</span><span class="p">,</span> <span class="s2">&quot;QuestionId&quot;</span><span class="p">]</span>
+
+<div class="viewcode-block" id="read_data_from_csv"><a class="viewcode-back" href="../../../pykt.preprocess.html#pykt.preprocess.nips_task34_preprocess.read_data_from_csv">[docs]</a><span class="k">def</span> <span class="nf">read_data_from_csv</span><span class="p">(</span><span class="n">primary_data_path</span><span class="p">,</span><span class="n">meta_data_dir</span><span class="p">,</span><span class="n">task_name</span><span class="p">,</span><span class="n">write_file</span><span class="p">):</span>
+    <span class="n">stares</span><span class="o">=</span> <span class="p">[]</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">load_nips_data</span><span class="p">(</span><span class="n">primary_data_path</span><span class="p">,</span><span class="n">meta_data_dir</span><span class="p">,</span><span class="n">task_name</span><span class="p">)</span>
+    
+    <span class="n">ins</span><span class="p">,</span> <span class="n">us</span><span class="p">,</span> <span class="n">qs</span><span class="p">,</span> <span class="n">cs</span><span class="p">,</span> <span class="n">avgins</span><span class="p">,</span> <span class="n">avgcq</span><span class="p">,</span> <span class="n">na</span> <span class="o">=</span> <span class="n">sta_infos</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">KEYS</span><span class="p">,</span> <span class="n">stares</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;original interaction num: </span><span class="si">{</span><span class="n">ins</span><span class="si">}</span><span class="s2">, user num: </span><span class="si">{</span><span class="n">us</span><span class="si">}</span><span class="s2">, question num: </span><span class="si">{</span><span class="n">qs</span><span class="si">}</span><span class="s2">, concept num: </span><span class="si">{</span><span class="n">cs</span><span class="si">}</span><span class="s2">, avg(ins) per s: </span><span class="si">{</span><span class="n">avgins</span><span class="si">}</span><span class="s2">, avg(c) per q: </span><span class="si">{</span><span class="n">avgcq</span><span class="si">}</span><span class="s2">, na: </span><span class="si">{</span><span class="n">na</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="n">df</span><span class="p">[</span><span class="s1">&#39;tmp_index&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">))</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;UserId&quot;</span><span class="p">,</span><span class="s2">&quot;answer_timestamp&quot;</span><span class="p">,</span> <span class="s2">&quot;SubjectId_level3_str&quot;</span><span class="p">,</span> <span class="s2">&quot;IsCorrect&quot;</span><span class="p">,</span> <span class="s2">&quot;answer_timestamp&quot;</span><span class="p">,</span><span class="s2">&quot;QuestionId&quot;</span><span class="p">])</span>
+    
+    <span class="n">ins</span><span class="p">,</span> <span class="n">us</span><span class="p">,</span> <span class="n">qs</span><span class="p">,</span> <span class="n">cs</span><span class="p">,</span> <span class="n">avgins</span><span class="p">,</span> <span class="n">avgcq</span><span class="p">,</span> <span class="n">na</span> <span class="o">=</span> <span class="n">sta_infos</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">KEYS</span><span class="p">,</span> <span class="n">stares</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;after drop interaction num: </span><span class="si">{</span><span class="n">ins</span><span class="si">}</span><span class="s2">, user num: </span><span class="si">{</span><span class="n">us</span><span class="si">}</span><span class="s2">, question num: </span><span class="si">{</span><span class="n">qs</span><span class="si">}</span><span class="s2">, concept num: </span><span class="si">{</span><span class="n">cs</span><span class="si">}</span><span class="s2">, avg(ins) per s: </span><span class="si">{</span><span class="n">avgins</span><span class="si">}</span><span class="s2">, avg(c) per q: </span><span class="si">{</span><span class="n">avgcq</span><span class="si">}</span><span class="s2">, na: </span><span class="si">{</span><span class="n">na</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">user_inters</span> <span class="o">=</span> <span class="n">get_user_inters</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+    <span class="n">write_txt</span><span class="p">(</span><span class="n">write_file</span><span class="p">,</span> <span class="n">user_inters</span><span class="p">)</span></div>
+    
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, pykt-team.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

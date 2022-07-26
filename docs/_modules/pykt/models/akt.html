@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pykt.models.akt &mdash; pykt-toolkit 0.0.32 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html">
+            <img src="https://pykt.org/assets/img/logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Home</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pykt-team.github.io/">Official Website</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../quick_start.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../quick_start_cn.html">Quick Start (cn)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../pykt.models.html">Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../pykt.datasets.html">Datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../pykt.preprocess.html">Data Preprocess</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../pykt.utils.html">Utils</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">pykt-toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      <li>pykt.models.akt</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for pykt.models.akt</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">from</span> <span class="nn">torch</span> <span class="kn">import</span> <span class="n">nn</span>
+<span class="kn">from</span> <span class="nn">torch.nn.init</span> <span class="kn">import</span> <span class="n">xavier_uniform_</span>
+<span class="kn">from</span> <span class="nn">torch.nn.init</span> <span class="kn">import</span> <span class="n">constant_</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">torch.nn.functional</span> <span class="k">as</span> <span class="nn">F</span>
+<span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">IntEnum</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">&quot;cuda&quot;</span> <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="k">else</span> <span class="s2">&quot;cpu&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Dim"><a class="viewcode-back" href="../../../pykt.models.html#pykt.models.akt.Dim">[docs]</a><span class="k">class</span> <span class="nc">Dim</span><span class="p">(</span><span class="n">IntEnum</span><span class="p">):</span>
+    <span class="n">batch</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">seq</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">feature</span> <span class="o">=</span> <span class="mi">2</span></div>
+
+<div class="viewcode-block" id="AKT"><a class="viewcode-back" href="../../../pykt.models.html#pykt.models.akt.AKT">[docs]</a><span class="k">class</span> <span class="nc">AKT</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_question</span><span class="p">,</span> <span class="n">n_pid</span><span class="p">,</span> <span class="n">d_model</span><span class="p">,</span> <span class="n">n_blocks</span><span class="p">,</span> <span class="n">dropout</span><span class="p">,</span> <span class="n">d_ff</span><span class="o">=</span><span class="mi">256</span><span class="p">,</span> 
+            <span class="n">kq_same</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">final_fc_dim</span><span class="o">=</span><span class="mi">512</span><span class="p">,</span> <span class="n">num_attn_heads</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">separate_qa</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">l2</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">,</span> <span class="n">emb_type</span><span class="o">=</span><span class="s2">&quot;qid&quot;</span><span class="p">,</span> <span class="n">emb_path</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">pretrain_dim</span><span class="o">=</span><span class="mi">768</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Input:</span>
+<span class="sd">            d_model: dimension of attention block</span>
+<span class="sd">            final_fc_dim: dimension of final fully connected net before prediction</span>
+<span class="sd">            num_attn_heads: number of heads in multi-headed attention</span>
+<span class="sd">            d_ff : dimension for fully conntected net inside the basic block</span>
+<span class="sd">            kq_same: if key query same, kq_same=1, else = 0</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span> <span class="o">=</span> <span class="s2">&quot;akt&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_question</span> <span class="o">=</span> <span class="n">n_question</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dropout</span> <span class="o">=</span> <span class="n">dropout</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">kq_same</span> <span class="o">=</span> <span class="n">kq_same</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_pid</span> <span class="o">=</span> <span class="n">n_pid</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">l2</span> <span class="o">=</span> <span class="n">l2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">separate_qa</span> <span class="o">=</span> <span class="n">separate_qa</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">emb_type</span> <span class="o">=</span> <span class="n">emb_type</span>
+        <span class="n">embed_l</span> <span class="o">=</span> <span class="n">d_model</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_pid</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">difficult_param</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Embedding</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_pid</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="c1"># 题目难度</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">q_embed_diff</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Embedding</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_question</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">embed_l</span><span class="p">)</span> <span class="c1"># question emb, 总结了包含当前question（concept）的problems（questions）的变化</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">qa_embed_diff</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Embedding</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_question</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">embed_l</span><span class="p">)</span> <span class="c1"># interaction emb, 同上</span>
+        
+        <span class="k">if</span> <span class="n">emb_type</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;qid&quot;</span><span class="p">):</span>
+            <span class="c1"># n_question+1 ,d_model</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">q_embed</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Embedding</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_question</span><span class="p">,</span> <span class="n">embed_l</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">separate_qa</span><span class="p">:</span> 
+                <span class="bp">self</span><span class="o">.</span><span class="n">qa_embed</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Embedding</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">n_question</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">embed_l</span><span class="p">)</span> <span class="c1"># interaction emb</span>
+            <span class="k">else</span><span class="p">:</span> <span class="c1"># false default</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">qa_embed</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Embedding</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">embed_l</span><span class="p">)</span>
+
+        <span class="c1"># Architecture Object. It contains stack of attention block</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">Architecture</span><span class="p">(</span><span class="n">n_question</span><span class="o">=</span><span class="n">n_question</span><span class="p">,</span> <span class="n">n_blocks</span><span class="o">=</span><span class="n">n_blocks</span><span class="p">,</span> <span class="n">n_heads</span><span class="o">=</span><span class="n">num_attn_heads</span><span class="p">,</span> <span class="n">dropout</span><span class="o">=</span><span class="n">dropout</span><span class="p">,</span>
+                                    <span class="n">d_model</span><span class="o">=</span><span class="n">d_model</span><span class="p">,</span> <span class="n">d_feature</span><span class="o">=</span><span class="n">d_model</span> <span class="o">/</span> <span class="n">num_attn_heads</span><span class="p">,</span> <span class="n">d_ff</span><span class="o">=</span><span class="n">d_ff</span><span class="p">,</span>  <span class="n">kq_same</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">kq_same</span><span class="p">,</span> <span class="n">model_type</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">model_type</span><span class="p">,</span> <span class="n">emb_type</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">emb_type</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">out</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">d_model</span> <span class="o">+</span> <span class="n">embed_l</span><span class="p">,</span>
+                      <span class="n">final_fc_dim</span><span class="p">),</span> <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(),</span> <span class="n">nn</span><span class="o">.</span><span class="n">Dropout</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dropout</span><span class="p">),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">final_fc_dim</span><span class="p">,</span> <span class="mi">256</span><span class="p">),</span> <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(</span>
+            <span class="p">),</span> <span class="n">nn</span><span class="o">.</span><span class="n">Dropout</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dropout</span><span class="p">),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">256</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+
+<div class="viewcode-block" id="AKT.reset"><a class="viewcode-back" href="../../../pykt.models.html#pykt.models.akt.AKT.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_pid</span><span class="o">+</span><span class="mi">1</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_pid</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">init</span><span class="o">.</span><span class="n">constant_</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="mf">0.</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AKT.base_emb"><a class="viewcode-back" href="../../../pykt.models.html#pykt.models.akt.AKT.base_emb">[docs]</a>    <span class="k">def</span> <span class="nf">base_emb</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">q_data</span><span class="p">,</span> <span class="n">target</span><span class="p">):</span>
+        <span class="n">q_embed_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">q_embed</span><span class="p">(</span><span class="n">q_data</span><span class="p">)</span>  <span class="c1"># BS, seqlen,  d_model# c_ct</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">separate_qa</span><span class="p">:</span>
+            <span class="n">qa_data</span> <span class="o">=</span> <span class="n">q_data</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_question</span> <span class="o">*</span> <span class="n">target</span>
+            <span class="n">qa_embed_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">qa_embed</span><span class="p">(</span><span class="n">qa_data</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># BS, seqlen, d_model # c_ct+ g_rt =e_(ct,rt)</span>
+            <span class="n">qa_embed_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">qa_embed</span><span class="p">(</span><span class="n">target</span><span class="p">)</span><span class="o">+</span><span class="n">q_embed_data</span>
+        <span class="k">return</span> <span class="n">q_embed_data</span><span class="p">,</span> <span class="n">qa_embed_data</span></div>
+
+<div class="viewcode-block" id="AKT.forward"><a class="viewcode-back" href="../../../pykt.models.html#pykt.models.akt.AKT.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">q_data</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">pid_data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">qtest</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="n">emb_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">emb_type</span>
+        <span class="c1"># Batch First</span>
+        <span class="k">if</span> <span class="n">emb_type</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;qid&quot;</span><span class="p">):</span>
+            <span class="n">q_embed_data</span><span class="p">,</span> <span class="n">qa_embed_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_emb</span><span class="p">(</span><span class="n">q_data</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span>
+
+        <span class="n">pid_embed_data</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_pid</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span> <span class="c1"># have problem id</span>
+            <span class="n">q_embed_diff_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">q_embed_diff</span><span class="p">(</span><span class="n">q_data</span><span class="p">)</span>  <span class="c1"># d_ct 总结了包含当前question（concept）的problems（questions）的变化</span>
+            <span class="n">pid_embed_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">difficult_param</span><span class="p">(</span><span class="n">pid_data</span><span class="p">)</span>  <span class="c1"># uq 当前problem的难度</span>
+            <span class="n">q_embed_data</span> <span class="o">=</span> <span class="n">q_embed_data</span> <span class="o">+</span> <span class="n">pid_embed_data</span> <span class="o">*</span> \
+                <span class="n">q_embed_diff_data</span>  <span class="c1"># uq *d_ct + c_ct # question encoder</span>
+
+            <span class="n">qa_embed_diff_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">qa_embed_diff</span><span class="p">(</span>
+                <span class="n">target</span><span class="p">)</span>  <span class="c1"># f_(ct,rt) or #h_rt (qt, rt)差异向量</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">separate_qa</span><span class="p">:</span>
+                <span class="n">qa_embed_data</span> <span class="o">=</span> <span class="n">qa_embed_data</span> <span class="o">+</span> <span class="n">pid_embed_data</span> <span class="o">*</span> \
+                    <span class="n">qa_embed_diff_data</span>  <span class="c1"># uq* f_(ct,rt) + e_(ct,rt)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">qa_embed_data</span> <span class="o">=</span> <span class="n">qa_embed_data</span> <span class="o">+</span> <span class="n">pid_embed_data</span> <span class="o">*</span> \
+                    <span class="p">(</span><span class="n">qa_embed_diff_data</span><span class="o">+</span><span class="n">q_embed_diff_data</span><span class="p">)</span>  <span class="c1"># + uq *(h_rt+d_ct) # （q-response emb diff + question emb diff）</span>
+            <span class="n">c_reg_loss</span> <span class="o">=</span> <span class="p">(</span><span class="n">pid_embed_data</span> <span class="o">**</span> <span class="mf">2.</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">l2</span> <span class="c1"># rasch部分loss</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">c_reg_loss</span> <span class="o">=</span> <span class="mf">0.</span>
+
+        <span class="c1"># BS.seqlen,d_model</span>
+        <span class="c1"># Pass to the decoder</span>
+        <span class="c1"># output shape BS,seqlen,d_model or d_model//2</span>
+        <span class="n">d_output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">q_embed_data</span><span class="p">,</span> <span class="n">qa_embed_data</span><span class="p">,</span> <span class="n">pid_embed_data</span><span class="p">)</span>
+
+        <span class="n">concat_q</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">d_output</span><span class="p">,</span> <span class="n">q_embed_data</span><span class="p">],</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="p">(</span><span class="n">concat_q</span><span class="p">)</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sigmoid</span><span class="p">()</span>
+        <span class="n">preds</span> <span class="o">=</span> <span class="n">m</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">qtest</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">preds</span><span class="p">,</span> <span class="n">c_reg_loss</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">preds</span><span class="p">,</span> <span class="n">c_reg_loss</span><span class="p">,</span> <span class="n">concat_q</span></div></div>
+
+
+<div class="viewcode-block" id="Architecture"><a class="viewcode-back" href="../../../pykt.models.html#pykt.models.akt.Architecture">[docs]</a><span class="k">class</span> <span class="nc">Architecture</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_question</span><span class="p">,</span>  <span class="n">n_blocks</span><span class="p">,</span> <span class="n">d_model</span><span class="p">,</span> <span class="n">d_feature</span><span class="p">,</span>
+                 <span class="n">d_ff</span><span class="p">,</span> <span class="n">n_heads</span><span class="p">,</span> <span class="n">dropout</span><span class="p">,</span> <span class="n">kq_same</span><span class="p">,</span> <span class="n">model_type</span><span class="p">,</span> <span class="n">emb_type</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            n_block : number of stacked blocks in the attention</span>
+<span class="sd">            d_model : dimension of attention input/output</span>
+<span class="sd">            d_feature : dimension of input in each of the multi-head attention part.</span>
+<span class="sd">            n_head : number of heads. n_heads*d_feature = d_model</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">d_model</span> <span class="o">=</span> <span class="n">d_model</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span> <span class="o">=</span> <span class="n">model_type</span>
+
+        <span class="k">if</span> <span class="n">model_type</span> <span class="ow">in</span> <span class="p">{</span><span class="s1">&#39;akt&#39;</span><span class="p">}:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">blocks_1</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">ModuleList</span><span class="p">([</span>
+                <span class="n">TransformerLayer</span><span class="p">(</span><span class="n">d_model</span><span class="o">=</span><span class="n">d_model</span><span class="p">,</span> <span class="n">d_feature</span><span class="o">=</span><span class="n">d_model</span> <span class="o">//</span> <span class="n">n_heads</span><span class="p">,</span>
+                                 <span class="n">d_ff</span><span class="o">=</span><span class="n">d_ff</span><span class="p">,</span> <span class="n">dropout</span><span class="o">=</span><span class="n">dropout</span><span class="p">,</span> <span class="n">n_heads</span><span class="o">=</span><span class="n">n_heads</span><span class="p">,</span> <span class="n">kq_same</span><span class="o">=</span><span class="n">kq_same</span><span class="p">,</span> <span class="n">emb_type</span><span class="o">=</span><span class="n">emb_type</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_blocks</span><span class="p">)</span>
+            <span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">blocks_2</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">ModuleList</span><span class="p">([</span>
+                <span class="n">TransformerLayer</span><span class="p">(</span><span class="n">d_model</span><span class="o">=</span><span class="n">d_model</span><span class="p">,</span> <span class="n">d_feature</span><span class="o">=</span><span class="n">d_model</span> <span class="o">//</span> <span class="n">n_heads</span><span class="p">,</span>
+                                 <span class="n">d_ff</span><span class="o">=</span><span class="n">d_ff</span><span class="p">,</span> <span class="n">dropout</span><span class="o">=</span><span class="n">dropout</span><span class="p">,</span> <span class="n">n_heads</span><span class="o">=</span><span class="n">n_heads</span><span class="p">,</span> <span class="n">kq_same</span><span class="o">=</span><span class="n">kq_same</span><span class="p">,</span> <span class="n">emb_type</span><span class="o">=</span><span class="n">emb_type</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_blocks</span><span class="o">*</span><span class="mi">2</span><span class="p">)</span>
+            <span class="p">])</span>
+
+<div class="viewcode-block" id="Architecture.forward"><a class="viewcode-back" href="../../../pykt.models.html#pykt.models.akt.Architecture.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">q_embed_data</span><span class="p">,</span> <span class="n">qa_embed_data</span><span class="p">,</span> <span class="n">pid_embed_data</span><span class="p">):</span>
+        <span class="c1"># target shape  bs, seqlen</span>
+        <span class="n">seqlen</span><span class="p">,</span> <span class="n">batch_size</span> <span class="o">=</span> <span class="n">q_embed_data</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">q_embed_data</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="n">qa_pos_embed</span> <span class="o">=</span> <span class="n">qa_embed_data</span>
+        <span class="n">q_pos_embed</span> <span class="o">=</span> <span class="n">q_embed_data</span>
+
+        <span class="n">y</span> <span class="o">=</span> <span class="n">qa_pos_embed</span>
+        <span class="n">seqlen</span><span class="p">,</span> <span class="n">batch_size</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">y</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">q_pos_embed</span>
+
+        <span class="c1"># encoder</span>
+        <span class="k">for</span> <span class="n">block</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">blocks_1</span><span class="p">:</span>  <span class="c1"># encode qas, 对0～t-1时刻前的qa信息进行编码</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="n">block</span><span class="p">(</span><span class="n">mask</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">query</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">pdiff</span><span class="o">=</span><span class="n">pid_embed_data</span><span class="p">)</span> <span class="c1"># yt^</span>
+        <span class="n">flag_first</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">for</span> <span class="n">block</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">blocks_2</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">flag_first</span><span class="p">:</span>  <span class="c1"># peek current question</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="n">block</span><span class="p">(</span><span class="n">mask</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">query</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">x</span><span class="p">,</span>
+                          <span class="n">values</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">apply_pos</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">pdiff</span><span class="o">=</span><span class="n">pid_embed_data</span><span class="p">)</span> <span class="c1"># False: 没有FFN, 第一层只有self attention, 对应于xt^</span>
+                <span class="n">flag_first</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">else</span><span class="p">:</span>  <span class="c1"># dont peek current response</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="n">block</span><span class="p">(</span><span class="n">mask</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">query</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">apply_pos</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">pdiff</span><span class="o">=</span><span class="n">pid_embed_data</span><span class="p">)</span> <span class="c1"># True: +FFN+残差+laynorm 非第一层与0~t-1的的q的attention, 对应图中Knowledge Retriever</span>
+                <span class="c1"># mask=0，不能看到当前的response, 在Knowledge Retrever的value全为0，因此，实现了第一题只有question信息，无qa信息的目的</span>
+                <span class="c1"># print(x[0,0,:])</span>
+                <span class="n">flag_first</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="n">x</span></div></div>
+
+<div class="viewcode-block" id="TransformerLayer"><a class="viewcode-back" href="../../../pykt.models.html#pykt.models.akt.TransformerLayer">[docs]</a><span class="k">class</span> <span class="nc">TransformerLayer</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">d_model</span><span class="p">,</span> <span class="n">d_feature</span><span class="p">,</span>
+                 <span class="n">d_ff</span><span class="p">,</span> <span class="n">n_heads</span><span class="p">,</span> <span class="n">dropout</span><span class="p">,</span>  <span class="n">kq_same</span><span class="p">,</span> <span class="n">emb_type</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            This is a Basic Block of Transformer paper. It containts one Multi-head attention object. Followed by layer norm and postion wise feedforward net and dropout layer.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">kq_same</span> <span class="o">=</span> <span class="n">kq_same</span> <span class="o">==</span> <span class="mi">1</span>
+        <span class="c1"># Multi-Head Attention Block</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">masked_attn_head</span> <span class="o">=</span> <span class="n">MultiHeadAttention</span><span class="p">(</span>
+            <span class="n">d_model</span><span class="p">,</span> <span class="n">d_feature</span><span class="p">,</span> <span class="n">n_heads</span><span class="p">,</span> <span class="n">dropout</span><span class="p">,</span> <span class="n">kq_same</span><span class="o">=</span><span class="n">kq_same</span><span class="p">,</span> <span class="n">emb_type</span><span class="o">=</span><span class="n">emb_type</span><span class="p">)</span>
+
+        <span class="c1"># Two layer norm layer and two droput layer</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">layer_norm1</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">LayerNorm</span><span class="p">(</span><span class="n">d_model</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dropout1</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Dropout</span><span class="p">(</span><span class="n">dropout</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">linear1</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">d_model</span><span class="p">,</span> <span class="n">d_ff</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">activation</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dropout</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Dropout</span><span class="p">(</span><span class="n">dropout</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">linear2</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">d_ff</span><span class="p">,</span> <span class="n">d_model</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">layer_norm2</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">LayerNorm</span><span class="p">(</span><span class="n">d_model</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dropout2</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Dropout</span><span class="p">(</span><span class="n">dropout</span><span class="p">)</span>
+
+<div class="viewcode-block" id="TransformerLayer.forward"><a class="viewcode-back" href="../../../pykt.models.html#pykt.models.akt.TransformerLayer.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mask</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">apply_pos</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">pdiff</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Input:</span>
+<span class="sd">            block : object of type BasicBlock(nn.Module). It contains masked_attn_head objects which is of type MultiHeadAttention(nn.Module).</span>
+<span class="sd">            mask : 0 means, it can peek only past values. 1 means, block can peek only current and pas values</span>
+<span class="sd">            query : Query. In transformer paper it is the input for both encoder and decoder</span>
+<span class="sd">            key : Keys. In transformer paper it is the input for both encoder and decoder</span>
+<span class="sd">            Values. In transformer paper it is the input for encoder and  encoded output for decoder (in masked attention part)</span>
+
+<span class="sd">        Output:</span>
+<span class="sd">            query: Input gets changed over the layer and returned.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">seqlen</span><span class="p">,</span> <span class="n">batch_size</span> <span class="o">=</span> <span class="n">query</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">query</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">nopeek_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">triu</span><span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">seqlen</span><span class="p">,</span> <span class="n">seqlen</span><span class="p">)),</span> <span class="n">k</span><span class="o">=</span><span class="n">mask</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;uint8&#39;</span><span class="p">)</span>
+        <span class="n">src_mask</span> <span class="o">=</span> <span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">nopeek_mask</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">mask</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># If 0, zero-padding is needed.</span>
+            <span class="c1"># Calls block.masked_attn_head.forward() method</span>
+            <span class="n">query2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">masked_attn_head</span><span class="p">(</span>
+                <span class="n">query</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="n">src_mask</span><span class="p">,</span> <span class="n">zero_pad</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">pdiff</span><span class="o">=</span><span class="n">pdiff</span><span class="p">)</span> <span class="c1"># 只能看到之前的信息，当前的信息也看不到，此时会把第一行score全置0，表示第一道题看不到历史的interaction信息，第一题attn之后，对应value全0</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Calls block.masked_attn_head.forward() method</span>
+            <span class="n">query2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">masked_attn_head</span><span class="p">(</span>
+                <span class="n">query</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="n">src_mask</span><span class="p">,</span> <span class="n">zero_pad</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">pdiff</span><span class="o">=</span><span class="n">pdiff</span><span class="p">)</span>
+
+        <span class="n">query</span> <span class="o">=</span> <span class="n">query</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">dropout1</span><span class="p">((</span><span class="n">query2</span><span class="p">))</span> <span class="c1"># 残差1</span>
+        <span class="n">query</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">layer_norm1</span><span class="p">(</span><span class="n">query</span><span class="p">)</span> <span class="c1"># layer norm</span>
+        <span class="k">if</span> <span class="n">apply_pos</span><span class="p">:</span>
+            <span class="n">query2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">linear2</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dropout</span><span class="p">(</span> <span class="c1"># FFN</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">activation</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">linear1</span><span class="p">(</span><span class="n">query</span><span class="p">))))</span>
+            <span class="n">query</span> <span class="o">=</span> <span class="n">query</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">dropout2</span><span class="p">((</span><span class="n">query2</span><span class="p">))</span> <span class="c1"># 残差</span>
+            <span class="n">query</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">layer_norm2</span><span class="p">(</span><span class="n">query</span><span class="p">)</span> <span class="c1"># lay norm</span>
+        <span class="k">return</span> <span class="n">query</span></div></div>
+
+
+<div class="viewcode-block" id="MultiHeadAttention"><a class="viewcode-back" href="../../../pykt.models.html#pykt.models.akt.MultiHeadAttention">[docs]</a><span class="k">class</span> <span class="nc">MultiHeadAttention</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">d_model</span><span class="p">,</span> <span class="n">d_feature</span><span class="p">,</span> <span class="n">n_heads</span><span class="p">,</span> <span class="n">dropout</span><span class="p">,</span> <span class="n">kq_same</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">emb_type</span><span class="o">=</span><span class="s2">&quot;qid&quot;</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        It has projection layer for getting keys, queries and values. Followed by attention and a connected layer.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">d_model</span> <span class="o">=</span> <span class="n">d_model</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">emb_type</span> <span class="o">=</span> <span class="n">emb_type</span>
+        <span class="k">if</span> <span class="n">emb_type</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;avgpool&quot;</span><span class="p">):</span>
+            <span class="c1"># pooling</span>
+            <span class="c1">#self.pool =  nn.AvgPool2d(pool_size, stride=1, padding=pool_size//2, count_include_pad=False, )</span>
+            <span class="n">pool_size</span> <span class="o">=</span> <span class="mi">3</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pooling</span> <span class="o">=</span>  <span class="n">nn</span><span class="o">.</span><span class="n">AvgPool1d</span><span class="p">(</span><span class="n">pool_size</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="n">pool_size</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span> <span class="n">count_include_pad</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">out_proj</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">d_model</span><span class="p">,</span> <span class="n">d_model</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="n">bias</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">emb_type</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;linear&quot;</span><span class="p">):</span>
+            <span class="c1"># linear</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">linear</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">d_model</span><span class="p">,</span> <span class="n">d_model</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="n">bias</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">out_proj</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">d_model</span><span class="p">,</span> <span class="n">d_model</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="n">bias</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">emb_type</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;qid&quot;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">d_k</span> <span class="o">=</span> <span class="n">d_feature</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">h</span> <span class="o">=</span> <span class="n">n_heads</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">kq_same</span> <span class="o">=</span> <span class="n">kq_same</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">v_linear</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">d_model</span><span class="p">,</span> <span class="n">d_model</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="n">bias</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">k_linear</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">d_model</span><span class="p">,</span> <span class="n">d_model</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="n">bias</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">kq_same</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">q_linear</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">d_model</span><span class="p">,</span> <span class="n">d_model</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="n">bias</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dropout</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Dropout</span><span class="p">(</span><span class="n">dropout</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">proj_bias</span> <span class="o">=</span> <span class="n">bias</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">out_proj</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">d_model</span><span class="p">,</span> <span class="n">d_model</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="n">bias</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">gammas</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_heads</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+            <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">init</span><span class="o">.</span><span class="n">xavier_uniform_</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gammas</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_reset_parameters</span><span class="p">()</span>
+
+
+    <span class="k">def</span> <span class="nf">_reset_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">xavier_uniform_</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">k_linear</span><span class="o">.</span><span class="n">weight</span><span class="p">)</span>
+        <span class="n">xavier_uniform_</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">v_linear</span><span class="o">.</span><span class="n">weight</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">kq_same</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+            <span class="n">xavier_uniform_</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">q_linear</span><span class="o">.</span><span class="n">weight</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">proj_bias</span><span class="p">:</span>
+            <span class="n">constant_</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">k_linear</span><span class="o">.</span><span class="n">bias</span><span class="p">,</span> <span class="mf">0.</span><span class="p">)</span>
+            <span class="n">constant_</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">v_linear</span><span class="o">.</span><span class="n">bias</span><span class="p">,</span> <span class="mf">0.</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">kq_same</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+                <span class="n">constant_</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">q_linear</span><span class="o">.</span><span class="n">bias</span><span class="p">,</span> <span class="mf">0.</span><span class="p">)</span>
+            <span class="c1"># constant_(self.attnlinear.bias, 0.)</span>
+            <span class="n">constant_</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">out_proj</span><span class="o">.</span><span class="n">bias</span><span class="p">,</span> <span class="mf">0.</span><span class="p">)</span>
+
+<div class="viewcode-block" id="MultiHeadAttention.forward"><a class="viewcode-back" href="../../../pykt.models.html#pykt.models.akt.MultiHeadAttention.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">mask</span><span class="p">,</span> <span class="n">zero_pad</span><span class="p">,</span> <span class="n">pdiff</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+        <span class="n">bs</span> <span class="o">=</span> <span class="n">q</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">emb_type</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;avgpool&quot;</span><span class="p">):</span>
+            <span class="c1"># v = v.transpose(1,2)</span>
+            <span class="n">scores</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pooling</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+            <span class="n">concat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pad_zero</span><span class="p">(</span><span class="n">scores</span><span class="p">,</span> <span class="n">bs</span><span class="p">,</span> <span class="n">scores</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">zero_pad</span><span class="p">)</span>
+            <span class="c1"># concat = concat.transpose(1,2)#.contiguous().view(bs, -1, self.d_model)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">emb_type</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;linear&quot;</span><span class="p">):</span>
+            <span class="c1"># v = v.transpose(1,2)</span>
+            <span class="n">scores</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">linear</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+            <span class="n">concat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pad_zero</span><span class="p">(</span><span class="n">scores</span><span class="p">,</span> <span class="n">bs</span><span class="p">,</span> <span class="n">scores</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">zero_pad</span><span class="p">)</span>
+            <span class="c1"># concat = concat.transpose(1,2)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">emb_type</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;qid&quot;</span><span class="p">):</span>
+            <span class="c1"># perform linear operation and split into h heads</span>
+
+            <span class="n">k</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">k_linear</span><span class="p">(</span><span class="n">k</span><span class="p">)</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">bs</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">h</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">d_k</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">kq_same</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+                <span class="n">q</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">q_linear</span><span class="p">(</span><span class="n">q</span><span class="p">)</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">bs</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">h</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">d_k</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">q</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">k_linear</span><span class="p">(</span><span class="n">q</span><span class="p">)</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">bs</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">h</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">d_k</span><span class="p">)</span>
+            <span class="n">v</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">v_linear</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">bs</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">h</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">d_k</span><span class="p">)</span>
+
+            <span class="c1"># transpose to get dimensions bs * h * sl * d_model</span>
+
+            <span class="n">k</span> <span class="o">=</span> <span class="n">k</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="n">q</span> <span class="o">=</span> <span class="n">q</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="n">v</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="c1"># calculate attention using function we will define next</span>
+            <span class="n">gammas</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gammas</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">emb_type</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;pdiff&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+                <span class="n">pdiff</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">scores</span> <span class="o">=</span> <span class="n">attention</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">d_k</span><span class="p">,</span>
+                            <span class="n">mask</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dropout</span><span class="p">,</span> <span class="n">zero_pad</span><span class="p">,</span> <span class="n">gammas</span><span class="p">,</span> <span class="n">pdiff</span><span class="p">)</span>
+
+            <span class="c1"># concatenate heads and put through final linear layer</span>
+            <span class="n">concat</span> <span class="o">=</span> <span class="n">scores</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">contiguous</span><span class="p">()</span>\
+                <span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">bs</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">d_model</span><span class="p">)</span>
+
+        <span class="n">output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">out_proj</span><span class="p">(</span><span class="n">concat</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">output</span></div>
+
+<div class="viewcode-block" id="MultiHeadAttention.pad_zero"><a class="viewcode-back" href="../../../pykt.models.html#pykt.models.akt.MultiHeadAttention.pad_zero">[docs]</a>    <span class="k">def</span> <span class="nf">pad_zero</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scores</span><span class="p">,</span> <span class="n">bs</span><span class="p">,</span> <span class="n">dim</span><span class="p">,</span> <span class="n">zero_pad</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">zero_pad</span><span class="p">:</span>
+            <span class="c1"># # need: torch.Size([64, 1, 200]), scores: torch.Size([64, 200, 200]), v: torch.Size([64, 200, 32])</span>
+            <span class="n">pad_zero</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">bs</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">dim</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+            <span class="n">scores</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">pad_zero</span><span class="p">,</span> <span class="n">scores</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]],</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="c1"># 所有v后置一位</span>
+        <span class="k">return</span> <span class="n">scores</span></div></div>
+
+
+<div class="viewcode-block" id="attention"><a class="viewcode-back" href="../../../pykt.models.html#pykt.models.akt.attention">[docs]</a><span class="k">def</span> <span class="nf">attention</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">d_k</span><span class="p">,</span> <span class="n">mask</span><span class="p">,</span> <span class="n">dropout</span><span class="p">,</span> <span class="n">zero_pad</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">pdiff</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This is called by Multi-head atention object to find the values.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># d_k: 每一个头的dim</span>
+    <span class="n">scores</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="n">k</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span> <span class="o">/</span> \
+        <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">d_k</span><span class="p">)</span>  <span class="c1"># BS, 8, seqlen, seqlen</span>
+    <span class="n">bs</span><span class="p">,</span> <span class="n">head</span><span class="p">,</span> <span class="n">seqlen</span> <span class="o">=</span> <span class="n">scores</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">scores</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">scores</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+
+    <span class="n">x1</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">seqlen</span><span class="p">)</span><span class="o">.</span><span class="n">expand</span><span class="p">(</span><span class="n">seqlen</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+    <span class="n">x2</span> <span class="o">=</span> <span class="n">x1</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">contiguous</span><span class="p">()</span>
+
+    <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+        <span class="n">scores_</span> <span class="o">=</span> <span class="n">scores</span><span class="o">.</span><span class="n">masked_fill</span><span class="p">(</span><span class="n">mask</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1e32</span><span class="p">)</span>
+        <span class="n">scores_</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">softmax</span><span class="p">(</span><span class="n">scores_</span><span class="p">,</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># BS,8,seqlen,seqlen</span>
+        <span class="n">scores_</span> <span class="o">=</span> <span class="n">scores_</span> <span class="o">*</span> <span class="n">mask</span><span class="o">.</span><span class="n">float</span><span class="p">()</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span> <span class="c1"># 结果和上一步一样</span>
+        <span class="n">distcum_scores</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">scores_</span><span class="p">,</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># bs, 8, sl, sl</span>
+        <span class="n">disttotal_scores</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span>
+            <span class="n">scores_</span><span class="p">,</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">keepdim</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># bs, 8, sl, 1 全1</span>
+        <span class="c1"># print(f&quot;distotal_scores: {disttotal_scores}&quot;)</span>
+        <span class="n">position_effect</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span>
+            <span class="n">x1</span><span class="o">-</span><span class="n">x2</span><span class="p">)[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span><span class="o">.</span><span class="n">type</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">FloatTensor</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>  <span class="c1"># 1, 1, seqlen, seqlen 位置差值</span>
+        <span class="c1"># bs, 8, sl, sl positive distance</span>
+        <span class="n">dist_scores</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">clamp</span><span class="p">(</span>
+            <span class="p">(</span><span class="n">disttotal_scores</span><span class="o">-</span><span class="n">distcum_scores</span><span class="p">)</span><span class="o">*</span><span class="n">position_effect</span><span class="p">,</span> <span class="nb">min</span><span class="o">=</span><span class="mf">0.</span><span class="p">)</span> <span class="c1"># score &lt;0 时，设置为0</span>
+        <span class="n">dist_scores</span> <span class="o">=</span> <span class="n">dist_scores</span><span class="o">.</span><span class="n">sqrt</span><span class="p">()</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Softplus</span><span class="p">()</span>
+    <span class="n">gamma</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.</span> <span class="o">*</span> <span class="n">m</span><span class="p">(</span><span class="n">gamma</span><span class="p">)</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>  <span class="c1"># 1,8,1,1 一个头一个gamma参数， 对应论文里的theta</span>
+    <span class="c1"># Now after do exp(gamma*distance) and then clamp to 1e-5 to 1e5</span>
+    <span class="k">if</span> <span class="n">pdiff</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">total_effect</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">clamp</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">clamp</span><span class="p">(</span>
+            <span class="p">(</span><span class="n">dist_scores</span><span class="o">*</span><span class="n">gamma</span><span class="p">)</span><span class="o">.</span><span class="n">exp</span><span class="p">(),</span> <span class="nb">min</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">),</span> <span class="nb">max</span><span class="o">=</span><span class="mf">1e5</span><span class="p">)</span> <span class="c1"># 对应论文公式1中的新增部分</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">diff</span> <span class="o">=</span> <span class="n">pdiff</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">expand</span><span class="p">(</span><span class="n">pdiff</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">dist_scores</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">pdiff</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">pdiff</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+        <span class="n">diff</span> <span class="o">=</span> <span class="n">diff</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">()</span><span class="o">.</span><span class="n">exp</span><span class="p">()</span>
+        <span class="n">total_effect</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">clamp</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">clamp</span><span class="p">(</span>
+            <span class="p">(</span><span class="n">dist_scores</span><span class="o">*</span><span class="n">gamma</span><span class="o">*</span><span class="n">diff</span><span class="p">)</span><span class="o">.</span><span class="n">exp</span><span class="p">(),</span> <span class="nb">min</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">),</span> <span class="nb">max</span><span class="o">=</span><span class="mf">1e5</span><span class="p">)</span> <span class="c1"># 对应论文公式1中的新增部分</span>
+    <span class="n">scores</span> <span class="o">=</span> <span class="n">scores</span> <span class="o">*</span> <span class="n">total_effect</span>
+
+    <span class="n">scores</span><span class="o">.</span><span class="n">masked_fill_</span><span class="p">(</span><span class="n">mask</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1e32</span><span class="p">)</span>
+    <span class="n">scores</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">softmax</span><span class="p">(</span><span class="n">scores</span><span class="p">,</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># BS,8,seqlen,seqlen</span>
+    <span class="c1"># print(f&quot;before zero pad scores: {scores.shape}&quot;)</span>
+    <span class="c1"># print(zero_pad)</span>
+    <span class="k">if</span> <span class="n">zero_pad</span><span class="p">:</span>
+        <span class="n">pad_zero</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">bs</span><span class="p">,</span> <span class="n">head</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">seqlen</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+        <span class="n">scores</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">pad_zero</span><span class="p">,</span> <span class="n">scores</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">1</span><span class="p">:,</span> <span class="p">:]],</span> <span class="n">dim</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span> <span class="c1"># 第一行score置0</span>
+    <span class="c1"># print(f&quot;after zero pad scores: {scores}&quot;)</span>
+    <span class="n">scores</span> <span class="o">=</span> <span class="n">dropout</span><span class="p">(</span><span class="n">scores</span><span class="p">)</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">scores</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+    <span class="c1"># import sys</span>
+    <span class="c1"># sys.exit()</span>
+    <span class="k">return</span> <span class="n">output</span></div>
+
+
+<div class="viewcode-block" id="LearnablePositionalEmbedding"><a class="viewcode-back" href="../../../pykt.models.html#pykt.models.akt.LearnablePositionalEmbedding">[docs]</a><span class="k">class</span> <span class="nc">LearnablePositionalEmbedding</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">d_model</span><span class="p">,</span> <span class="n">max_len</span><span class="o">=</span><span class="mi">512</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="c1"># Compute the positional encodings once in log space.</span>
+        <span class="n">pe</span> <span class="o">=</span> <span class="mf">0.1</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">max_len</span><span class="p">,</span> <span class="n">d_model</span><span class="p">)</span>
+        <span class="n">pe</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">weight</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span><span class="n">pe</span><span class="p">,</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<div class="viewcode-block" id="LearnablePositionalEmbedding.forward"><a class="viewcode-back" href="../../../pykt.models.html#pykt.models.akt.LearnablePositionalEmbedding.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight</span><span class="p">[:,</span> <span class="p">:</span><span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">Dim</span><span class="o">.</span><span class="n">seq</span><span class="p">),</span> <span class="p">:]</span>  <span class="c1"># ( 1,seq,  Feature)</span></div></div>
+
+
+<div class="viewcode-block" id="CosinePositionalEmbedding"><a class="viewcode-back" href="../../../pykt.models.html#pykt.models.akt.CosinePositionalEmbedding">[docs]</a><span class="k">class</span> <span class="nc">CosinePositionalEmbedding</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">d_model</span><span class="p">,</span> <span class="n">max_len</span><span class="o">=</span><span class="mi">512</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="c1"># Compute the positional encodings once in log space.</span>
+        <span class="n">pe</span> <span class="o">=</span> <span class="mf">0.1</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">max_len</span><span class="p">,</span> <span class="n">d_model</span><span class="p">)</span>
+        <span class="n">position</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_len</span><span class="p">)</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">float</span><span class="p">()</span>
+        <span class="n">div_term</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">d_model</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">float</span><span class="p">()</span> <span class="o">*</span>
+                             <span class="o">-</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mf">10000.0</span><span class="p">)</span> <span class="o">/</span> <span class="n">d_model</span><span class="p">))</span>
+        <span class="n">pe</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">::</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">position</span> <span class="o">*</span> <span class="n">div_term</span><span class="p">)</span>
+        <span class="n">pe</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">position</span> <span class="o">*</span> <span class="n">div_term</span><span class="p">)</span>
+        <span class="n">pe</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">weight</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span><span class="n">pe</span><span class="p">,</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<div class="viewcode-block" id="CosinePositionalEmbedding.forward"><a class="viewcode-back" href="../../../pykt.models.html#pykt.models.akt.CosinePositionalEmbedding.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight</span><span class="p">[:,</span> <span class="p">:</span><span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">Dim</span><span class="o">.</span><span class="n">seq</span><span class="p">),</span> <span class="p">:]</span>  <span class="c1"># ( 1,seq,  Feature)</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, pykt-team.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
