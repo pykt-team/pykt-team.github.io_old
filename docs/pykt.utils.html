@@ -52,6 +52,7 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Utils</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-pykt.utils.utils">pykt.utils.utils module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-pykt.utils.wandb_utils">pykt.utils.wandb_utils module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-pykt.utils">Module contents</a></li>
 </ul>
 </li>
@@ -126,6 +127,157 @@
 </dd>
 </dl>
 </dd></dl>
+
+</section>
+<section id="module-pykt.utils.wandb_utils">
+<span id="pykt-utils-wandb-utils-module"></span><h2>pykt.utils.wandb_utils module<a class="headerlink" href="#module-pykt.utils.wandb_utils" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="pykt.utils.wandb_utils.WandbUtils">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pykt.utils.wandb_utils.</span></span><span class="sig-name descname"><span class="pre">WandbUtils</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">project_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/utils/wandb_utils.html#WandbUtils"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.utils.wandb_utils.WandbUtils" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>wandb utils</p>
+<p>wandb_api = WandbUtils(user=’tabchen’, project_name=’pykt_iekt_pred’)
+&gt;self.sweep_dict is {‘mx2tvwfy’: [‘mx2tvwfy’]}</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pykt.utils.wandb_utils.WandbUtils.check_sweep_by_pattern">
+<span class="sig-name descname"><span class="pre">check_sweep_by_pattern</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sweep_pattern</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'testauc'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'max'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_run_num</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">300</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">patience</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/utils/wandb_utils.html#WandbUtils.check_sweep_by_pattern"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.utils.wandb_utils.WandbUtils.check_sweep_by_pattern" title="Permalink to this definition"></a></dt>
+<dd><p>Check sweeps by pattern
+:param sweep_pattern: check the sweeps which sweep names start with sweep_pattern
+:type sweep_pattern: str
+:param metric: the metric to check. Defaults to testauc.
+:type metric: str, optional
+:param metric_type: the type of metric max or min. Defaults to max.
+:type metric_type: str, optional
+:param min_run_num: the min run num to check. Defaults to 300.
+:type min_run_num: int, optional
+:param patience: the patience to stop. Defaults to 100.
+:type patience: int, optional</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the list of dict, each dict is {“id”:id,”state”:state,’df’:df,”num_run”:num_run}, state is ‘RUNNING’, ‘CANCELED’ or ‘FINISHED’,df is the df of the sweep, num_run is the num of sweep run, -1 mean the sweep is finished to save time we will not check it again.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pykt.utils.wandb_utils.WandbUtils.check_sweep_early_stop">
+<span class="sig-name descname"><span class="pre">check_sweep_early_stop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'sweep_name'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'testauc'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'max'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_run_num</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">300</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">patience</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/utils/wandb_utils.html#WandbUtils.check_sweep_early_stop"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.utils.wandb_utils.WandbUtils.check_sweep_early_stop" title="Permalink to this definition"></a></dt>
+<dd><p>Check sweep early stop</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>id</strong> (<em>str</em>) – the sweep name or sweep id.</p></li>
+<li><p><strong>input_type</strong> (<em>str</em><em>, </em><em>optional</em>) – the type of id. Defaults to sweep_name.</p></li>
+<li><p><strong>metric</strong> (<em>str</em><em>, </em><em>optional</em>) – the metric to check. Defaults to testauc.</p></li>
+<li><p><strong>metric_type</strong> (<em>str</em><em>, </em><em>optional</em>) – the type of metric max or min. Defaults to max.</p></li>
+<li><p><strong>min_run_num</strong> (<em>int</em><em>, </em><em>optional</em>) – the min run num to check. Defaults to 300.</p></li>
+<li><p><strong>patience</strong> (<em>int</em><em>, </em><em>optional</em>) – the patience to stop. Defaults to 100.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>{“state”:state,’df’:df,”num_run”:num_run}, state is ‘RUNNING’, ‘CANCELED’ or ‘FINISHED’,df is the df of the sweep, num_run is the num of sweep run, -1 mean the sweep is finished to save time we will not check it again.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pykt.utils.wandb_utils.WandbUtils.get_df">
+<span class="sig-name descname"><span class="pre">get_df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'sweep_name'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/utils/wandb_utils.html#WandbUtils.get_df"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.utils.wandb_utils.WandbUtils.get_df" title="Permalink to this definition"></a></dt>
+<dd><p>Get one sweep result</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>id</strong> (<em>str</em>) – the sweep name or sweep id.</p></li>
+<li><p><strong>input_type</strong> (<em>str</em><em>, </em><em>optional</em>) – the type of id. Defaults to sweep_name.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>_description_</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>pd.Data</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pykt.utils.wandb_utils.WandbUtils.get_multi_df">
+<span class="sig-name descname"><span class="pre">get_multi_df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id_list</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'sweep_name'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/utils/wandb_utils.html#WandbUtils.get_multi_df"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.utils.wandb_utils.WandbUtils.get_multi_df" title="Permalink to this definition"></a></dt>
+<dd><p>Get multi sweep result</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>id_list</strong> (<em>list</em>) – the list of sweep name or sweep id.</p></li>
+<li><p><strong>input_type</strong> (<em>str</em><em>, </em><em>optional</em>) – the type of id. Defaults to sweep_name.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>_description_</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>_type_</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pykt.utils.wandb_utils.WandbUtils.get_sweep_dict">
+<span class="sig-name descname"><span class="pre">get_sweep_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/utils/wandb_utils.html#WandbUtils.get_sweep_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.utils.wandb_utils.WandbUtils.get_sweep_dict" title="Permalink to this definition"></a></dt>
+<dd><p>Get sweep dict</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pykt.utils.wandb_utils.WandbUtils.get_sweep_run_num">
+<span class="sig-name descname"><span class="pre">get_sweep_run_num</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'sweep_name'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/utils/wandb_utils.html#WandbUtils.get_sweep_run_num"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.utils.wandb_utils.WandbUtils.get_sweep_run_num" title="Permalink to this definition"></a></dt>
+<dd><p>Get sweep run num</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>id</strong> (<em>str</em>) – the sweep name or sweep id.</p></li>
+<li><p><strong>input_type</strong> (<em>str</em><em>, </em><em>optional</em>) – the type of id. Defaults to sweep_name.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the num of sweep run</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pykt.utils.wandb_utils.WandbUtils.get_sweep_status">
+<span class="sig-name descname"><span class="pre">get_sweep_status</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'sweep_name'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/utils/wandb_utils.html#WandbUtils.get_sweep_status"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.utils.wandb_utils.WandbUtils.get_sweep_status" title="Permalink to this definition"></a></dt>
+<dd><p>Get sweep run status</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>id</strong> (<em>str</em>) – the sweep name or sweep id.</p></li>
+<li><p><strong>input_type</strong> (<em>str</em><em>, </em><em>optional</em>) – the type of id. Defaults to sweep_name.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the state of sweep. ‘RUNNING’, ‘CANCELED’ or ‘FINISHED’</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pykt.utils.wandb_utils.get_runs_result">
+<span class="sig-prename descclassname"><span class="pre">pykt.utils.wandb_utils.</span></span><span class="sig-name descname"><span class="pre">get_runs_result</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">runs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">drop_duplicate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/utils/wandb_utils.html#get_runs_result"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.utils.wandb_utils.get_runs_result" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
 
 </section>
 <section id="module-pykt.utils">

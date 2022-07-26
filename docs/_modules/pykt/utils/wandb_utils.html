@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pykt.utils.wandb_utils &mdash; pykt-toolkit 0.0.32 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html">
+            <img src="https://pykt.org/assets/img/logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Home</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pykt-team.github.io/">Official Website</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../quick_start.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../quick_start_cn.html">Quick Start (cn)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../pykt.models.html">Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../pykt.datasets.html">Datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../pykt.preprocess.html">Data Preprocess</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../pykt.utils.html">Utils</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">pykt-toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      <li>pykt.utils.wandb_utils</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for pykt.utils.wandb_utils</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">wandb</span>
+<span class="kn">from</span> <span class="nn">wandb.apis.public</span> <span class="kn">import</span> <span class="n">gql</span>
+
+<div class="viewcode-block" id="get_runs_result"><a class="viewcode-back" href="../../../pykt.utils.html#pykt.utils.wandb_utils.get_runs_result">[docs]</a><span class="k">def</span> <span class="nf">get_runs_result</span><span class="p">(</span><span class="n">runs</span><span class="p">,</span><span class="n">drop_duplicate</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="n">result_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">run</span> <span class="ow">in</span> <span class="n">runs</span><span class="p">:</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">run</span><span class="o">.</span><span class="n">summary</span><span class="o">.</span><span class="n">_json_dict</span><span class="p">)</span>
+        <span class="n">model_config</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">run</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">k</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">type</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="nb">list</span><span class="p">,</span><span class="nb">dict</span><span class="p">]}</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">model_config</span><span class="p">)</span>
+        <span class="n">result</span><span class="p">[</span><span class="s1">&#39;Name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">run</span><span class="o">.</span><span class="n">name</span>
+        <span class="n">result</span><span class="p">[</span><span class="s1">&#39;path_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">run</span><span class="o">.</span><span class="n">path</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">result_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+    <span class="n">runs_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">result_list</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">drop_duplicate</span><span class="p">:</span>
+        <span class="n">runs_df</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">model_config</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
+    <span class="k">return</span> <span class="n">runs_df</span></div>
+
+<div class="viewcode-block" id="WandbUtils"><a class="viewcode-back" href="../../../pykt.utils.html#pykt.utils.wandb_utils.WandbUtils">[docs]</a><span class="k">class</span> <span class="nc">WandbUtils</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;wandb utils</span>
+
+<span class="sd">    wandb_api = WandbUtils(user=&#39;tabchen&#39;, project_name=&#39;pykt_iekt_pred&#39;)</span>
+<span class="sd">    &gt;self.sweep_dict is {&#39;mx2tvwfy&#39;: [&#39;mx2tvwfy&#39;]}</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">user</span><span class="p">,</span><span class="n">project_name</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="n">user</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">project_name</span> <span class="o">=</span> <span class="n">project_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_init_wandb</span><span class="p">()</span>
+        
+
+    <span class="k">def</span> <span class="nf">_init_wandb</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">api</span> <span class="o">=</span> <span class="n">wandb</span><span class="o">.</span><span class="n">Api</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">project</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">project</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">project_name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sweep_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_sweep_dict</span><span class="p">()</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;self.sweep_dict is </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">sweep_dict</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="WandbUtils.get_sweep_dict"><a class="viewcode-back" href="../../../pykt.utils.html#pykt.utils.wandb_utils.WandbUtils.get_sweep_dict">[docs]</a>    <span class="k">def</span> <span class="nf">get_sweep_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Get sweep dict&#39;&#39;&#39;</span>
+        <span class="n">sweep_dict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">sweep</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">sweeps</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">sweep</span><span class="o">.</span><span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">sweep_dict</span><span class="p">:</span>
+                <span class="n">sweep_dict</span><span class="p">[</span><span class="n">sweep</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">sweep_dict</span><span class="p">[</span><span class="n">sweep</span><span class="o">.</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sweep</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+               
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">sweep_dict</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sweep_dict</span><span class="p">[</span><span class="n">name</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">del</span> <span class="n">sweep_dict</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error!! we can not process the same sweep name </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">, we will not return those sweeps:</span><span class="si">{</span><span class="n">sweep_dict</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">sweep_dict</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">sweep_dict</span><span class="p">[</span><span class="n">name</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">sweep_dict</span></div>
+
+    <span class="k">def</span> <span class="nf">_get_sweep_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="nb">id</span><span class="p">,</span><span class="n">input_type</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">input_type</span> <span class="o">==</span> <span class="s2">&quot;sweep_name&quot;</span><span class="p">:</span>
+            <span class="n">sweep_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sweep_dict</span><span class="p">[</span><span class="nb">id</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">sweep_id</span> <span class="o">=</span> <span class="nb">id</span>
+        <span class="k">return</span> <span class="n">sweep_id</span>
+
+<div class="viewcode-block" id="WandbUtils.get_df"><a class="viewcode-back" href="../../../pykt.utils.html#pykt.utils.wandb_utils.WandbUtils.get_df">[docs]</a>    <span class="k">def</span> <span class="nf">get_df</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="nb">id</span><span class="p">,</span><span class="n">input_type</span><span class="o">=</span><span class="s2">&quot;sweep_name&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get one sweep result</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            id (str): the sweep name or sweep id.</span>
+<span class="sd">            input_type (str, optional): the type of id. Defaults to sweep_name.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            pd.Data: _description_</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="n">sweep_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_sweep_id</span><span class="p">(</span><span class="nb">id</span><span class="p">,</span><span class="n">input_type</span><span class="p">)</span>
+        <span class="n">sweep</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">sweep</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">project_name</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">sweep_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">get_runs_result</span><span class="p">(</span><span class="n">sweep</span><span class="o">.</span><span class="n">runs</span><span class="p">)</span>
+        <span class="n">df</span><span class="p">[</span><span class="s2">&quot;run_index&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;Name&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">a</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>  <span class="c1"># 创建的任务名字有顺序</span>
+        <span class="k">return</span> <span class="n">df</span></div>
+
+<div class="viewcode-block" id="WandbUtils.get_multi_df"><a class="viewcode-back" href="../../../pykt.utils.html#pykt.utils.wandb_utils.WandbUtils.get_multi_df">[docs]</a>    <span class="k">def</span> <span class="nf">get_multi_df</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">id_list</span><span class="o">=</span><span class="p">[],</span><span class="n">input_type</span><span class="o">=</span><span class="s2">&quot;sweep_name&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get multi sweep result</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            id_list (list): the list of sweep name or sweep id.</span>
+<span class="sd">            input_type (str, optional): the type of id. Defaults to sweep_name.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            _type_: _description_</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">df_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="nb">id</span> <span class="ow">in</span> <span class="n">id_list</span><span class="p">:</span>
+            <span class="n">df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_df</span><span class="p">(</span><span class="nb">id</span><span class="p">,</span><span class="n">input_type</span><span class="o">=</span><span class="n">input_type</span><span class="p">)</span>
+            <span class="n">df</span><span class="p">[</span><span class="n">input_type</span><span class="p">]</span> <span class="o">=</span> <span class="nb">id</span>
+            <span class="n">df_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">df_list</span></div>
+
+<div class="viewcode-block" id="WandbUtils.get_sweep_status"><a class="viewcode-back" href="../../../pykt.utils.html#pykt.utils.wandb_utils.WandbUtils.get_sweep_status">[docs]</a>    <span class="k">def</span> <span class="nf">get_sweep_status</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="nb">id</span><span class="p">,</span><span class="n">input_type</span><span class="o">=</span><span class="s2">&quot;sweep_name&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get sweep run status</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            id (str): the sweep name or sweep id.</span>
+<span class="sd">            input_type (str, optional): the type of id. Defaults to sweep_name.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: the state of sweep. &#39;RUNNING&#39;, &#39;CANCELED&#39; or &#39;FINISHED&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">query</span> <span class="o">=</span> <span class="n">gql</span><span class="p">(</span>
+            <span class="sd">&quot;&quot;&quot;query Sweep($project: String, $entity: String, $name: String!) {</span>
+<span class="sd">                project(name: $project, entityName: $entity) {</span>
+<span class="sd">                    sweep(sweepName: $name) {</span>
+<span class="sd">                        id</span>
+<span class="sd">                        name</span>
+<span class="sd">                        bestLoss</span>
+<span class="sd">                        config</span>
+<span class="sd">                        state</span>
+<span class="sd">                    }</span>
+<span class="sd">                },</span>
+<span class="sd">            }</span>
+<span class="sd">            &quot;&quot;&quot;</span><span class="p">)</span>
+        <span class="n">sweep_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_sweep_id</span><span class="p">(</span><span class="nb">id</span><span class="p">,</span><span class="n">input_type</span><span class="p">)</span>
+        <span class="n">variables</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;entity&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="p">,</span>
+                <span class="s2">&quot;project&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">project_name</span><span class="p">,</span>
+                <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">sweep_id</span><span class="p">}</span>
+        <span class="n">status</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">query</span><span class="p">,</span><span class="n">variable_values</span><span class="o">=</span><span class="n">variables</span><span class="p">)[</span><span class="s1">&#39;project&#39;</span><span class="p">][</span><span class="s1">&#39;sweep&#39;</span><span class="p">][</span><span class="s1">&#39;state&#39;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">status</span></div>
+
+<div class="viewcode-block" id="WandbUtils.get_sweep_run_num"><a class="viewcode-back" href="../../../pykt.utils.html#pykt.utils.wandb_utils.WandbUtils.get_sweep_run_num">[docs]</a>    <span class="k">def</span> <span class="nf">get_sweep_run_num</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="nb">id</span><span class="p">,</span><span class="n">input_type</span><span class="o">=</span><span class="s2">&quot;sweep_name&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get sweep run num</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            id (str): the sweep name or sweep id.</span>
+<span class="sd">            input_type (str, optional): the type of id. Defaults to sweep_name.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            int: the num of sweep run</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">sweep_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_sweep_id</span><span class="p">(</span><span class="nb">id</span><span class="p">,</span><span class="n">input_type</span><span class="p">)</span>
+        <span class="n">sweep</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">sweep</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">project_name</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">sweep_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">sweep</span><span class="o">.</span><span class="n">runs</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="WandbUtils.check_sweep_early_stop"><a class="viewcode-back" href="../../../pykt.utils.html#pykt.utils.wandb_utils.WandbUtils.check_sweep_early_stop">[docs]</a>    <span class="k">def</span> <span class="nf">check_sweep_early_stop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="nb">id</span><span class="p">,</span><span class="n">input_type</span><span class="o">=</span><span class="s2">&quot;sweep_name&quot;</span><span class="p">,</span><span class="n">metric</span><span class="o">=</span><span class="s2">&quot;testauc&quot;</span><span class="p">,</span><span class="n">metric_type</span><span class="o">=</span><span class="s2">&quot;max&quot;</span><span class="p">,</span><span class="n">min_run_num</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span><span class="n">patience</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Check sweep early stop</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            id (str): the sweep name or sweep id.</span>
+<span class="sd">            input_type (str, optional): the type of id. Defaults to sweep_name.</span>
+<span class="sd">            metric (str, optional): the metric to check. Defaults to testauc.</span>
+<span class="sd">            metric_type (str, optional): the type of metric max or min. Defaults to max.</span>
+<span class="sd">            min_run_num (int, optional): the min run num to check. Defaults to 300.</span>
+<span class="sd">            patience (int, optional): the patience to stop. Defaults to 100.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: {&quot;state&quot;:state,&#39;df&#39;:df,&quot;num_run&quot;:num_run}, state is &#39;RUNNING&#39;, &#39;CANCELED&#39; or &#39;FINISHED&#39;,df is the df of the sweep, num_run is the num of sweep run, -1 mean the sweep is finished to save time we will not check it again.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Start check </span><span class="si">{</span><span class="nb">id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">sweep_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_sweep_id</span><span class="p">(</span><span class="nb">id</span><span class="p">,</span><span class="n">input_type</span><span class="p">)</span>
+        <span class="n">sweep_status</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_sweep_status</span><span class="p">(</span><span class="n">sweep_id</span><span class="p">,</span><span class="n">input_type</span><span class="o">=</span><span class="s2">&quot;sweep_id&quot;</span><span class="p">)</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">report</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;stop_cmd&quot;</span><span class="p">:</span><span class="s2">&quot;&quot;</span><span class="p">}</span>
+        <span class="k">if</span> <span class="n">sweep_status</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;CANCELED&#39;</span><span class="p">,</span><span class="s1">&#39;FINISHED&#39;</span><span class="p">]:</span>
+            <span class="n">report</span><span class="p">[</span><span class="s1">&#39;state&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="n">report</span><span class="p">[</span><span class="s1">&#39;num_run&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">num_run</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_sweep_run_num</span><span class="p">(</span><span class="n">sweep_id</span><span class="p">,</span><span class="n">input_type</span><span class="o">=</span><span class="s2">&quot;sweep_id&quot;</span><span class="p">)</span><span class="c1">#get sweep run num</span>
+            <span class="n">report</span><span class="p">[</span><span class="s1">&#39;num_run&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">num_run</span>
+            <span class="k">if</span> <span class="n">num_run</span><span class="o">&lt;</span><span class="n">min_run_num</span><span class="p">:</span>
+                <span class="n">report</span><span class="p">[</span><span class="s1">&#39;state&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_df</span><span class="p">(</span><span class="n">sweep_id</span><span class="p">,</span><span class="n">input_type</span><span class="o">=</span><span class="s2">&quot;sweep_id&quot;</span><span class="p">)</span><span class="c1">#get sweep result</span>
+                <span class="n">report</span><span class="p">[</span><span class="s1">&#39;df&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span>
+                <span class="n">best_value</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">metric</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="k">if</span> <span class="n">metric_type</span> <span class="o">==</span> <span class="s2">&quot;max&quot;</span> <span class="k">else</span> <span class="n">df</span><span class="p">[</span><span class="n">metric</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">()</span><span class="c1">#get best value</span>
+                <span class="n">first_best_index</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="n">metric</span><span class="p">]</span><span class="o">==</span><span class="n">best_value</span><span class="p">][</span><span class="s1">&#39;run_index&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
+                <span class="n">not_improve_num</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;run_index&#39;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">first_best_index</span><span class="p">])</span>
+                <span class="k">if</span> <span class="n">not_improve_num</span> <span class="o">&gt;</span> <span class="n">patience</span><span class="p">:</span><span class="c1">#如果连续patience没有提高，则停止</span>
+                    <span class="n">stop_cmd</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;wandb sweep </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">project_name</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">sweep_id</span><span class="si">}</span><span class="s2"> --stop&quot;</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;    Run `</span><span class="si">{</span><span class="n">stop_cmd</span><span class="si">}</span><span class="s2">` to stop the sweep.&quot;</span><span class="p">)</span>
+                    <span class="n">report</span><span class="p">[</span><span class="s1">&#39;state&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="n">report</span><span class="p">[</span><span class="s1">&#39;stop_cmd&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">stop_cmd</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">report</span><span class="p">[</span><span class="s1">&#39;state&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;    details: </span><span class="si">{</span><span class="nb">id</span><span class="si">}</span><span class="s2"> state is </span><span class="si">{</span><span class="n">report</span><span class="p">[</span><span class="s1">&#39;state&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">,num of runs is </span><span class="si">{</span><span class="n">report</span><span class="p">[</span><span class="s1">&#39;num_run&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="o">*</span><span class="mi">60</span><span class="o">+</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">report</span></div>
+        
+<div class="viewcode-block" id="WandbUtils.check_sweep_by_pattern"><a class="viewcode-back" href="../../../pykt.utils.html#pykt.utils.wandb_utils.WandbUtils.check_sweep_by_pattern">[docs]</a>    <span class="k">def</span> <span class="nf">check_sweep_by_pattern</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">sweep_pattern</span><span class="p">,</span><span class="n">metric</span><span class="o">=</span><span class="s2">&quot;testauc&quot;</span><span class="p">,</span><span class="n">metric_type</span><span class="o">=</span><span class="s2">&quot;max&quot;</span><span class="p">,</span><span class="n">min_run_num</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span><span class="n">patience</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Check sweeps by pattern</span>
+<span class="sd">        Args:</span>
+<span class="sd">            sweep_pattern (str): check the sweeps which sweep names start with sweep_pattern</span>
+<span class="sd">            metric (str, optional): the metric to check. Defaults to testauc.</span>
+<span class="sd">            metric_type (str, optional): the type of metric max or min. Defaults to max.</span>
+<span class="sd">            min_run_num (int, optional): the min run num to check. Defaults to 300.</span>
+<span class="sd">            patience (int, optional): the patience to stop. Defaults to 100.</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            list: the list of dict, each dict is {&quot;id&quot;:id,&quot;state&quot;:state,&#39;df&#39;:df,&quot;num_run&quot;:num_run}, state is &#39;RUNNING&#39;, &#39;CANCELED&#39; or &#39;FINISHED&#39;,df is the df of the sweep, num_run is the num of sweep run, -1 mean the sweep is finished to save time we will not check it again.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">check_result_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">sweep_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">sweep_dict</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">sweep_name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">sweep_pattern</span><span class="p">)</span> <span class="ow">or</span> <span class="n">sweep_pattern</span><span class="o">==</span><span class="s1">&#39;all&#39;</span><span class="p">:</span>
+                <span class="n">check_result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_sweep_early_stop</span><span class="p">(</span><span class="n">sweep_name</span><span class="p">,</span><span class="n">input_type</span><span class="o">=</span><span class="s1">&#39;sweep_name&#39;</span><span class="p">,</span>
+                        <span class="n">metric</span><span class="o">=</span><span class="n">metric</span><span class="p">,</span><span class="n">metric_type</span><span class="o">=</span><span class="n">metric_type</span><span class="p">,</span><span class="n">min_run_num</span><span class="o">=</span><span class="n">min_run_num</span><span class="p">,</span><span class="n">patience</span><span class="o">=</span><span class="n">patience</span><span class="p">)</span>
+                <span class="n">check_result</span><span class="p">[</span><span class="s1">&#39;sweep_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sweep_name</span>
+                <span class="n">check_result_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">check_result</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">check_result_list</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, pykt-team.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

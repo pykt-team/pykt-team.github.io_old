@@ -53,6 +53,9 @@
 <li class="toctree-l2"><a class="reference internal" href="#module-pykt.datasets.data_loader">pykt.datasets.data_loader module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-pykt.datasets.dkt_forget_dataloader">pykt.datasets.dkt_forget_dataloader module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-pykt.datasets.init_dataset">pykt.datasets.init_dataset module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-pykt.datasets.lpkt_dataloader">pykt.datasets.lpkt_dataloader module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-pykt.datasets.lpkt_utils">pykt.datasets.lpkt_utils module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-pykt.datasets.que_data_loader">pykt.datasets.que_data_loader module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-pykt.datasets">Module contents</a></li>
 </ul>
 </li>
@@ -169,6 +172,55 @@ common test data(concept level evaluation), real educational scenario test data(
 <dt class="sig sig-object py" id="pykt.datasets.init_dataset.update_gap">
 <span class="sig-prename descclassname"><span class="pre">pykt.datasets.init_dataset.</span></span><span class="sig-name descname"><span class="pre">update_gap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">max_rgap</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_sgap</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_pcount</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cur</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/datasets/init_dataset.html#update_gap"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.datasets.init_dataset.update_gap" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
+
+</section>
+<section id="module-pykt.datasets.lpkt_dataloader">
+<span id="pykt-datasets-lpkt-dataloader-module"></span><h2>pykt.datasets.lpkt_dataloader module<a class="headerlink" href="#module-pykt.datasets.lpkt_dataloader" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="pykt.datasets.lpkt_dataloader.LPKTDataset">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pykt.datasets.lpkt_dataloader.</span></span><span class="sig-name descname"><span class="pre">LPKTDataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">at2idx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">it2idx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">folds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qtest</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/datasets/lpkt_dataloader.html#LPKTDataset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.datasets.lpkt_dataloader.LPKTDataset" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.utils.data.dataset.Dataset</span></code></p>
+</dd></dl>
+
+</section>
+<section id="module-pykt.datasets.lpkt_utils">
+<span id="pykt-datasets-lpkt-utils-module"></span><h2>pykt.datasets.lpkt_utils module<a class="headerlink" href="#module-pykt.datasets.lpkt_utils" title="Permalink to this headline"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="pykt.datasets.lpkt_utils.generate_time2idx">
+<span class="sig-prename descclassname"><span class="pre">pykt.datasets.lpkt_utils.</span></span><span class="sig-name descname"><span class="pre">generate_time2idx</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_config</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/datasets/lpkt_utils.html#generate_time2idx"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.datasets.lpkt_utils.generate_time2idx" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-pykt.datasets.que_data_loader">
+<span id="pykt-datasets-que-data-loader-module"></span><h2>pykt.datasets.que_data_loader module<a class="headerlink" href="#module-pykt.datasets.que_data_loader" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="pykt.datasets.que_data_loader.KTQueDataset">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pykt.datasets.que_data_loader.</span></span><span class="sig-name descname"><span class="pre">KTQueDataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">folds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">concept_num</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_concepts</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qtest</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/datasets/que_data_loader.html#KTQueDataset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.datasets.que_data_loader.KTQueDataset" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.utils.data.dataset.Dataset</span></code></p>
+<dl class="simple">
+<dt>Dataset for KT</dt><dd><dl class="simple">
+<dt>can use to init dataset for: (for models except dkt_forget)</dt><dd><p>train data, valid data
+common test data(concept level evaluation), real educational scenario test data(question level evaluation).</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>file_path</strong> (<em>str</em>) – train_valid/test file path</p></li>
+<li><p><strong>input_type</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – the input type of the dataset, values are in [“questions”, “concepts”]</p></li>
+<li><p><strong>folds</strong> (<em>set</em><em>(</em><em>int</em><em>)</em>) – the folds used to generate dataset, -1 for test data</p></li>
+<li><p><strong>qtest</strong> (<em>bool</em><em>, </em><em>optional</em>) – is question evaluation or not. Defaults to False.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pykt.datasets.que_data_loader.KTQueDataset.get_skill_multi_hot">
+<span class="sig-name descname"><span class="pre">get_skill_multi_hot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">this_skills</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pykt/datasets/que_data_loader.html#KTQueDataset.get_skill_multi_hot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pykt.datasets.que_data_loader.KTQueDataset.get_skill_multi_hot" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
 
 </section>
 <section id="module-pykt.datasets">

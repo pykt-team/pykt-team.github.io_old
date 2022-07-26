@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pykt.models.que_base_model &mdash; pykt-toolkit 0.0.32 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html">
+            <img src="https://pykt.org/assets/img/logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Home</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pykt-team.github.io/">Official Website</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../quick_start.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../quick_start_cn.html">Quick Start (cn)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../pykt.models.html">Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../pykt.datasets.html">Datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../pykt.preprocess.html">Data Preprocess</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../pykt.utils.html">Utils</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">pykt-toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      <li>pykt.models.que_base_model</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for pykt.models.que_base_model</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">torch.nn</span> <span class="k">as</span> <span class="nn">nn</span>
+<span class="kn">import</span> <span class="nn">torch.nn.functional</span> <span class="k">as</span> <span class="nn">F</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">torch.utils.data</span> <span class="kn">import</span> <span class="n">DataLoader</span>
+<span class="kn">from</span> <span class="nn">torch.utils.data</span> <span class="kn">import</span> <span class="n">TensorDataset</span>
+<span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">metrics</span>
+
+<span class="n">emb_type_list</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;qc_merge&quot;</span><span class="p">,</span><span class="s2">&quot;qid&quot;</span><span class="p">,</span><span class="s2">&quot;qaid&quot;</span><span class="p">,</span><span class="s2">&quot;qcid_merge&quot;</span><span class="p">]</span>
+<span class="n">emb_type_map</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;iekt-qid&quot;</span><span class="p">:</span><span class="s2">&quot;qc_merge&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;iekt-qc_merge&quot;</span><span class="p">:</span><span class="s2">&quot;qc_merge&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;iekt_ce-qid&quot;</span><span class="p">:</span><span class="s2">&quot;qc_merge&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;dkt_que-qid&quot;</span><span class="p">:</span><span class="s2">&quot;qaid_qc&quot;</span>
+                <span class="p">}</span>
+
+<div class="viewcode-block" id="QueEmb"><a class="viewcode-back" href="../../../pykt.models.html#pykt.models.que_base_model.QueEmb">[docs]</a><span class="k">class</span> <span class="nc">QueEmb</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">num_q</span><span class="p">,</span><span class="n">num_c</span><span class="p">,</span><span class="n">emb_size</span><span class="p">,</span><span class="n">model_name</span><span class="p">,</span><span class="n">device</span><span class="o">=</span><span class="s1">&#39;cpu&#39;</span><span class="p">,</span><span class="n">emb_type</span><span class="o">=</span><span class="s1">&#39;qid&#39;</span><span class="p">,</span><span class="n">emb_path</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">pretrain_dim</span><span class="o">=</span><span class="mi">768</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;_summary_</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            num_q (_type_): num of question</span>
+<span class="sd">            num_c (_type_): num of concept</span>
+<span class="sd">            emb_size (_type_): emb_size</span>
+<span class="sd">            device (str, optional): device. Defaults to &#39;cpu&#39;.</span>
+<span class="sd">            emb_type (str, optional): how to encode question id. Defaults to &#39;qid&#39;. qid:question_id one-hot; </span>
+<span class="sd">                qaid:question_id + r*question_num one-hot; qc_merge: question emb + avg(concept emb);</span>
+<span class="sd">            emb_path (str, optional): _description_. Defaults to &quot;&quot;.</span>
+<span class="sd">            pretrain_dim (int, optional): _description_. Defaults to 768.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="n">device</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_q</span> <span class="o">=</span> <span class="n">num_q</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_c</span> <span class="o">=</span> <span class="n">num_c</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">emb_size</span> <span class="o">=</span> <span class="n">emb_size</span>
+        <span class="c1">#get emb type</span>
+        <span class="n">tmp_emb_type</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">model_name</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">emb_type</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">emb_type</span> <span class="o">=</span> <span class="n">emb_type_map</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">tmp_emb_type</span><span class="p">,</span><span class="n">tmp_emb_type</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">model_name</span><span class="si">}</span><span class="s2">_&quot;</span><span class="p">,</span><span class="s2">&quot;&quot;</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;emb_type is </span><span class="si">{</span><span class="n">emb_type</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">emb_type</span> <span class="o">=</span> <span class="n">emb_type</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">emb_path</span> <span class="o">=</span> <span class="n">emb_path</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pretrain_dim</span> <span class="o">=</span> <span class="n">pretrain_dim</span>
+
+        <span class="k">if</span> <span class="n">emb_type</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;qc_merge&quot;</span><span class="p">,</span><span class="s2">&quot;qaid_qc&quot;</span><span class="p">]:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">concept_emb</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_c</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">emb_size</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">),</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="c1">#concept embeding</span>
+        <span class="k">if</span> <span class="n">emb_type</span>  <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;qc_merge&quot;</span><span class="p">,</span><span class="s2">&quot;qaid_qc&quot;</span><span class="p">]:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">que_emb</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Embedding</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_q</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">emb_size</span><span class="p">)</span><span class="c1">#question embeding</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">que_c_linear</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">emb_size</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">emb_size</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">emb_type</span> <span class="o">==</span><span class="s2">&quot;qaid_c&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">que_c_linear</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">emb_size</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">emb_size</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">emb_type</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;qaid&quot;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">interaction_emb</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Embedding</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_q</span> <span class="o">*</span> <span class="mi">2</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">emb_size</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">emb_type</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;qid&quot;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">q_emb</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Embedding</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_q</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">emb_size</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_emb_dim</span> <span class="o">=</span> <span class="n">emb_size</span>
+
+<div class="viewcode-block" id="QueEmb.get_avg_skill_emb"><a class="viewcode-back" href="../../../pykt.models.html#pykt.models.que_base_model.QueEmb.get_avg_skill_emb">[docs]</a>    <span class="k">def</span> <span class="nf">get_avg_skill_emb</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">c</span><span class="p">):</span>
+        <span class="c1"># add zero for padding</span>
+        <span class="n">concept_emb_cat</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">emb_size</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">),</span> 
+            <span class="bp">self</span><span class="o">.</span><span class="n">concept_emb</span><span class="p">],</span> <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="c1"># shift c</span>
+        <span class="n">related_concepts</span> <span class="o">=</span> <span class="p">(</span><span class="n">c</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">long</span><span class="p">()</span>
+        <span class="c1">#[batch_size, seq_len, emb_dim]</span>
+        <span class="n">concept_emb_sum</span> <span class="o">=</span> <span class="n">concept_emb_cat</span><span class="p">[</span><span class="n">related_concepts</span><span class="p">,</span> <span class="p">:]</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span>
+            <span class="n">axis</span><span class="o">=-</span><span class="mi">2</span><span class="p">)</span>
+
+        <span class="c1">#[batch_size, seq_len,1]</span>
+        <span class="n">concept_num</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">related_concepts</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span>
+            <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">concept_num</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">concept_num</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">concept_num</span><span class="p">)</span>
+        <span class="n">concept_avg</span> <span class="o">=</span> <span class="p">(</span><span class="n">concept_emb_sum</span> <span class="o">/</span> <span class="n">concept_num</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">concept_avg</span></div>
+
+<div class="viewcode-block" id="QueEmb.forward"><a class="viewcode-back" href="../../../pykt.models.html#pykt.models.que_base_model.QueEmb.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">q</span><span class="p">,</span><span class="n">c</span><span class="p">,</span><span class="n">r</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">emb_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">emb_type</span>
+        <span class="k">if</span> <span class="s2">&quot;qc_merge&quot;</span> <span class="ow">in</span> <span class="n">emb_type</span><span class="p">:</span>
+            <span class="n">concept_avg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_avg_skill_emb</span><span class="p">(</span><span class="n">c</span><span class="p">)</span><span class="c1">#[batch,max_len-1,emb_size]</span>
+            <span class="n">que_emb</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">que_emb</span><span class="p">(</span><span class="n">q</span><span class="p">)</span><span class="c1">#[batch,max_len-1,emb_size]</span>
+            <span class="c1"># print(f&quot;que_emb shape is {que_emb.shape}&quot;)</span>
+            <span class="n">que_c_emb</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">concept_avg</span><span class="p">,</span><span class="n">que_emb</span><span class="p">],</span><span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span><span class="c1">#[batch,max_len-1,2*emb_size]</span>
+            
+        <span class="k">if</span> <span class="n">emb_type</span> <span class="o">==</span> <span class="s2">&quot;qaid&quot;</span><span class="p">:</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">q</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_q</span> <span class="o">*</span> <span class="n">r</span>
+            <span class="n">xemb</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">interaction_emb</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="c1">#[batch,max_len-1,emb_size]</span>
+            <span class="c1"># print(&quot;qid&quot;)</span>
+        <span class="k">elif</span> <span class="n">emb_type</span> <span class="o">==</span> <span class="s2">&quot;qid&quot;</span><span class="p">:</span>
+            <span class="n">xemb</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">q_emb</span><span class="p">(</span><span class="n">q</span><span class="p">)</span><span class="c1">#[batch,max_len-1,emb_size]</span>
+        <span class="k">elif</span> <span class="n">emb_type</span> <span class="o">==</span> <span class="s2">&quot;qaid+qc_merge&quot;</span><span class="p">:</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">q</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_q</span> <span class="o">*</span> <span class="n">r</span>
+            <span class="n">xemb</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">interaction_emb</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="c1">#[batch,max_len-1,emb_size]</span>
+            <span class="n">que_c_emb</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">que_c_linear</span><span class="p">(</span><span class="n">que_c_emb</span><span class="p">)</span><span class="c1">#[batch,max_len-1,emb_size]</span>
+            <span class="n">xemb</span> <span class="o">=</span> <span class="n">xemb</span> <span class="o">+</span> <span class="n">que_c_emb</span>
+            <span class="c1"># print(&quot;qid+qc_merge&quot;)</span>
+        <span class="k">elif</span> <span class="n">emb_type</span><span class="o">==</span><span class="s2">&quot;qc_merge&quot;</span><span class="p">:</span>
+            <span class="c1"># print(&quot;qc_merge&quot;)</span>
+            <span class="n">xemb</span> <span class="o">=</span> <span class="n">que_c_emb</span>
+        <span class="k">elif</span> <span class="n">emb_type</span> <span class="o">==</span><span class="s2">&quot;qaid_qc&quot;</span><span class="p">:</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">q</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_q</span> <span class="o">*</span> <span class="n">r</span>
+            <span class="n">xemb</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">interaction_emb</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+            <span class="n">concept_avg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_avg_skill_emb</span><span class="p">(</span><span class="n">c</span><span class="p">)</span><span class="c1">#[batch,max_len-1,emb_size]</span>
+            <span class="n">xemb</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">xemb</span><span class="p">,</span><span class="n">concept_avg</span><span class="p">],</span><span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">xemb</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">que_c_linear</span><span class="p">(</span><span class="n">xemb</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">xemb</span></div></div>
+
+<span class="kn">from</span> <span class="nn">pykt.utils</span> <span class="kn">import</span> <span class="n">set_seed</span>
+<div class="viewcode-block" id="QueBaseModel"><a class="viewcode-back" href="../../../pykt.models.html#pykt.models.que_base_model.QueBaseModel">[docs]</a><span class="k">class</span> <span class="nc">QueBaseModel</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">model_name</span><span class="p">,</span><span class="n">emb_type</span><span class="p">,</span><span class="n">emb_path</span><span class="p">,</span><span class="n">pretrain_dim</span><span class="p">,</span><span class="n">device</span><span class="p">,</span><span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span> <span class="o">=</span> <span class="n">model_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">emb_type</span> <span class="o">=</span> <span class="n">emb_type</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">emb_path</span> <span class="o">=</span> <span class="n">emb_path</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pretrain_dim</span> <span class="o">=</span> <span class="n">pretrain_dim</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="n">device</span>
+        <span class="c1"># set_seed(seed)</span>
+
+<div class="viewcode-block" id="QueBaseModel.compile"><a class="viewcode-back" href="../../../pykt.models.html#pykt.models.que_base_model.QueBaseModel.compile">[docs]</a>    <span class="k">def</span> <span class="nf">compile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">optimizer</span><span class="p">,</span><span class="n">lr</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span>
+                <span class="n">loss</span><span class="o">=</span><span class="s1">&#39;binary_crossentropy&#39;</span><span class="p">,</span>
+                <span class="n">metrics</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :param optimizer: String (name of optimizer) or optimizer instance. See [optimizers](https://pytorch.org/docs/stable/optim.html).</span>
+<span class="sd">        :param loss: String (name of objective function) or objective function. See [losses](https://pytorch.org/docs/stable/nn.functional.html#loss-functions).</span>
+<span class="sd">        :param metrics: List of metrics to be evaluated by the model during training and testing. Typically you will use `metrics=[&#39;accuracy&#39;]`.</span>
+<span class="sd">        ref from https://github.com/shenweichen/DeepCTR-Torch/blob/2cd84f305cb50e0fd235c0f0dd5605c8114840a2/deepctr_torch/models/basemodel.py</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lr</span> <span class="o">=</span> <span class="n">lr</span>
+        <span class="c1"># self.metrics_names = [&quot;loss&quot;]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">opt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_optimizer</span><span class="p">(</span><span class="n">optimizer</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">loss_func</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_loss_func</span><span class="p">(</span><span class="n">loss</span><span class="p">)</span></div>
+        <span class="c1"># self.metrics = self._get_metrics(metrics)</span>
+
+    <span class="k">def</span> <span class="nf">_get_loss_func</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">loss</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">loss</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">loss</span> <span class="o">==</span> <span class="s2">&quot;binary_crossentropy&quot;</span><span class="p">:</span>
+                <span class="n">loss_func</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">binary_cross_entropy</span>
+            <span class="k">elif</span> <span class="n">loss</span> <span class="o">==</span> <span class="s2">&quot;mse&quot;</span><span class="p">:</span>
+                <span class="n">loss_func</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">mse_loss</span>
+            <span class="k">elif</span> <span class="n">loss</span> <span class="o">==</span> <span class="s2">&quot;mae&quot;</span><span class="p">:</span>
+                <span class="n">loss_func</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">l1_loss</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">loss_func</span> <span class="o">=</span> <span class="n">loss</span>
+        <span class="k">return</span> <span class="n">loss_func</span>
+
+    <span class="k">def</span> <span class="nf">_get_optimizer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">optimizer</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">optimizer</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">optimizer</span> <span class="o">==</span> <span class="s1">&#39;gd&#39;</span><span class="p">:</span>
+                <span class="n">optimizer</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">SGD</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">lr</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">optimizer</span> <span class="o">==</span> <span class="s1">&#39;adagrad&#39;</span><span class="p">:</span>
+                <span class="n">optimizer</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Adagrad</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">lr</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">optimizer</span> <span class="o">==</span> <span class="s1">&#39;adadelta&#39;</span><span class="p">:</span>
+                <span class="n">optimizer</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Adadelta</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">lr</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">optimizer</span> <span class="o">==</span> <span class="s1">&#39;adam&#39;</span><span class="p">:</span>
+                <span class="n">optimizer</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">lr</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Unknown Optimizer: &quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">optimizer</span>
+
+<div class="viewcode-block" id="QueBaseModel.train_one_step"><a class="viewcode-back" href="../../../pykt.models.html#pykt.models.que_base_model.QueBaseModel.train_one_step">[docs]</a>    <span class="k">def</span> <span class="nf">train_one_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">data</span><span class="p">,</span><span class="n">process</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="bp">NotImplemented</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="QueBaseModel.predict_one_step"><a class="viewcode-back" href="../../../pykt.models.html#pykt.models.que_base_model.QueBaseModel.predict_one_step">[docs]</a>    <span class="k">def</span> <span class="nf">predict_one_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">data</span><span class="p">,</span><span class="n">process</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="bp">NotImplemented</span><span class="p">()</span></div>
+        
+<div class="viewcode-block" id="QueBaseModel.get_loss"><a class="viewcode-back" href="../../../pykt.models.html#pykt.models.que_base_model.QueBaseModel.get_loss">[docs]</a>    <span class="k">def</span> <span class="nf">get_loss</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ys</span><span class="p">,</span><span class="n">rshft</span><span class="p">,</span><span class="n">sm</span><span class="p">):</span>
+        <span class="n">y_pred</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">masked_select</span><span class="p">(</span><span class="n">ys</span><span class="p">,</span> <span class="n">sm</span><span class="p">)</span>
+        <span class="n">y_true</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">masked_select</span><span class="p">(</span><span class="n">rshft</span><span class="p">,</span> <span class="n">sm</span><span class="p">)</span>
+        <span class="n">loss</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">loss_func</span><span class="p">(</span><span class="n">y_pred</span><span class="o">.</span><span class="n">double</span><span class="p">(),</span> <span class="n">y_true</span><span class="o">.</span><span class="n">double</span><span class="p">())</span>
+        <span class="k">return</span> <span class="n">loss</span></div>
+
+    <span class="k">def</span> <span class="nf">_save_model</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">torch</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">state_dict</span><span class="p">(),</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">save_dir</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">emb_type</span><span class="o">+</span><span class="s2">&quot;_model.ckpt&quot;</span><span class="p">))</span>
+
+<div class="viewcode-block" id="QueBaseModel.load_model"><a class="viewcode-back" href="../../../pykt.models.html#pykt.models.que_base_model.QueBaseModel.load_model">[docs]</a>    <span class="k">def</span> <span class="nf">load_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">save_dir</span><span class="p">):</span>
+        <span class="n">net</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">save_dir</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">emb_type</span><span class="o">+</span><span class="s2">&quot;_model.ckpt&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">load_state_dict</span><span class="p">(</span><span class="n">net</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="QueBaseModel.batch_to_device"><a class="viewcode-back" href="../../../pykt.models.html#pykt.models.que_base_model.QueBaseModel.batch_to_device">[docs]</a>    <span class="k">def</span> <span class="nf">batch_to_device</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">data</span><span class="p">,</span><span class="n">process</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">process</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">data</span>
+        <span class="n">dcur</span> <span class="o">=</span> <span class="n">data</span>
+        <span class="c1"># q, c, r, t = dcur[&quot;qseqs&quot;], dcur[&quot;cseqs&quot;], dcur[&quot;rseqs&quot;], dcur[&quot;tseqs&quot;]</span>
+        <span class="c1"># qshft, cshft, rshft, tshft = dcur[&quot;shft_qseqs&quot;], dcur[&quot;shft_cseqs&quot;], dcur[&quot;shft_rseqs&quot;], dcur[&quot;shft_tseqs&quot;]</span>
+        <span class="c1"># m, sm = dcur[&quot;masks&quot;], dcur[&quot;smasks&quot;]</span>
+        <span class="n">data_new</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">data_new</span><span class="p">[</span><span class="s1">&#39;cq&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">((</span><span class="n">dcur</span><span class="p">[</span><span class="s2">&quot;qseqs&quot;</span><span class="p">][:,</span><span class="mi">0</span><span class="p">:</span><span class="mi">1</span><span class="p">],</span> <span class="n">dcur</span><span class="p">[</span><span class="s2">&quot;shft_qseqs&quot;</span><span class="p">]),</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">data_new</span><span class="p">[</span><span class="s1">&#39;cc&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">((</span><span class="n">dcur</span><span class="p">[</span><span class="s2">&quot;cseqs&quot;</span><span class="p">][:,</span><span class="mi">0</span><span class="p">:</span><span class="mi">1</span><span class="p">],</span>  <span class="n">dcur</span><span class="p">[</span><span class="s2">&quot;shft_cseqs&quot;</span><span class="p">]),</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">data_new</span><span class="p">[</span><span class="s1">&#39;cr&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">((</span><span class="n">dcur</span><span class="p">[</span><span class="s2">&quot;rseqs&quot;</span><span class="p">][:,</span><span class="mi">0</span><span class="p">:</span><span class="mi">1</span><span class="p">],</span> <span class="n">dcur</span><span class="p">[</span><span class="s2">&quot;shft_rseqs&quot;</span><span class="p">]),</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">data_new</span><span class="p">[</span><span class="s1">&#39;ct&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">((</span><span class="n">dcur</span><span class="p">[</span><span class="s2">&quot;tseqs&quot;</span><span class="p">][:,</span><span class="mi">0</span><span class="p">:</span><span class="mi">1</span><span class="p">],</span> <span class="n">dcur</span><span class="p">[</span><span class="s2">&quot;shft_tseqs&quot;</span><span class="p">]),</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">data_new</span><span class="p">[</span><span class="s1">&#39;q&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dcur</span><span class="p">[</span><span class="s2">&quot;qseqs&quot;</span><span class="p">]</span>
+        <span class="n">data_new</span><span class="p">[</span><span class="s1">&#39;c&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dcur</span><span class="p">[</span><span class="s2">&quot;cseqs&quot;</span><span class="p">]</span>
+        <span class="n">data_new</span><span class="p">[</span><span class="s1">&#39;r&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dcur</span><span class="p">[</span><span class="s2">&quot;rseqs&quot;</span><span class="p">]</span>
+        <span class="n">data_new</span><span class="p">[</span><span class="s1">&#39;t&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dcur</span><span class="p">[</span><span class="s2">&quot;tseqs&quot;</span><span class="p">]</span>
+        <span class="n">data_new</span><span class="p">[</span><span class="s1">&#39;qshft&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dcur</span><span class="p">[</span><span class="s2">&quot;shft_qseqs&quot;</span><span class="p">]</span>
+        <span class="n">data_new</span><span class="p">[</span><span class="s1">&#39;cshft&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dcur</span><span class="p">[</span><span class="s2">&quot;shft_cseqs&quot;</span><span class="p">]</span>
+        <span class="n">data_new</span><span class="p">[</span><span class="s1">&#39;rshft&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dcur</span><span class="p">[</span><span class="s2">&quot;shft_rseqs&quot;</span><span class="p">]</span>
+        <span class="n">data_new</span><span class="p">[</span><span class="s1">&#39;tshft&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dcur</span><span class="p">[</span><span class="s2">&quot;shft_tseqs&quot;</span><span class="p">]</span>
+        <span class="n">data_new</span><span class="p">[</span><span class="s1">&#39;m&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dcur</span><span class="p">[</span><span class="s2">&quot;masks&quot;</span><span class="p">]</span>
+        <span class="n">data_new</span><span class="p">[</span><span class="s1">&#39;sm&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dcur</span><span class="p">[</span><span class="s2">&quot;smasks&quot;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">data_new</span></div>
+
+<div class="viewcode-block" id="QueBaseModel.train"><a class="viewcode-back" href="../../../pykt.models.html#pykt.models.que_base_model.QueBaseModel.train">[docs]</a>    <span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">train_dataset</span><span class="p">,</span> <span class="n">valid_dataset</span><span class="p">,</span><span class="n">batch_size</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span><span class="n">valid_batch_size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">num_epochs</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span> <span class="n">test_loader</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">test_window_loader</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">save_dir</span><span class="o">=</span><span class="s2">&quot;tmp&quot;</span><span class="p">,</span><span class="n">save_model</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">patient</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span><span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">process</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">save_dir</span> <span class="o">=</span> <span class="n">save_dir</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">save_dir</span><span class="p">,</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">valid_batch_size</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">valid_batch_size</span> <span class="o">=</span> <span class="n">batch_size</span>
+
+        <span class="n">train_loader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span><span class="n">train_dataset</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">,</span><span class="n">shuffle</span><span class="o">=</span><span class="n">shuffle</span><span class="p">)</span>
+        
+        <span class="n">max_auc</span><span class="p">,</span> <span class="n">best_epoch</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="n">train_step</span> <span class="o">=</span> <span class="mi">0</span>
+        
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">num_epochs</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">loss_mean</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">train_loader</span><span class="p">:</span>
+                <span class="n">train_step</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">train</span><span class="p">()</span>
+                <span class="n">y</span><span class="p">,</span><span class="n">loss</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">train_one_step</span><span class="p">(</span><span class="n">data</span><span class="p">,</span><span class="n">process</span><span class="o">=</span><span class="n">process</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span>
+                <span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span><span class="c1">#compute gradients </span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">step</span><span class="p">()</span><span class="c1">#update model’s parameters</span>
+                <span class="n">loss_mean</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">loss</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">())</span>
+               
+            <span class="n">loss_mean</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">loss_mean</span><span class="p">)</span>
+            <span class="n">auc</span><span class="p">,</span> <span class="n">acc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">valid_dataset</span><span class="p">,</span><span class="n">batch_size</span><span class="o">=</span><span class="n">valid_batch_size</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">auc</span> <span class="o">&gt;</span> <span class="n">max_auc</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">save_model</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_save_model</span><span class="p">()</span>
+                <span class="n">max_auc</span> <span class="o">=</span> <span class="n">auc</span>
+                <span class="n">best_epoch</span> <span class="o">=</span> <span class="n">i</span>
+                <span class="n">testauc</span><span class="p">,</span> <span class="n">testacc</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span>
+                <span class="n">window_testauc</span><span class="p">,</span> <span class="n">window_testacc</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span>
+
+                <span class="n">validauc</span><span class="p">,</span> <span class="n">validacc</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">auc</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="nb">round</span><span class="p">(</span><span class="n">acc</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span><span class="c1">#model.evaluate(valid_dataset, emb_type)</span>
+                <span class="n">testauc</span><span class="p">,</span> <span class="n">testacc</span><span class="p">,</span> <span class="n">window_testauc</span><span class="p">,</span> <span class="n">window_testacc</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">testauc</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="nb">round</span><span class="p">(</span><span class="n">testacc</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="nb">round</span><span class="p">(</span><span class="n">window_testauc</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="nb">round</span><span class="p">(</span><span class="n">window_testacc</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+                <span class="n">max_auc</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">max_auc</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Epoch: </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">, validauc: </span><span class="si">{</span><span class="n">validauc</span><span class="si">}</span><span class="s2">, validacc: </span><span class="si">{</span><span class="n">validacc</span><span class="si">}</span><span class="s2">, best epoch: </span><span class="si">{</span><span class="n">best_epoch</span><span class="si">}</span><span class="s2">, best auc: </span><span class="si">{</span><span class="n">max_auc</span><span class="si">}</span><span class="s2">, loss: </span><span class="si">{</span><span class="n">loss_mean</span><span class="si">}</span><span class="s2">, emb_type: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">emb_type</span><span class="si">}</span><span class="s2">, model: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">model_name</span><span class="si">}</span><span class="s2">, save_dir: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">save_dir</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;            testauc: </span><span class="si">{</span><span class="n">testauc</span><span class="si">}</span><span class="s2">, testacc: </span><span class="si">{</span><span class="n">testacc</span><span class="si">}</span><span class="s2">, window_testauc: </span><span class="si">{</span><span class="n">window_testauc</span><span class="si">}</span><span class="s2">, window_testacc: </span><span class="si">{</span><span class="n">window_testacc</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">i</span> <span class="o">-</span> <span class="n">best_epoch</span> <span class="o">&gt;=</span> <span class="n">patient</span><span class="p">:</span>
+                <span class="k">break</span>
+        <span class="k">return</span> <span class="n">testauc</span><span class="p">,</span> <span class="n">testacc</span><span class="p">,</span> <span class="n">window_testauc</span><span class="p">,</span> <span class="n">window_testacc</span><span class="p">,</span> <span class="n">validauc</span><span class="p">,</span> <span class="n">validacc</span><span class="p">,</span> <span class="n">best_epoch</span></div>
+
+
+<div class="viewcode-block" id="QueBaseModel.evaluate"><a class="viewcode-back" href="../../../pykt.models.html#pykt.models.que_base_model.QueBaseModel.evaluate">[docs]</a>    <span class="k">def</span> <span class="nf">evaluate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">dataset</span><span class="p">,</span><span class="n">batch_size</span><span class="p">,</span><span class="n">acc_threshold</span><span class="o">=</span><span class="mf">0.5</span><span class="p">):</span>
+        <span class="n">ps</span><span class="p">,</span><span class="n">ts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span><span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">)</span>
+        <span class="n">auc</span> <span class="o">=</span> <span class="n">metrics</span><span class="o">.</span><span class="n">roc_auc_score</span><span class="p">(</span><span class="n">y_true</span><span class="o">=</span><span class="n">ts</span><span class="p">,</span> <span class="n">y_score</span><span class="o">=</span><span class="n">ps</span><span class="p">)</span>
+        <span class="n">prelabels</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span> <span class="k">if</span> <span class="n">p</span> <span class="o">&gt;=</span> <span class="n">acc_threshold</span> <span class="k">else</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">ps</span><span class="p">]</span>
+        <span class="n">acc</span> <span class="o">=</span> <span class="n">metrics</span><span class="o">.</span><span class="n">accuracy_score</span><span class="p">(</span><span class="n">ts</span><span class="p">,</span> <span class="n">prelabels</span><span class="p">)</span>
+        <span class="c1"># eval_result = {&quot;auc&quot;:auc,&quot;acc&quot;:acc}</span>
+        <span class="c1"># return eval_result</span>
+        <span class="k">return</span> <span class="n">auc</span><span class="p">,</span><span class="n">acc</span></div>
+
+    <span class="k">def</span> <span class="nf">_parser_row</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">row</span><span class="p">,</span><span class="n">data_config</span><span class="p">,</span><span class="n">ob_portions</span><span class="o">=</span><span class="mf">0.5</span><span class="p">):</span>
+        <span class="n">max_concepts</span> <span class="o">=</span> <span class="n">data_config</span><span class="p">[</span><span class="s2">&quot;max_concepts&quot;</span><span class="p">]</span>
+        <span class="n">max_len</span> <span class="o">=</span> <span class="n">data_config</span><span class="p">[</span><span class="s2">&quot;maxlen&quot;</span><span class="p">]</span>
+        <span class="n">start_index</span><span class="p">,</span><span class="n">seq_len</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_multi_ahead_start_index</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;concepts&#39;</span><span class="p">],</span><span class="n">ob_portions</span><span class="p">)</span>
+        <span class="n">questions</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;questions&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)]</span>
+        <span class="n">responses</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;responses&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)]</span>
+        <span class="n">concept_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">concept</span> <span class="ow">in</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;concepts&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">concept</span> <span class="o">==</span> <span class="s2">&quot;-1&quot;</span><span class="p">:</span>
+                <span class="n">skills</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">max_concepts</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">skills</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">_</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">concept</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)]</span>
+                <span class="n">skills</span> <span class="o">=</span> <span class="n">skills</span> <span class="o">+</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="n">max_concepts</span><span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="n">skills</span><span class="p">))</span>
+            <span class="n">concept_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">skills</span><span class="p">)</span>
+        <span class="n">cq_full</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">questions</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+        <span class="n">cc_full</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">concept_list</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+        <span class="n">cr_full</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">responses</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+
+        <span class="n">history_start_index</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">start_index</span> <span class="o">-</span> <span class="n">max_len</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">hist_q</span> <span class="o">=</span> <span class="n">cq_full</span><span class="p">[</span><span class="n">history_start_index</span><span class="p">:</span><span class="n">start_index</span><span class="p">]</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">hist_c</span> <span class="o">=</span> <span class="n">cc_full</span><span class="p">[</span><span class="n">history_start_index</span><span class="p">:</span><span class="n">start_index</span><span class="p">]</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">hist_r</span> <span class="o">=</span> <span class="n">cr_full</span><span class="p">[</span><span class="n">history_start_index</span><span class="p">:</span><span class="n">start_index</span><span class="p">]</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">hist_q</span><span class="p">,</span><span class="n">hist_c</span><span class="p">,</span><span class="n">hist_r</span><span class="p">,</span><span class="n">cq_full</span><span class="p">,</span><span class="n">cc_full</span><span class="p">,</span><span class="n">cr_full</span><span class="p">,</span><span class="n">seq_len</span><span class="p">,</span><span class="n">start_index</span>
+        
+    
+    <span class="k">def</span> <span class="nf">_get_multi_ahead_start_index</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">cc</span><span class="p">,</span><span class="n">ob_portions</span><span class="o">=</span><span class="mf">0.5</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;_summary_</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            cc (str): the concept sequence</span>
+<span class="sd">            ob_portions (float, optional): _description_. Defaults to 0.5.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            _type_: _description_</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">filter_cc</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">cc</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="n">x</span> <span class="o">!=</span> <span class="s2">&quot;-1&quot;</span><span class="p">]</span>
+        <span class="n">seq_len</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">filter_cc</span><span class="p">)</span>
+        <span class="n">start_index</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">seq_len</span> <span class="o">*</span> <span class="n">ob_portions</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">start_index</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">start_index</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="n">start_index</span> <span class="o">==</span> <span class="n">seq_len</span><span class="p">:</span>
+            <span class="n">start_index</span> <span class="o">=</span> <span class="n">seq_len</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">start_index</span><span class="p">,</span><span class="n">seq_len</span>
+
+   
+    <span class="k">def</span> <span class="nf">_evaluate_multi_ahead_accumulative</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">data_config</span><span class="p">,</span><span class="n">batch_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">ob_portions</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span><span class="n">acc_threshold</span><span class="o">=</span><span class="mf">0.5</span><span class="p">):</span>
+       
+        <span class="n">testf</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data_config</span><span class="p">[</span><span class="s2">&quot;dpath&quot;</span><span class="p">],</span> <span class="s2">&quot;test.csv&quot;</span><span class="p">)</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">testf</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;total sequence length is </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">)))</span>
+
+        <span class="n">y_pred_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">y_true_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+            <span class="n">hist_q</span><span class="p">,</span><span class="n">hist_c</span><span class="p">,</span><span class="n">hist_r</span><span class="p">,</span><span class="n">cq_full</span><span class="p">,</span><span class="n">cc_full</span><span class="p">,</span><span class="n">cr_full</span><span class="p">,</span><span class="n">seq_len</span><span class="p">,</span><span class="n">start_index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parser_row</span><span class="p">(</span><span class="n">row</span><span class="p">,</span><span class="n">data_config</span><span class="o">=</span><span class="n">data_config</span><span class="p">,</span><span class="n">ob_portions</span><span class="o">=</span><span class="n">ob_portions</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">i</span><span class="o">%</span><span class="mi">10</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;predict step </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+            <span class="n">seq_y_pred_hist</span> <span class="o">=</span> <span class="p">[</span><span class="n">cr_full</span><span class="p">[</span><span class="n">start_index</span><span class="p">]]</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">start_index</span><span class="p">,</span><span class="n">seq_len</span><span class="p">):</span>
+                <span class="n">cur_q</span> <span class="o">=</span> <span class="n">cq_full</span><span class="p">[</span><span class="n">start_index</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+                <span class="n">cur_c</span> <span class="o">=</span> <span class="n">cc_full</span><span class="p">[</span><span class="n">start_index</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+                <span class="n">cur_r</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">seq_y_pred_hist</span><span class="p">)</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+                <span class="c1"># print(f&quot;cur_q is {cur_q} shape is {cur_q.shape}&quot;)</span>
+                <span class="c1"># print(f&quot;cur_r is {cur_r} shape is {cur_r.shape}&quot;)</span>
+                <span class="n">cq</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">hist_q</span><span class="p">,</span><span class="n">cur_q</span><span class="p">],</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+                <span class="n">cc</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">hist_c</span><span class="p">,</span><span class="n">cur_c</span><span class="p">],</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+                <span class="n">cr</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">hist_r</span><span class="p">,</span><span class="n">cur_r</span><span class="p">],</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+                <span class="c1"># print(f&quot;cc_full is {cc_full}&quot;)</span>
+                <span class="c1"># print(f&quot;cr is {cr} shape is {cr.shape}&quot;)</span>
+                <span class="c1"># print(f&quot;cq is {cq} shape is {cq.shape}&quot;)</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="n">cq</span><span class="p">,</span><span class="n">cc</span><span class="p">,</span><span class="n">cr</span><span class="p">]</span>
+                <span class="n">cq</span><span class="p">,</span><span class="n">cc</span><span class="p">,</span><span class="n">cr</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">data</span><span class="p">]</span><span class="c1">#full sequence,[1,n]</span>
+                <span class="n">q</span><span class="p">,</span><span class="n">c</span><span class="p">,</span><span class="n">r</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="p">[:,:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">data</span><span class="p">]</span><span class="c1">#[0,n-1]</span>
+                <span class="n">qshft</span><span class="p">,</span><span class="n">cshft</span><span class="p">,</span><span class="n">rshft</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="p">[:,</span><span class="mi">1</span><span class="p">:]</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">data</span><span class="p">]</span><span class="c1">#[1,n]</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;cq&quot;</span><span class="p">:</span><span class="n">cq</span><span class="p">,</span><span class="s2">&quot;cc&quot;</span><span class="p">:</span><span class="n">cc</span><span class="p">,</span><span class="s2">&quot;cr&quot;</span><span class="p">:</span><span class="n">cr</span><span class="p">,</span><span class="s2">&quot;q&quot;</span><span class="p">:</span><span class="n">q</span><span class="p">,</span><span class="s2">&quot;c&quot;</span><span class="p">:</span><span class="n">c</span><span class="p">,</span><span class="s2">&quot;r&quot;</span><span class="p">:</span><span class="n">r</span><span class="p">,</span><span class="s2">&quot;qshft&quot;</span><span class="p">:</span><span class="n">qshft</span><span class="p">,</span><span class="s2">&quot;cshft&quot;</span><span class="p">:</span><span class="n">cshft</span><span class="p">,</span><span class="s2">&quot;rshft&quot;</span><span class="p">:</span><span class="n">rshft</span><span class="p">}</span>
+                <span class="n">y_last_pred</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">predict_one_step</span><span class="p">(</span><span class="n">data</span><span class="p">,</span><span class="n">process</span><span class="o">=</span><span class="kc">False</span><span class="p">)[:,</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">seq_y_pred_hist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">1</span> <span class="k">if</span> <span class="n">y_last_pred</span><span class="o">&gt;</span><span class="n">acc_threshold</span> <span class="k">else</span> <span class="mi">0</span><span class="p">)</span>
+            
+                <span class="n">y_true_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cr_full</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">())</span>
+                <span class="n">y_pred_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">y_last_pred</span><span class="o">.</span><span class="n">item</span><span class="p">())</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;num of y_pred_list is </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">y_pred_list</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;num of y_true_list is </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">y_true_list</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="n">y_pred_list</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">y_pred_list</span><span class="p">)</span>
+        <span class="n">y_true_list</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">y_true_list</span><span class="p">)</span>
+        <span class="n">auc</span> <span class="o">=</span> <span class="n">metrics</span><span class="o">.</span><span class="n">roc_auc_score</span><span class="p">(</span><span class="n">y_true_list</span><span class="p">,</span> <span class="n">y_pred_list</span><span class="p">)</span>
+        <span class="n">acc</span> <span class="o">=</span> <span class="n">metrics</span><span class="o">.</span><span class="n">accuracy_score</span><span class="p">(</span><span class="n">y_true_list</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span> <span class="k">if</span> <span class="n">p</span> <span class="o">&gt;=</span> <span class="n">acc_threshold</span> <span class="k">else</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">y_pred_list</span><span class="p">])</span>
+
+        <span class="k">return</span> <span class="n">auc</span><span class="p">,</span><span class="n">acc</span>
+
+
+    <span class="k">def</span> <span class="nf">_evaluate_multi_ahead_help</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">data_config</span><span class="p">,</span><span class="n">batch_size</span><span class="p">,</span><span class="n">ob_portions</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span><span class="n">acc_threshold</span><span class="o">=</span><span class="mf">0.5</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;generate multi-ahead dataset</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            data_config (_type_): data_config</span>
+<span class="sd">            ob_portions (float, optional): portions of observed student interactions. . Defaults to 0.5.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dataset: new dataset for multi-ahead prediction</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">testf</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data_config</span><span class="p">[</span><span class="s2">&quot;dpath&quot;</span><span class="p">],</span> <span class="s2">&quot;test.csv&quot;</span><span class="p">)</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">testf</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;total sequence length is </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">)))</span>
+        <span class="n">y_pred_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">y_true_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+            <span class="n">hist_q</span><span class="p">,</span><span class="n">hist_c</span><span class="p">,</span><span class="n">hist_r</span><span class="p">,</span><span class="n">cq_full</span><span class="p">,</span><span class="n">cc_full</span><span class="p">,</span><span class="n">cr_full</span><span class="p">,</span><span class="n">seq_len</span><span class="p">,</span><span class="n">start_index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parser_row</span><span class="p">(</span><span class="n">row</span><span class="p">,</span><span class="n">data_config</span><span class="o">=</span><span class="n">data_config</span><span class="p">,</span><span class="n">ob_portions</span><span class="o">=</span><span class="n">ob_portions</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">i</span><span class="o">%</span><span class="mi">10</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;predict step </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">cq_list</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">cc_list</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">cr_list</span> <span class="o">=</span> <span class="p">[]</span>
+            
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">start_index</span><span class="p">,</span><span class="n">seq_len</span><span class="p">):</span>
+                <span class="n">cur_q</span> <span class="o">=</span> <span class="n">cq_full</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+                <span class="n">cur_c</span> <span class="o">=</span> <span class="n">cc_full</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+                <span class="n">cur_r</span> <span class="o">=</span> <span class="n">cr_full</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+                <span class="n">cq_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">hist_q</span><span class="p">,</span><span class="n">cur_q</span><span class="p">],</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+                <span class="n">cc_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">hist_c</span><span class="p">,</span><span class="n">cur_c</span><span class="p">],</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+                <span class="n">cr_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">hist_r</span><span class="p">,</span><span class="n">cur_r</span><span class="p">],</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+                <span class="n">y_true_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cr_full</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">())</span>
+            <span class="c1"># print(f&quot;cq_list is {len(cq_list)}&quot;)</span>
+            <span class="n">cq_ahead</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">(</span><span class="n">cq_list</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+            <span class="n">cc_ahead</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">(</span><span class="n">cc_list</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+            <span class="n">cr_ahead</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">(</span><span class="n">cr_list</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+            <span class="c1"># print(f&quot;cq_ahead shape is {cq_ahead.shape}&quot;)</span>
+
+            <span class="n">tensor_dataset</span> <span class="o">=</span> <span class="n">TensorDataset</span><span class="p">(</span><span class="n">cq_ahead</span><span class="p">,</span><span class="n">cc_ahead</span><span class="p">,</span><span class="n">cr_ahead</span><span class="p">)</span>
+            <span class="n">dataloader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span><span class="n">dataset</span><span class="o">=</span><span class="n">tensor_dataset</span><span class="p">,</span><span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">)</span> 
+
+            <span class="k">for</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">dataloader</span><span class="p">:</span>
+                <span class="n">cq</span><span class="p">,</span><span class="n">cc</span><span class="p">,</span><span class="n">cr</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">data</span><span class="p">]</span><span class="c1">#full sequence,[1,n]</span>
+                <span class="n">q</span><span class="p">,</span><span class="n">c</span><span class="p">,</span><span class="n">r</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="p">[:,:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">data</span><span class="p">]</span><span class="c1">#[0,n-1]</span>
+                <span class="n">qshft</span><span class="p">,</span><span class="n">cshft</span><span class="p">,</span><span class="n">rshft</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="p">[:,</span><span class="mi">1</span><span class="p">:]</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">data</span><span class="p">]</span><span class="c1">#[1,n]</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;cq&quot;</span><span class="p">:</span><span class="n">cq</span><span class="p">,</span><span class="s2">&quot;cc&quot;</span><span class="p">:</span><span class="n">cc</span><span class="p">,</span><span class="s2">&quot;cr&quot;</span><span class="p">:</span><span class="n">cr</span><span class="p">,</span><span class="s2">&quot;q&quot;</span><span class="p">:</span><span class="n">q</span><span class="p">,</span><span class="s2">&quot;c&quot;</span><span class="p">:</span><span class="n">c</span><span class="p">,</span><span class="s2">&quot;r&quot;</span><span class="p">:</span><span class="n">r</span><span class="p">,</span><span class="s2">&quot;qshft&quot;</span><span class="p">:</span><span class="n">qshft</span><span class="p">,</span><span class="s2">&quot;cshft&quot;</span><span class="p">:</span><span class="n">cshft</span><span class="p">,</span><span class="s2">&quot;rshft&quot;</span><span class="p">:</span><span class="n">rshft</span><span class="p">}</span>
+                <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">predict_one_step</span><span class="p">(</span><span class="n">data</span><span class="p">,</span><span class="n">process</span><span class="o">=</span><span class="kc">False</span><span class="p">)[:,</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+                <span class="n">y_pred_list</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">y</span><span class="p">))</span>
+        
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;num of y_pred_list is </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">y_pred_list</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;num of y_true_list is </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">y_true_list</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="n">y_pred_list</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">y_pred_list</span><span class="p">)</span>
+        <span class="n">y_true_list</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">y_true_list</span><span class="p">)</span>
+        <span class="n">auc</span> <span class="o">=</span> <span class="n">metrics</span><span class="o">.</span><span class="n">roc_auc_score</span><span class="p">(</span><span class="n">y_true_list</span><span class="p">,</span> <span class="n">y_pred_list</span><span class="p">)</span>
+        <span class="n">acc</span> <span class="o">=</span> <span class="n">metrics</span><span class="o">.</span><span class="n">accuracy_score</span><span class="p">(</span><span class="n">y_true_list</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span> <span class="k">if</span> <span class="n">p</span> <span class="o">&gt;=</span> <span class="n">acc_threshold</span> <span class="k">else</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">y_pred_list</span><span class="p">])</span>
+
+        <span class="k">return</span> <span class="n">auc</span><span class="p">,</span><span class="n">acc</span>
+
+<div class="viewcode-block" id="QueBaseModel.evaluate_multi_ahead"><a class="viewcode-back" href="../../../pykt.models.html#pykt.models.que_base_model.QueBaseModel.evaluate_multi_ahead">[docs]</a>    <span class="k">def</span> <span class="nf">evaluate_multi_ahead</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">data_config</span><span class="p">,</span><span class="n">batch_size</span><span class="p">,</span><span class="n">ob_portions</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span><span class="n">acc_threshold</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span><span class="n">accumulative</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Predictions in the multi-step ahead prediction scenario</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            data_config (_type_): data_config</span>
+<span class="sd">            batch_size (int): batch_size</span>
+<span class="sd">            ob_portions (float, optional): portions of observed student interactions. Defaults to 0.5.</span>
+<span class="sd">            accumulative (bool, optional): `True` for accumulative prediction and `False` for non-accumulative prediction. Defaults to False.</span>
+<span class="sd">            acc_threshold (float, optional): threshold for accuracy. Defaults to 0.5.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            metrics: auc,acc</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+        <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">accumulative</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;predict use accumulative&quot;</span><span class="p">)</span>
+                <span class="n">auc</span><span class="p">,</span><span class="n">acc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_evaluate_multi_ahead_accumulative</span><span class="p">(</span><span class="n">data_config</span><span class="p">,</span><span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">,</span><span class="n">ob_portions</span><span class="o">=</span><span class="n">ob_portions</span><span class="p">,</span><span class="n">acc_threshold</span><span class="o">=</span><span class="n">acc_threshold</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;predict use no accumulative&quot;</span><span class="p">)</span>
+                <span class="n">auc</span><span class="p">,</span><span class="n">acc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_evaluate_multi_ahead_help</span><span class="p">(</span><span class="n">data_config</span><span class="p">,</span><span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">,</span><span class="n">ob_portions</span><span class="o">=</span><span class="n">ob_portions</span><span class="p">,</span><span class="n">acc_threshold</span><span class="o">=</span><span class="n">acc_threshold</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;auc&quot;</span><span class="p">:</span><span class="n">auc</span><span class="p">,</span><span class="s2">&quot;acc&quot;</span><span class="p">:</span><span class="n">acc</span><span class="p">}</span></div>
+        
+ 
+
+<div class="viewcode-block" id="QueBaseModel.predict"><a class="viewcode-back" href="../../../pykt.models.html#pykt.models.que_base_model.QueBaseModel.predict">[docs]</a>    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">dataset</span><span class="p">,</span><span class="n">batch_size</span><span class="p">,</span><span class="n">return_ts</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">process</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="n">test_loader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">,</span><span class="n">shuffle</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+        <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+            <span class="n">y_trues</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">y_scores</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">test_loader</span><span class="p">:</span>
+                <span class="n">new_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">batch_to_device</span><span class="p">(</span><span class="n">data</span><span class="p">,</span><span class="n">process</span><span class="o">=</span><span class="n">process</span><span class="p">)</span>
+                <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">predict_one_step</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+                <span class="n">y</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">masked_select</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">new_data</span><span class="p">[</span><span class="s1">&#39;sm&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span>
+                <span class="n">t</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">masked_select</span><span class="p">(</span><span class="n">new_data</span><span class="p">[</span><span class="s1">&#39;rshft&#39;</span><span class="p">],</span> <span class="n">new_data</span><span class="p">[</span><span class="s1">&#39;sm&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span>
+                <span class="n">y_trues</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">numpy</span><span class="p">())</span>
+                <span class="n">y_scores</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">numpy</span><span class="p">())</span>
+        <span class="n">ts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">y_trues</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">ps</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">y_scores</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ts.shape: </span><span class="si">{</span><span class="n">ts</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">, ps.shape: </span><span class="si">{</span><span class="n">ps</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">ps</span><span class="p">,</span><span class="n">ts</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, pykt-team.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
